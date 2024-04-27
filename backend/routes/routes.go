@@ -7,9 +7,11 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
 
+	"itinerario/routes/handlers"
+
 )
 
-type Config struct {}
+type Config struct{}
 
 func (app *Config) Routes() http.Handler {
 	r := chi.NewRouter()
@@ -24,12 +26,13 @@ func (app *Config) Routes() http.Handler {
 		MaxAge:           300,
 	}))
 
-	// Routes
+	// Middlewares
 	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
 	r.Use(middleware.Heartbeat("/ping"))
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("welcome"))
-	})
+
+	// Routes
+	r.Get("/", handlers.Welcome)
 
 	return r
 }

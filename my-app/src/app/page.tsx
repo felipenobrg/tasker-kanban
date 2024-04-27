@@ -1,5 +1,6 @@
 import Sidebar from "@/components/sidebar"
 import Header from "@/components/header"
+import Board from "@/components/board"
 
 export default function Home() {
   return (
@@ -7,11 +8,9 @@ export default function Home() {
       <Sidebar />
       <div className="flex flex-col">
         <Header />
-        <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
-        </main>
+         <Board />
       </div>
     </div>
-    
   )
 }
 

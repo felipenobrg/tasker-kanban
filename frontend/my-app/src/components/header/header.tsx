@@ -1,8 +1,8 @@
 import * as React from "react"
 import { Menu, Link, HomeIcon, Search, Sun } from "lucide-react";
-import { Button } from "./ui/button";
-import { SheetTrigger, SheetContent, Sheet } from "./ui/sheet";
-import { Input } from "./ui/input";
+import { Button } from "../ui/button";
+import { SheetTrigger, SheetContent, Sheet } from "../ui/sheet";
+import { Input } from "../ui/input";
 
 export default function Header() {
     return (

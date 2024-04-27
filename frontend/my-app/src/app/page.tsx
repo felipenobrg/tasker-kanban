@@ -1,6 +1,6 @@
-import Sidebar from "@/components/sidebar"
-import Header from "@/components/header"
-import Board from "@/components/board"
+import Sidebar from "@/components/sidebar/sidebar"
+import Header from "@/components/header/header"
+import Board from "@/components/board/board"
 
 export default function Home() {
   return (

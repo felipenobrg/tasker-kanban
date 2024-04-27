@@ -1,0 +1,46 @@
+version: '3'
+services:
+  postgres:
+    image: "postgres"
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data  
+
+  pgadmin-compose:
+    image: dpage/pgadmin4
+    env_file:
+      - .env
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
+    ports:
+      - "54321:80"
+    depends_on:
+      - postgres
+  
+  api:
+    build: .
+    container_name: itinerario
+    env_file:
+      - .env
+    environment:
+      - DB_USERNAME=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_DB=${DB_NAME}
+      - DB_HOST=postgres
+      - DB_TABLE=postgres
+      - DB_PORT=5432
+    ports:
+      - "8080:8080"
+    depends_on:
+      - pgadmin-compose
+
+volumes:
+  postgres:

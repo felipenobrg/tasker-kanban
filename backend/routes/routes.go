@@ -6,12 +6,14 @@ import (
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
+	"gorm.io/gorm"
 
 	"itinerario/routes/handlers"
-
 )
 
-type Config struct{}
+type Config struct {
+	Postgres *gorm.DB
+}
 
 func (app *Config) Routes() http.Handler {
 	r := chi.NewRouter()

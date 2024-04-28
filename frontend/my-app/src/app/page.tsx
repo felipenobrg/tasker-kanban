@@ -1,16 +1,25 @@
+'use client'
+
 import Sidebar from '@/components/sidebar/sidebar'
 import Header from '@/components/header/header'
 import Board from '@/components/board/board'
-import GetTask from '@/lib/getTask'
+import { useState } from 'react'
 
-export default async function Home() {
-  const tasks = await GetTask()
+export default function Home() {
+  const [darkTheme, setDarkTheme] = useState(true)
+
+  const toggleTheme = () => {
+    setDarkTheme((prevTheme) => !prevTheme)
+  }
+
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+    <div
+      className={`grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] ${darkTheme ? 'dark' : ''}`}
+    >
       <Sidebar />
       <div className="flex flex-col">
-        <Header />
-        <Board tasks={tasks} />
+        <Header toggleTheme={toggleTheme} />
+        <Board />
       </div>
     </div>
   )

@@ -1,24 +1,34 @@
 'use client'
 
+import * as React from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Button } from '../ui/button'
 import BoardCard from './boardCard'
 import DialogBoard from '../dialogBoard/dialogBoard'
 import { Task } from '@/types/task'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Reorder } from 'framer-motion'
 import PostTask from '@/lib/postTask'
 import { Plus } from 'lucide-react'
-
-interface BoardProps {
-  tasks: Task[]
-}
+import GetTask from '@/lib/getTask'
 
 const statusOptions = ['Backlog', 'Em andamento', 'Feito']
 
-export default function Board(props: BoardProps) {
-  const { tasks } = props
+export default function Board() {
+  const [tasks, setTasks] = useState<Task[]>([])
   const [dialogOpen, setDialogOpen] = useState(false)
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const tasksData = await GetTask()
+        setTasks(tasksData)
+      } catch (error) {
+        console.error('Error fetching tasks:', error)
+      }
+    }
+    fetchTasks()
+  }, [])
 
   const handleDialogOpen = () => {
     setDialogOpen(true)
@@ -29,6 +39,8 @@ export default function Board(props: BoardProps) {
   const sendTask = async (description: string, status: string) => {
     try {
       await PostTask({ description, status })
+      const updatedTasks = await GetTask()
+      setTasks(updatedTasks)
     } catch (error) {
       console.error('Error posting task:', error)
     }

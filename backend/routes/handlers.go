@@ -1,7 +1,10 @@
 package routes
 
 import (
+	"errors"
 	"net/http"
+
+	"github.com/go-chi/chi/v5"
 
 	"tasker/models"
 
@@ -55,4 +58,61 @@ func (app *Config) CreateBoard(w http.ResponseWriter, r *http.Request) {
 	}
 
 	app.writeJSON(w, http.StatusCreated, responsePayload)
+}
+
+func (app *Config) DeleteBoard(w http.ResponseWriter, r *http.Request) {
+	var board models.Board
+	boardID := chi.URLParam(r, "id")
+
+	app.Postgres.First(&board, boardID)
+	if board.ID == 0 {
+		err := errors.New("board not found")
+		app.errorJSON(w, err, http.StatusNotFound)
+		return
+	}
+
+	app.Postgres.Delete(&board)
+
+	responsePayload := jsonResponse{
+		Error:   false,
+		Message: "Board deleted successfully",
+	}
+	app.writeJSON(w, http.StatusOK, responsePayload)
+}
+
+func (app *Config) UpdateBoard(w http.ResponseWriter, r *http.Request) {
+	var board models.Board
+	boardID := chi.URLParam(r, "id")
+
+	app.Postgres.First(&board, boardID)
+	if board.ID == 0 {
+		err := errors.New("board not found")
+		app.errorJSON(w, err, http.StatusNotFound)
+		return
+	}
+
+	var boardPayload BoardPayload
+	err := app.readJson(w, r, &boardPayload)
+	if err != nil {
+		app.errorJSON(w, err, http.StatusBadRequest)
+		return
+	}
+
+	board.Description = boardPayload.Description
+	board.Status = boardPayload.Status
+
+	err = board.Validate()
+	if err != nil {
+		app.errorJSON(w, err, http.StatusBadRequest)
+		return
+	}
+
+	app.Postgres.Save(&board)
+
+	responsePayload := jsonResponse{
+		Error:   false,
+		Message: "Board updated successfully",
+		Data:    board,
+	}
+	app.writeJSON(w, http.StatusOK, responsePayload)
 }

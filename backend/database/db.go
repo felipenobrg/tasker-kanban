@@ -10,6 +10,8 @@ import (
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+
+	"tasker/models"
 )
 
 var (
@@ -43,7 +45,7 @@ func Connect() (*gorm.DB, error) {
 			counts++
 		} else {
 			log.Println("Conectado com postgres")
-			// DB.AutoMigrate(&models.User{})
+			DB.AutoMigrate(&models.Board{})
 			connection = DB
 			break
 		}

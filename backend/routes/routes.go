@@ -7,8 +7,6 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
 	"gorm.io/gorm"
-
-	"itinerario/routes/handlers"
 )
 
 type Config struct {
@@ -34,7 +32,12 @@ func (app *Config) Routes() http.Handler {
 	r.Use(middleware.Heartbeat("/ping"))
 
 	// Routes
-	r.Get("/", handlers.Welcome)
+	r.Route("/api/v1/board", func(r chi.Router) {
+		r.Get("/", app.GetBoards)
+		r.Post("/add", app.CreateBoard)
+		r.Delete("/delete/{id}", app.DeleteBoard)
+		r.Put("/update/{id}", app.UpdateBoard)
+	})
 
 	return r
 }

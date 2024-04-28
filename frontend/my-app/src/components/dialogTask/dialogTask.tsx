@@ -11,23 +11,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select'
-import { useState, useTransition } from 'react'
+import { useState } from 'react'
 import PostTask from '@/lib/postTask'
+import UpdateTask from '@/lib/updateTask'
+import { FileSpreadsheetIcon } from 'lucide-react'
 
-interface DialogBoardProps {
-  statusOptions: string[]
+interface DialogTaskProps {
+  statusOption: string[]
+  initialDescription: string
+  initialStatus: string
+  id: number
   setDialogOpen: (isOpen: boolean) => void
 }
 
-export default function DialogBoard(props: DialogBoardProps) {
-  const { statusOptions, setDialogOpen } = props
-  const [dialogDescription, setDialogDescription] = useState('')
-  const [dialogStatus, setDialogStatus] = useState('')
+export default function DialogTask(props: DialogTaskProps) {
+  const { statusOption, initialDescription, initialStatus, id, setDialogOpen } =
+    props
+  const [dialogDescription, setDialogDescription] = useState(initialDescription)
+  const [dialogStatus, setDialogStatus] = useState(initialStatus)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
-      await PostTask({ description: dialogDescription, status: dialogStatus })
+      await UpdateTask({
+        description: dialogDescription,
+        status: dialogStatus,
+        id,
+      })
       setDialogDescription('')
       setDialogStatus('')
       setDialogOpen(false)
@@ -40,7 +50,7 @@ export default function DialogBoard(props: DialogBoardProps) {
     <Dialog.Overlay className="fixed inset-0 backdrop-filter backdrop-blur-sm bg-opacity-30 bg-black">
       <Dialog.Content className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded shadow-md bg-gray-900 p-5 w-1/4 h-1/2 flex flex-col gap-2 justify-center">
         <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
-          <Dialog.Title>Descrição da Tarefa</Dialog.Title>
+          <Dialog.Title>Editar descrição da Tarefa</Dialog.Title>
           <Input
             type="text"
             className="w-4/5"
@@ -48,7 +58,7 @@ export default function DialogBoard(props: DialogBoardProps) {
             value={dialogDescription}
             onChange={(e) => setDialogDescription(e.target.value)}
           />
-          <Dialog.Title>Status da Tarefa</Dialog.Title>
+          <Dialog.Title>Editar o status da Tarefa</Dialog.Title>
           <Select
             value={dialogStatus}
             onValueChange={(value) => setDialogStatus(value)}
@@ -58,7 +68,7 @@ export default function DialogBoard(props: DialogBoardProps) {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                {statusOptions.map((status, index) => (
+                {statusOption.map((status, index) => (
                   <SelectItem key={index} value={status}>
                     {status}
                   </SelectItem>

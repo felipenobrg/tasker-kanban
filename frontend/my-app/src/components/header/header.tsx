@@ -69,13 +69,13 @@ export default function Header(props: HeaderProps) {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={() => setTheme('light')}>
-            Light
+            Claro
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setTheme('dark')}>
-            Dark
+            Escuro
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setTheme('system')}>
-            System
+            Padrão do Sistema
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

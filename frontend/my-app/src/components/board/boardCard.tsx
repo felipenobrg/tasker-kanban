@@ -21,11 +21,13 @@ export default function BoardCard(props: BoardCardProps) {
   return (
     <div className="flex flex-row ml-5">
       <div className="flex flex-col gap-4">
-        {status.map((statusOption) => (
-          <h1 key={statusOption} className="font-semibold mb-1">
-            {statusOption}
-          </h1>
-        ))}
+        <div className="flex justify-between gap-5">
+          {status.map((statusOption) => (
+            <h1 key={statusOption} className="font-semibold mb-1">
+              {statusOption}
+            </h1>
+          ))}
+        </div>
         <Reorder.Group
           className="flex flex-col gap-5"
           values={task}

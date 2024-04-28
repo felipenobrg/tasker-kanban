@@ -5,16 +5,12 @@ import { Button } from '../ui/button'
 import BoardCard from './boardCard'
 import { Task } from '@/types/task'
 import DialogBoard from '../dialogBoard/dialogBoard'
-
 interface BoardProps {
   tasks: Task[]
 }
-
 const statusOptions = ['Backlog', 'Em andamento', 'Feito']
-
 export default function Board(props: BoardProps) {
   const { tasks } = props
-  console.log(tasks)
 
   return (
     <Dialog.Root>

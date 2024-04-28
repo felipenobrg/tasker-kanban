@@ -11,23 +11,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select'
-import { useState, useTransition } from 'react'
-import PostTask from '@/lib/postTask'
+import { useState } from 'react'
 
 interface DialogBoardProps {
   statusOptions: string[]
   setDialogOpen: (isOpen: boolean) => void
+  sendTask: (description: string, status: string) => void
 }
 
 export default function DialogBoard(props: DialogBoardProps) {
-  const { statusOptions, setDialogOpen } = props
+  const { statusOptions, setDialogOpen, sendTask } = props
   const [dialogDescription, setDialogDescription] = useState('')
   const [dialogStatus, setDialogStatus] = useState('')
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
-      await PostTask({ description: dialogDescription, status: dialogStatus })
+      sendTask(dialogDescription, dialogStatus)
       setDialogDescription('')
       setDialogStatus('')
       setDialogOpen(false)

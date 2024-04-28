@@ -7,6 +7,8 @@ import DialogBoard from '../dialogBoard/dialogBoard'
 import { Task } from '@/types/task'
 import { useState } from 'react'
 import { Reorder } from 'framer-motion'
+import PostTask from '@/lib/postTask'
+import { Plus } from 'lucide-react'
 
 interface BoardProps {
   tasks: Task[]
@@ -24,22 +26,30 @@ export default function Board(props: BoardProps) {
 
   const handleDrop = (newTasks: Task[], status: string) => {}
 
+  const sendTask = async (description: string, status: string) => {
+    try {
+      await PostTask({ description, status })
+    } catch (error) {
+      console.error('Error posting task:', error)
+    }
+  }
+
   return (
     <Dialog.Root>
       <main className="flex flex-1 gap-4 p-4 lg:gap-6 lg:p-6 relative">
         <div className="flex flex-col items-center gap-4">
           <Dialog.Trigger asChild>
             <Button
-              className="w-48 p-3 mb-5 bg-gray-800 text-white hover:bg-slate-900"
+              className="w-48 p-3 mb-5 bg-gray-800 text-white hover:bg-slate-900 flex gap-2 items-center"
               onClick={handleDialogOpen}
             >
-              Adicionar novo item
+              Adicionar novo item <Plus size={20} />
             </Button>
           </Dialog.Trigger>
-          <div className="flex flex-row gap-3">
+          <div className="flex">
             {statusOptions.map((status) => (
-              <div key={status} className="flex flex-col gap-4">
-                <h1 className="font-semibold mb-1">{status}</h1>
+              <div key={status} className="flex flex-col ml-20 items-center">
+                <h1 className="font-semibold mb-2 mt-2">{status}</h1>
                 <Reorder.Group
                   className="flex flex-col gap-5"
                   values={tasks.filter((task) => task.status === status)}
@@ -64,6 +74,7 @@ export default function Board(props: BoardProps) {
           <DialogBoard
             statusOptions={statusOptions}
             setDialogOpen={setDialogOpen}
+            sendTask={sendTask}
           />
         )}
       </main>

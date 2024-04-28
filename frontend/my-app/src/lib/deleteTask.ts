@@ -2,19 +2,17 @@
 
 import axios from 'axios'
 
-interface UpdateTaskProps {
-    description?: string;
-    status: string;
+interface DeleteTaskProps {
     id: number;
 }
 
-export default async function UpdateTask(props: UpdateTaskProps) {
-    const { description, status, id } = props;
+export default async function DeleteTask(props: DeleteTaskProps) {
+    const { id } = props;
     try {
         if (!process.env.BASE_URL) {
             throw new Error('BASE_URL is not defined in the environment variables');
         }
-        const response = await axios.put(`${process.env.BASE_URL}/update/${id}`, { description, status });
+        const response = await axios.delete(`${process.env.BASE_URL}/delete/${id}`);
         return response.data;
     } catch(error) {
         console.error('Error posting task:', error);

@@ -12,9 +12,7 @@ import {
   SelectValue,
 } from '../ui/select'
 import { useState } from 'react'
-import PostTask from '@/lib/postTask'
 import UpdateTask from '@/lib/updateTask'
-import { FileSpreadsheetIcon } from 'lucide-react'
 
 interface DialogTaskProps {
   statusOption: string[]
@@ -22,11 +20,18 @@ interface DialogTaskProps {
   initialStatus: string
   id: number
   setDialogOpen: (isOpen: boolean) => void
+  onUpdateTask: (id: number, description: string, status: string) => void
 }
 
 export default function DialogTask(props: DialogTaskProps) {
-  const { statusOption, initialDescription, initialStatus, id, setDialogOpen } =
-    props
+  const {
+    statusOption,
+    initialDescription,
+    initialStatus,
+    id,
+    setDialogOpen,
+    onUpdateTask,
+  } = props
   const [dialogDescription, setDialogDescription] = useState(initialDescription)
   const [dialogStatus, setDialogStatus] = useState(initialStatus)
 
@@ -38,11 +43,12 @@ export default function DialogTask(props: DialogTaskProps) {
         status: dialogStatus,
         id,
       })
+      onUpdateTask(id, dialogDescription, dialogStatus)
       setDialogDescription('')
       setDialogStatus('')
       setDialogOpen(false)
     } catch (error) {
-      console.error('Error posting task:', error)
+      console.error('Error updating task:', error)
     }
   }
 

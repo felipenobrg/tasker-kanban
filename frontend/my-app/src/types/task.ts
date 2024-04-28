@@ -4,5 +4,5 @@ export interface Task {
     UpdatedAt: string,
     DeletedAt: string | null,
     description: string,
-    status: "Backlog" | "Em andamento" | "Feito"
+    status: string
 }

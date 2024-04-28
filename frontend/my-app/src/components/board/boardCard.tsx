@@ -6,6 +6,9 @@ import { Reorder } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import DialogTask from '../dialogTask/dialogTask'
+import { X } from 'lucide-react'
+import DeleteTask from '@/lib/deleteTask'
+import UpdateTask from '@/lib/updateTask'
 interface BoardCardProps {
   data: Task
   statusOption: string[]
@@ -18,6 +21,32 @@ export default function BoardCard(props: BoardCardProps) {
 
   const handleDialogOpen = () => {
     setDialogOpen(true)
+  }
+
+  const handleDeleteTask = async (id: number, event: React.MouseEvent) => {
+    event.stopPropagation()
+    await DeleteTask({ id })
+    const updatedTasks = task.filter((item) => item.ID !== id)
+    setTask(updatedTasks)
+  }
+
+  const handleUpdateTask = async (
+    id: number,
+    description: string,
+    status: string,
+  ) => {
+    try {
+      await UpdateTask({ id, description, status })
+      const updatedTasks = task.map((item) => {
+        if (item.ID === id) {
+          return { ...item, description, status }
+        }
+        return item
+      })
+      setTask(updatedTasks)
+    } catch (error) {
+      console.error('Error updating task:', error)
+    }
   }
 
   useEffect(() => {
@@ -37,8 +66,17 @@ export default function BoardCard(props: BoardCardProps) {
             {task.map((item) => (
               <Reorder.Item value={item} key={item.description}>
                 <Dialog.Trigger asChild>
-                  <Card onClick={handleDialogOpen}>
-                    <p className="text-gray-200 text-sm">{item.description}</p>
+                  <Card onClick={handleDialogOpen} className="flex flex-col">
+                    <div className="flex items-end justify-between">
+                      <p className="text-gray-200 text-sm ml-1">
+                        {item.description}
+                      </p>
+                      <X
+                        size={20}
+                        onClick={(e) => handleDeleteTask(item.ID, e)}
+                        className="items-end"
+                      />
+                    </div>
                   </Card>
                 </Dialog.Trigger>
               </Reorder.Item>
@@ -53,6 +91,7 @@ export default function BoardCard(props: BoardCardProps) {
           initialStatus={data.status}
           id={data.ID}
           setDialogOpen={setDialogOpen}
+          onUpdateTask={handleUpdateTask}
         />
       )}
     </Dialog.Root>

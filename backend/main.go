@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"os"
 
-	"itinerario/database"
-	"itinerario/routes"
+	"tasker/database"
+	"tasker/routes"
 )
 
 const webPort = "8080"

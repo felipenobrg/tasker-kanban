@@ -12,6 +12,7 @@ import (
 	"gorm.io/gorm"
 
 	"tasker/models"
+
 )
 
 var (
@@ -37,7 +38,8 @@ func Connect() (*gorm.DB, error) {
 		host,
 		os.Getenv("DB_USER"),
 		os.Getenv("DB_PASSWORD"),
-		os.Getenv("DB_NAME"))
+		os.Getenv("DB_NAME"),
+	)
 
 	for {
 		DB, err = gorm.Open(postgres.Open(dns))

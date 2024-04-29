@@ -1,0 +1,11 @@
+version: '3'
+services:
+  tasker:
+    build: .
+    container_name: tasker-api
+    env_file:
+      - .env
+    environment:
+      - NEON_DB=${NEON_DB}
+    ports:
+      - "8080:8080"

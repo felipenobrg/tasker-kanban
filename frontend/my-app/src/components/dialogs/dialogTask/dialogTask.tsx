@@ -1,8 +1,8 @@
 'use client'
 
 import * as Dialog from '@radix-ui/react-dialog'
-import { Button } from '../ui/button'
-import { Input } from '../ui/input'
+import { Button } from '../../ui/button'
+import { Input } from '../../ui/input'
 import {
   Select,
   SelectContent,
@@ -10,8 +10,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select'
-import { useEffect, useState } from 'react'
+} from '../../ui/select'
+import { useState } from 'react'
 import UpdateTask from '@/lib/updateTask'
 
 interface DialogTaskProps {
@@ -55,12 +55,12 @@ export default function DialogTask(props: DialogTaskProps) {
 
   return (
     <Dialog.Overlay className="fixed inset-0 backdrop-filter backdrop-blur-sm bg-opacity-30 bg-black">
-      <Dialog.Content className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded shadow-md bg-gray-900 p-5 w-1/4 h-1/2 flex flex-col gap-2 justify-center">
+      <Dialog.Content className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded shadow-md bg-gray-900 p-5 w-80 h-80 flex flex-col gap-2 justify-center">
         <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
           <Dialog.Title>Editar descrição da Tarefa</Dialog.Title>
           <Input
             type="text"
-            className="w-4/5"
+            className="w-full"
             placeholder="Informe..."
             value={dialogDescription}
             onChange={(e) => setDialogDescription(e.target.value)}
@@ -70,7 +70,7 @@ export default function DialogTask(props: DialogTaskProps) {
             value={dialogStatus}
             onValueChange={(value) => setDialogStatus(value)}
           >
-            <SelectTrigger className="w-4/5">
+            <SelectTrigger className="w-full">
               <SelectValue placeholder="Selecione um status" />
             </SelectTrigger>
             <SelectContent>

@@ -18,6 +18,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu'
+import { useFilter } from '@/context/filterContext'
+import { ChangeEvent } from 'react'
 
 interface HeaderProps {
   toggleTheme: () => void
@@ -25,6 +27,11 @@ interface HeaderProps {
 
 export default function Header(props: HeaderProps) {
   const { setTheme } = useTheme()
+  const { setFilterValue } = useFilter()
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setFilterValue(e.target.value)
+  }
 
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
@@ -55,6 +62,7 @@ export default function Header(props: HeaderProps) {
               type="search"
               placeholder="Pesquisar campos..."
               className="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
+              onChange={handleInputChange}
             />
           </div>
         </form>

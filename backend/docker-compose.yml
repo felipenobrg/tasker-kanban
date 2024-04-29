@@ -40,7 +40,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - pgadmin-compose
+      - pgadmin
 
 volumes:
   postgres:

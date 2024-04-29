@@ -1,13 +1,14 @@
 'use client'
+
+import * as Dialog from '@radix-ui/react-dialog'
 import { Task } from '@/types/task'
 import { Card } from '../ui/card'
 import { Reorder } from 'framer-motion'
 import { useEffect, useState } from 'react'
-import * as Dialog from '@radix-ui/react-dialog'
-import DialogTask from '../dialogTask/dialogTask'
 import { X } from 'lucide-react'
 import DeleteTask from '@/lib/deleteTask'
 import UpdateTask from '@/lib/updateTask'
+import DialogTask from '../dialogs/dialogTask/dialogTask'
 
 interface BoardCardProps {
   data: Task

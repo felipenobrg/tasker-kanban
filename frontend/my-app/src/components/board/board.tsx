@@ -3,7 +3,7 @@
 import * as React from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import BoardCard from './boardCard'
-import DialogBoard from '../dialogBoard/dialogBoard'
+import DialogBoard from '../dialogs/dialogBoard/dialogBoard'
 import PostTask from '@/lib/postTask'
 import GetTask from '@/lib/getTask'
 import { Plus } from 'lucide-react'
@@ -11,13 +11,16 @@ import { Task } from '@/types/task'
 import { useState, useEffect } from 'react'
 import { Reorder } from 'framer-motion'
 import { Button } from '../ui/button'
+import { useFilter } from '@/context/filterContext'
 
 const statusOptions = ['Backlog', 'Em andamento', 'Feito']
 
 export default function Board() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [dialogOpen, setDialogOpen] = useState(false)
-  const [filterValue, setFilterValue] = useState<string>('')
+  const [filteredTasks, setFilteredTasks] = useState<Task[]>([])
+  const { filterValue } = useFilter()
+  console.log('filterValue', filterValue)
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -30,6 +33,13 @@ export default function Board() {
     }
     fetchTasks()
   }, [])
+
+  useEffect(() => {
+    const updatedFilteredTasks = tasks.filter((task) =>
+      task.description.toLowerCase().includes(filterValue.toLowerCase()),
+    )
+    setFilteredTasks(updatedFilteredTasks)
+  }, [filterValue, tasks])
 
   const handleDialogOpen = () => {
     setDialogOpen(true)
@@ -46,10 +56,6 @@ export default function Board() {
       console.error('Error posting task:', error)
     }
   }
-
-  const filteredTasks = tasks.filter((task) =>
-    task.description.toLowerCase().includes(filterValue.toLowerCase()),
-  )
 
   return (
     <Dialog.Root>

@@ -2,21 +2,22 @@
 
 import * as React from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
-import { Button } from '../ui/button'
 import BoardCard from './boardCard'
 import DialogBoard from '../dialogBoard/dialogBoard'
+import PostTask from '@/lib/postTask'
+import GetTask from '@/lib/getTask'
+import { Plus } from 'lucide-react'
 import { Task } from '@/types/task'
 import { useState, useEffect } from 'react'
 import { Reorder } from 'framer-motion'
-import PostTask from '@/lib/postTask'
-import { Plus } from 'lucide-react'
-import GetTask from '@/lib/getTask'
+import { Button } from '../ui/button'
 
 const statusOptions = ['Backlog', 'Em andamento', 'Feito']
 
 export default function Board() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [filterValue, setFilterValue] = useState<string>('')
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -46,6 +47,10 @@ export default function Board() {
     }
   }
 
+  const filteredTasks = tasks.filter((task) =>
+    task.description.toLowerCase().includes(filterValue.toLowerCase()),
+  )
+
   return (
     <Dialog.Root>
       <main className="flex flex-1 gap-4 p-4 lg:gap-6 lg:p-6 relative">
@@ -64,11 +69,13 @@ export default function Board() {
                 <h1 className="font-semibold mb-2 mt-2">{status}</h1>
                 <Reorder.Group
                   className="flex flex-col gap-5"
-                  values={tasks.filter((task) => task.status === status)}
+                  values={filteredTasks.filter(
+                    (task) => task.status === status,
+                  )}
                   onReorder={(newTasks: Task[]) => handleDrop(newTasks, status)}
                   axis="x"
                 >
-                  {tasks
+                  {filteredTasks
                     .filter((task) => task.status === status)
                     .map((task, index) => (
                       <BoardCard

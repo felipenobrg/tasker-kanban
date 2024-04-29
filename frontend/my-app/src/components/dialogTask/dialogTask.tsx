@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import UpdateTask from '@/lib/updateTask'
 
 interface DialogTaskProps {
@@ -47,6 +47,7 @@ export default function DialogTask(props: DialogTaskProps) {
       setDialogDescription('')
       setDialogStatus('')
       setDialogOpen(false)
+      window.location.reload()
     } catch (error) {
       console.error('Error updating task:', error)
     }

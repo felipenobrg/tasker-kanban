@@ -1,5 +1,4 @@
 'use client'
-
 import { Task } from '@/types/task'
 import { Card } from '../ui/card'
 import { Reorder } from 'framer-motion'
@@ -9,9 +8,22 @@ import DialogTask from '../dialogTask/dialogTask'
 import { X } from 'lucide-react'
 import DeleteTask from '@/lib/deleteTask'
 import UpdateTask from '@/lib/updateTask'
+
 interface BoardCardProps {
   data: Task
   statusOption: string[]
+}
+
+const truncateDescription = (
+  description: string,
+  maxLength: number,
+): string => {
+  if (description.length <= maxLength) {
+    return description
+  } else {
+    const lastSpaceIndex = description.lastIndexOf(' ', maxLength)
+    return description.substring(0, lastSpaceIndex) + '...'
+  }
 }
 
 export default function BoardCard(props: BoardCardProps) {
@@ -37,13 +49,15 @@ export default function BoardCard(props: BoardCardProps) {
   ) => {
     try {
       await UpdateTask({ id, description, status })
-      const updatedTasks = task.map((item) => {
-        if (item.ID === id) {
-          return { ...item, description, status }
-        }
-        return item
-      })
-      setTask(updatedTasks)
+      const updatedTask = {
+        ...task.find((item) => item.ID === id),
+        description,
+        status,
+      }
+      const updatedTasks = task.map((item) =>
+        item.ID === id ? updatedTask : item,
+      )
+      setTask(updatedTasks as Task[])
     } catch (error) {
       console.error('Error updating task:', error)
     }
@@ -51,7 +65,7 @@ export default function BoardCard(props: BoardCardProps) {
 
   useEffect(() => {
     setTask([data])
-  }, [data])
+  }, [data, setTask])
 
   return (
     <Dialog.Root>
@@ -64,12 +78,12 @@ export default function BoardCard(props: BoardCardProps) {
             axis="x"
           >
             {task.map((item) => (
-              <Reorder.Item value={item} key={item.description}>
+              <Reorder.Item value={item} key={item.ID}>
                 <Dialog.Trigger asChild>
                   <Card onClick={handleDialogOpen} className="flex flex-col">
                     <div className="flex items-end justify-between">
-                      <p className="text-gray-200 text-sm ml-1">
-                        {item.description}
+                      <p className="text-gray-200 text-sm ml-1 break-words">
+                        {truncateDescription(item.description, 15)}
                       </p>
                       <X
                         size={20}

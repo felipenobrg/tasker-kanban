@@ -2,13 +2,18 @@ package models
 
 import (
 	"errors"
-
-	"gorm.io/gorm"
+	"time"
 )
 
+type Model struct {
+	ID        uint `gorm:"primarykey"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
 type Task struct {
-	gorm.Model
-	BoardID     int    `json:"boardId"`
+	Model
+	BoardID     int    `json:"board_id" gorm:"foreignKey:board_id"`
 	Description string `json:"description"`
 	Status      string `json:"status" gorm:"default:'Backlog'"`
 }

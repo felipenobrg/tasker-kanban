@@ -12,7 +12,6 @@ import (
 	"gorm.io/gorm"
 
 	"tasker/models"
-
 )
 
 var (
@@ -47,7 +46,7 @@ func Connect() (*gorm.DB, error) {
 			counts++
 		} else {
 			log.Println("Conectado com postgres")
-			DB.AutoMigrate(&models.Board{})
+			DB.AutoMigrate(&models.Board{}, &models.Task{})
 			connection = DB
 			break
 		}

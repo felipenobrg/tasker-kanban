@@ -32,7 +32,14 @@ func (app *Config) Routes() http.Handler {
 	r.Use(middleware.Heartbeat("/ping"))
 
 	// Routes
-	r.Route("/api/v1/board", func(r chi.Router) {
+	r.Route("/api/v1/tasks", func(r chi.Router) {
+		r.Get("/", app.GetTasks)
+		r.Post("/add", app.CreateTask)
+		r.Delete("/delete/{id}", app.DeleteTask)
+		r.Put("/update/{id}", app.UpdateTask)
+	})
+
+	r.Route("/api/v1/boards", func(r chi.Router) {
 		r.Get("/", app.GetBoards)
 		r.Post("/add", app.CreateBoard)
 		r.Delete("/delete/{id}", app.DeleteBoard)

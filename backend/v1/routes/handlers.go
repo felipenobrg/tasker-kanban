@@ -8,7 +8,6 @@ import (
 	"github.com/go-chi/chi/v5"
 
 	"tasker/models"
-
 )
 
 type BoardPayload struct {
@@ -17,7 +16,7 @@ type BoardPayload struct {
 }
 
 type TaskPayload struct {
-	BoardID     int    `json:"boardId"`
+	BoardID     int    `json:"board_id"`
 	Description string `json:"description"`
 	Status      string `json:"status"`
 }
@@ -69,7 +68,7 @@ func (app *Config) CreateTask(w http.ResponseWriter, r *http.Request) {
 
 	responsePayload := jsonResponse{
 		Error:   false,
-		Message: "board created successfully",
+		Message: "task created successfully",
 		Data:    newTask,
 	}
 
@@ -91,7 +90,7 @@ func (app *Config) DeleteTask(w http.ResponseWriter, r *http.Request) {
 
 	responsePayload := jsonResponse{
 		Error:   false,
-		Message: "board deleted successfully",
+		Message: "task deleted successfully",
 	}
 	app.writeJSON(w, http.StatusOK, responsePayload)
 }
@@ -139,7 +138,7 @@ func (app *Config) GetBoards(w http.ResponseWriter, r *http.Request) {
 
 	for i := range boards {
 		var tasks []models.Task
-		app.Postgres.Where("boardId = ?", boards[i].ID).Find(&tasks)
+		app.Postgres.Where("board_id = ?", boards[i].ID).Find(&tasks)
 		boards[i].Tasks = tasks
 	}
 
@@ -189,7 +188,7 @@ func (app *Config) DeleteBoard(w http.ResponseWriter, r *http.Request) {
 	}
 
 	app.Postgres.Delete(&board)
-	app.Postgres.Where("boardId = ?", boardID).Delete(&models.Task{})
+	app.Postgres.Where("board_id = ?", boardID).Delete(&models.Task{})
 
 	responsePayload := jsonResponse{
 		Error:   false,

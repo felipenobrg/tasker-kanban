@@ -4,12 +4,11 @@ import (
 	"errors"
 
 	"gorm.io/gorm"
-
 )
 
 type Task struct {
 	gorm.Model
-	BoardID     int    `json:"board_id"`
+	BoardID     int    `json:"boardId"`
 	Description string `json:"description"`
 	Status      string `json:"status" gorm:"default:'Backlog'"`
 }

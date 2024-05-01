@@ -8,6 +8,7 @@ import (
 
 	"tasker/database"
 	"tasker/routes"
+	"tasker/routes/handlers"
 )
 
 const webPort = "8080"
@@ -22,6 +23,7 @@ func main() {
 
 	app := routes.Config{
 		Postgres: postgresConn,
+		Handlers: handlers.NewHandlers(postgresConn),
 	}
 	log.Printf("Server is running on port:%s\n\n", webPort)
 

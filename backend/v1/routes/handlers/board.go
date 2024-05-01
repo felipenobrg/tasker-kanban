@@ -7,6 +7,7 @@ import (
 	"github.com/go-chi/chi/v5"
 
 	"tasker/models"
+	"tasker/util"
 )
 
 type BoardPayload struct {
@@ -18,10 +19,15 @@ func (app *Handlers) GetBoards(w http.ResponseWriter, r *http.Request) {
 	var boards []models.Board
 	app.DB.Find(&boards)
 
+	var tasks []models.Task
+	app.DB.Find(&tasks)
+
 	for i := range boards {
-		var tasks []models.Task
-		app.DB.Where("board_id = ?", boards[i].ID).Find(&tasks)
-		boards[i].Tasks = tasks
+		for j := range tasks {
+			if tasks[j].BoardID == boards[i].ID {
+				boards[i].Tasks = append(boards[i].Tasks, tasks[j])
+			}
+		}
 	}
 
 	responsePayload := jsonResponse{
@@ -30,15 +36,15 @@ func (app *Handlers) GetBoards(w http.ResponseWriter, r *http.Request) {
 		Data:    boards,
 	}
 
-	app.writeJSON(w, http.StatusOK, responsePayload)
+	util.WriteJSON(w, http.StatusOK, responsePayload)
 }
 
 func (app *Handlers) CreateBoard(w http.ResponseWriter, r *http.Request) {
 	payload := BoardPayload{}
 
-	err := app.readJson(w, r, &payload)
+	err := util.ReadJson(w, r, &payload)
 	if err != nil {
-		app.errorJSON(w, err, http.StatusBadRequest)
+		util.ErrorJSON(w, err, http.StatusBadRequest)
 		return
 	}
 
@@ -55,7 +61,7 @@ func (app *Handlers) CreateBoard(w http.ResponseWriter, r *http.Request) {
 		Data:    newBoard,
 	}
 
-	app.writeJSON(w, http.StatusCreated, responsePayload)
+	util.WriteJSON(w, http.StatusCreated, responsePayload)
 }
 
 func (app *Handlers) DeleteBoard(w http.ResponseWriter, r *http.Request) {
@@ -65,7 +71,7 @@ func (app *Handlers) DeleteBoard(w http.ResponseWriter, r *http.Request) {
 	app.DB.First(&board, boardID)
 	if board.ID == 0 {
 		err := errors.New("board not found")
-		app.errorJSON(w, err, http.StatusNotFound)
+		util.ErrorJSON(w, err, http.StatusNotFound)
 		return
 	}
 
@@ -76,7 +82,7 @@ func (app *Handlers) DeleteBoard(w http.ResponseWriter, r *http.Request) {
 		Error:   false,
 		Message: "board deleted successfully",
 	}
-	app.writeJSON(w, http.StatusOK, responsePayload)
+	util.WriteJSON(w, http.StatusOK, responsePayload)
 }
 
 func (app *Handlers) UpdateBoard(w http.ResponseWriter, r *http.Request) {
@@ -86,14 +92,14 @@ func (app *Handlers) UpdateBoard(w http.ResponseWriter, r *http.Request) {
 	app.DB.First(&board, boardID)
 	if board.ID == 0 {
 		err := errors.New("board not found")
-		app.errorJSON(w, err, http.StatusNotFound)
+		util.ErrorJSON(w, err, http.StatusNotFound)
 		return
 	}
 
 	var boardPayload BoardPayload
-	err := app.readJson(w, r, &boardPayload)
+	err := util.ReadJson(w, r, &boardPayload)
 	if err != nil {
-		app.errorJSON(w, err, http.StatusBadRequest)
+		util.ErrorJSON(w, err, http.StatusBadRequest)
 		return
 	}
 
@@ -105,5 +111,5 @@ func (app *Handlers) UpdateBoard(w http.ResponseWriter, r *http.Request) {
 		Message: "board updated successfully",
 		Data:    board,
 	}
-	app.writeJSON(w, http.StatusOK, responsePayload)
+	util.WriteJSON(w, http.StatusOK, responsePayload)
 }

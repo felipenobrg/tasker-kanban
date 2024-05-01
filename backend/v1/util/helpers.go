@@ -1,4 +1,4 @@
-package handlers
+package util
 
 import (
 	"encoding/json"
@@ -8,14 +8,14 @@ import (
 
 )
 
-type jsonResponse struct {
+type JsonResponse struct {
 	Error   bool   `json:"error"`
 	Message string `json:"message"`
 	Data    any    `json:"data,omitempty"`
 }
 
 // Ler o corpo da requisição e decodificar o JSON, enviando o resultado para o objeto "data"
-func (app *Handlers) readJson(w http.ResponseWriter, r *http.Request, data any) error {
+func ReadJson(w http.ResponseWriter, r *http.Request, data any) error {
 
 	// Limitar o tamanho do corpo da requisição para 1MB
 	maxBytes := 1048576 // 1MB
@@ -37,7 +37,7 @@ func (app *Handlers) readJson(w http.ResponseWriter, r *http.Request, data any) 
 }
 
 // Escreve a resposta da requisição em formato JSON e define o status da resposta
-func (app *Handlers) writeJSON(w http.ResponseWriter, status int, data any, headers ...http.Header) error {
+func WriteJSON(w http.ResponseWriter, status int, data any, headers ...http.Header) error {
 	out, err := json.MarshalIndent(data, "", "\t")
 	if err != nil {
 		return err
@@ -62,7 +62,7 @@ func (app *Handlers) writeJSON(w http.ResponseWriter, status int, data any, head
 }
 
 // Escreve uma resposta de erro em formato JSON e define o status da resposta
-func (app *Handlers) errorJSON(w http.ResponseWriter, err error, status ...int) error {
+func ErrorJSON(w http.ResponseWriter, err error, status ...int) error {
 
 	// Define o status padrão da resposta para 400 (Bad Request)
 	statusCode := http.StatusBadRequest
@@ -70,9 +70,9 @@ func (app *Handlers) errorJSON(w http.ResponseWriter, err error, status ...int) 
 		statusCode = status[0]
 	}
 
-	payload := jsonResponse{
+	payload := JsonResponse{
 		Error:   true,
 		Message: err.Error(),
 	}
-	return app.writeJSON(w, statusCode, payload)
+	return WriteJSON(w, statusCode, payload)
 }

@@ -10,19 +10,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useDialog } from '@/context/dialogContext'
 import * as Dialog from '@radix-ui/react-dialog'
 import { useState } from 'react'
 
 interface DialogBoardProps {
   statusOption: { status: string; circleColor: string }[]
-  setDialogOpen: (isOpen: boolean) => void
   sendTask: (description: string, status: string) => void
 }
 
 export default function DialogBoard(props: DialogBoardProps) {
-  const { statusOption, setDialogOpen, sendTask } = props
+  const { statusOption, sendTask } = props
   const [dialogDescription, setDialogDescription] = useState('')
   const [dialogStatus, setDialogStatus] = useState('')
+  const { isOpen, onClose, onOpen } = useDialog()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -30,14 +31,18 @@ export default function DialogBoard(props: DialogBoardProps) {
       sendTask(dialogDescription, dialogStatus)
       setDialogDescription('')
       setDialogStatus('')
-      setDialogOpen(false)
     } catch (error) {
       console.error('Error posting task:', error)
     }
   }
 
   return (
-    <Dialog.Root>
+    <Dialog.Root
+      onOpenChange={onClose}
+      modal
+      open={isOpen}
+      defaultOpen={isOpen}
+    >
       <Dialog.Overlay className="fixed inset-0 backdrop-filter backdrop-blur-sm bg-opacity-30 bg-black">
         <Dialog.Content className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded shadow-md bg-gray-900 p-5 w-80 h-80 flex flex-col gap-2 justify-center items-center">
           <form className="flex flex-col gap-3" onSubmit={handleSubmit}>

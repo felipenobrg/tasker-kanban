@@ -1,29 +1,40 @@
+'use client'
+
 import React, {
   createContext,
   useContext,
   useState,
   ReactNode,
-  Dispatch,
-  SetStateAction,
+  useCallback,
 } from 'react'
 
 interface DialogContextType {
-  dialogOpen: boolean
-  setDialogOpen: Dispatch<SetStateAction<boolean>>
+  isOpen: boolean
+  onOpen: () => void
+  onClose: () => void
 }
 
 const DialogContext = createContext<DialogContextType>({
-  dialogOpen: false,
-  setDialogOpen: () => {},
+  isOpen: false,
+  onOpen: () => {},
+  onClose: () => {},
 })
 
 export const useDialog = () => useContext(DialogContext)
 
 export const DialogProvider = ({ children }: { children: ReactNode }) => {
-  const [dialogOpen, setDialogOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
+
+  const onOpen = useCallback(() => {
+    setIsOpen(true)
+  }, [])
+
+  const onClose = useCallback(() => {
+    setIsOpen(false)
+  }, [])
 
   return (
-    <DialogContext.Provider value={{ dialogOpen, setDialogOpen }}>
+    <DialogContext.Provider value={{ isOpen, onOpen, onClose }}>
       {children}
     </DialogContext.Provider>
   )

@@ -13,14 +13,16 @@ import {
 } from '../../ui/select'
 import { useState } from 'react'
 import UpdateTask from '@/lib/updateTask'
+import MenubarTask from './menubarTask'
 
 interface DialogTaskProps {
-  statusOption: string[]
+  statusOption: { status: string; circleColor: string }[]
   initialDescription: string
   initialStatus: string
   id: number
   setDialogOpen: (isOpen: boolean) => void
   onUpdateTask: (id: number, description: string, status: string) => void
+  handleDeleteTask: (id: number, description: string, status: string) => void
 }
 
 export default function DialogTask(props: DialogTaskProps) {
@@ -31,6 +33,7 @@ export default function DialogTask(props: DialogTaskProps) {
     id,
     setDialogOpen,
     onUpdateTask,
+    handleDeleteTask,
   } = props
   const [dialogDescription, setDialogDescription] = useState(initialDescription)
   const [dialogStatus, setDialogStatus] = useState(initialStatus)
@@ -57,6 +60,7 @@ export default function DialogTask(props: DialogTaskProps) {
     <Dialog.Overlay className="fixed inset-0 backdrop-filter backdrop-blur-sm bg-opacity-30 bg-black">
       <Dialog.Content className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded shadow-md bg-gray-900 p-5 w-80 h-80 flex flex-col gap-2 justify-center">
         <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
+          <MenubarTask handleDeleteTask={handleDeleteTask} />
           <Dialog.Title>Editar descrição da Tarefa</Dialog.Title>
           <Input
             type="text"
@@ -75,7 +79,7 @@ export default function DialogTask(props: DialogTaskProps) {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                {statusOption.map((status, index) => (
+                {statusOption.map(({ status }, index) => (
                   <SelectItem key={index} value={status}>
                     {status}
                   </SelectItem>

@@ -7,14 +7,19 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
 	"gorm.io/gorm"
+
+	"tasker/routes/handlers"
+
 )
 
 type Config struct {
 	Postgres *gorm.DB
+	Handlers *handlers.Handlers
 }
 
 func (app *Config) Routes() http.Handler {
 	r := chi.NewRouter()
+	hand := app.Handlers
 
 	// CORS
 	r.Use(cors.Handler(cors.Options{
@@ -33,17 +38,17 @@ func (app *Config) Routes() http.Handler {
 
 	// Routes
 	r.Route("/api/v1/tasks", func(r chi.Router) {
-		r.Get("/", app.GetTasks)
-		r.Post("/add", app.CreateTask)
-		r.Delete("/delete/{id}", app.DeleteTask)
-		r.Put("/update/{id}", app.UpdateTask)
+		r.Get("/", hand.GetTasks)
+		r.Post("/add", hand.CreateTask)
+		r.Delete("/delete/{id}", hand.DeleteTask)
+		r.Put("/update/{id}", hand.UpdateTask)
 	})
 
 	r.Route("/api/v1/boards", func(r chi.Router) {
-		r.Get("/", app.GetBoards)
-		r.Post("/add", app.CreateBoard)
-		r.Delete("/delete/{id}", app.DeleteBoard)
-		r.Put("/update/{id}", app.UpdateBoard)
+		r.Get("/", hand.GetBoards)
+		r.Post("/add", hand.CreateBoard)
+		r.Delete("/delete/{id}", hand.DeleteBoard)
+		r.Put("/update/{id}", hand.UpdateBoard)
 	})
 
 	return r

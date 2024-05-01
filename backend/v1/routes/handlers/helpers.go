@@ -1,10 +1,11 @@
-package routes
+package handlers
 
 import (
 	"encoding/json"
 	"errors"
 	"io"
 	"net/http"
+
 )
 
 type jsonResponse struct {
@@ -14,7 +15,7 @@ type jsonResponse struct {
 }
 
 // Ler o corpo da requisição e decodificar o JSON, enviando o resultado para o objeto "data"
-func (app *Config) readJson(w http.ResponseWriter, r *http.Request, data any) error {
+func (app *Handlers) readJson(w http.ResponseWriter, r *http.Request, data any) error {
 
 	// Limitar o tamanho do corpo da requisição para 1MB
 	maxBytes := 1048576 // 1MB
@@ -36,7 +37,7 @@ func (app *Config) readJson(w http.ResponseWriter, r *http.Request, data any) er
 }
 
 // Escreve a resposta da requisição em formato JSON e define o status da resposta
-func (app *Config) writeJSON(w http.ResponseWriter, status int, data any, headers ...http.Header) error {
+func (app *Handlers) writeJSON(w http.ResponseWriter, status int, data any, headers ...http.Header) error {
 	out, err := json.MarshalIndent(data, "", "\t")
 	if err != nil {
 		return err
@@ -61,7 +62,7 @@ func (app *Config) writeJSON(w http.ResponseWriter, status int, data any, header
 }
 
 // Escreve uma resposta de erro em formato JSON e define o status da resposta
-func (app *Config) errorJSON(w http.ResponseWriter, err error, status ...int) error {
+func (app *Handlers) errorJSON(w http.ResponseWriter, err error, status ...int) error {
 
 	// Define o status padrão da resposta para 400 (Bad Request)
 	statusCode := http.StatusBadRequest

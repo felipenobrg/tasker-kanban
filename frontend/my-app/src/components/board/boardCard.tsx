@@ -5,14 +5,13 @@ import { Task } from '@/types/task'
 import { Card } from '../ui/card'
 import { Reorder } from 'framer-motion'
 import { useEffect, useState } from 'react'
-import { X } from 'lucide-react'
 import DeleteTask from '@/lib/deleteTask'
 import UpdateTask from '@/lib/updateTask'
 import DialogTask from '../dialogs/dialogTask/dialogTask'
 
 interface BoardCardProps {
   data: Task
-  statusOption: string[]
+  statusOption: { status: string; circleColor: string }[]
 }
 
 const truncateDescription = (
@@ -81,16 +80,14 @@ export default function BoardCard(props: BoardCardProps) {
             {task.map((item) => (
               <Reorder.Item value={item} key={item.ID}>
                 <Dialog.Trigger asChild>
-                  <Card onClick={handleDialogOpen} className="flex flex-col">
+                  <Card
+                    onClick={handleDialogOpen}
+                    className="flex flex-col bg-gray-800"
+                  >
                     <div className="flex items-end justify-between">
                       <p className="text-gray-200 text-sm ml-1 break-words">
                         {truncateDescription(item.description, 15)}
                       </p>
-                      <X
-                        size={20}
-                        onClick={(e) => handleDeleteTask(item.ID, e)}
-                        className="items-end"
-                      />
                     </div>
                   </Card>
                 </Dialog.Trigger>
@@ -107,6 +104,7 @@ export default function BoardCard(props: BoardCardProps) {
           id={data.ID}
           setDialogOpen={setDialogOpen}
           onUpdateTask={handleUpdateTask}
+          handleDeleteTask={handleDeleteTask}
         />
       )}
     </Dialog.Root>

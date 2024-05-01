@@ -21,7 +21,6 @@ export const useFilter = () => useContext(FilterContext)
 
 export const FilterProvider = ({ children }: { children: ReactNode }) => {
   const [filterValue, setFilterValue] = useState<string>('')
-  console.log('filterVxxxxalue', filterValue)
 
   return (
     <FilterContext.Provider value={{ filterValue, setFilterValue }}>

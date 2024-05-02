@@ -5,7 +5,7 @@ import Header from '@/components/header/header'
 import Board from '@/components/board/board'
 import { useState } from 'react'
 import { FilterProvider } from '@/context/filterContext'
-import { DialogProvider } from '@/context/DialogContext'
+import { DialogProvider } from '@/context/dialogContext'
 
 export default function Home() {
   const [darkTheme, setDarkTheme] = useState(true)

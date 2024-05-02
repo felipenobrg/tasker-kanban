@@ -23,7 +23,7 @@ export default function DialogBoard(props: DialogBoardProps) {
   const { statusOption, sendTask } = props
   const [dialogDescription, setDialogDescription] = useState('')
   const [dialogStatus, setDialogStatus] = useState('')
-  const { isOpen, onClose, onOpen } = useDialog()
+  const { isOpen, onClose } = useDialog()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -49,7 +49,7 @@ export default function DialogBoard(props: DialogBoardProps) {
             <Dialog.Title>Descrição da Tarefa</Dialog.Title>
             <Input
               type="text"
-              className="w-11/12"
+              className="w-full"
               placeholder="Informe..."
               value={dialogDescription}
               onChange={(e) => setDialogDescription(e.target.value)}

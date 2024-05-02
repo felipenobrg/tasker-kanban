@@ -61,8 +61,8 @@ export default function Header(props: HeaderProps) {
           </nav>
         </SheetContent>
       </Sheet>
-      <div className="w-full flex-1">
-        <form>
+      <div className="w-full flex flex-1 items-center">
+        <form className="w-full">
           <div className="relative">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
@@ -73,14 +73,15 @@ export default function Header(props: HeaderProps) {
             />
           </div>
         </form>
+        <div>
+          <Button
+            className="w-48 p-3 bg-indigo-500 text-white hover:bg-indigo600 flex gap-2 items-center"
+            onClick={handleDialogOpen}
+          >
+            Adicionar novo item <Plus size={20} />
+          </Button>
+        </div>
       </div>
-      <Button
-        className="w-48 p-3 mb-5 bg-gray-800 text-white hover:bg-slate-900 flex gap-2 items-center"
-        onClick={handleDialogOpen}
-      >
-        Adicionar novo item <Plus size={20} />
-      </Button>
-
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="icon">

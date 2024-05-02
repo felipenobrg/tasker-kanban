@@ -8,6 +8,7 @@ import (
 
 	"tasker/models"
 	"tasker/util"
+
 )
 
 type BoardPayload struct {
@@ -16,8 +17,10 @@ type BoardPayload struct {
 }
 
 func (app *Handlers) GetBoards(w http.ResponseWriter, r *http.Request) {
+	userID := r.Context().Value("user").(models.User).ID
+
 	var boards []models.Board
-	app.DB.Find(&boards)
+	app.DB.Where("user_id = ?", userID).Find(&boards)
 
 	var tasks []models.Task
 	app.DB.Find(&tasks)
@@ -41,6 +44,8 @@ func (app *Handlers) GetBoards(w http.ResponseWriter, r *http.Request) {
 
 func (app *Handlers) CreateBoard(w http.ResponseWriter, r *http.Request) {
 	payload := BoardPayload{}
+	userID := r.Context().Value("user").(models.User).ID
+	userEmail := r.Context().Value("user").(models.User).Email
 
 	err := util.ReadJson(w, r, &payload)
 	if err != nil {
@@ -49,8 +54,10 @@ func (app *Handlers) CreateBoard(w http.ResponseWriter, r *http.Request) {
 	}
 
 	newBoard := models.Board{
-		Name:  payload.Name,
-		Tasks: []models.Task{},
+		UserID: userID,
+		User:   userEmail,
+		Name:   payload.Name,
+		Tasks:  []models.Task{},
 	}
 
 	app.DB.Create(&newBoard)
@@ -75,6 +82,13 @@ func (app *Handlers) DeleteBoard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	userID := r.Context().Value("user").(models.User).ID
+	if board.UserID != userID {
+		err := errors.New("board not found")
+		util.ErrorJSON(w, err, http.StatusNotFound)
+		return
+	}
+
 	app.DB.Delete(&board)
 	app.DB.Where("board_id = ?", boardID).Delete(&models.Task{})
 
@@ -91,6 +105,13 @@ func (app *Handlers) UpdateBoard(w http.ResponseWriter, r *http.Request) {
 
 	app.DB.First(&board, boardID)
 	if board.ID == 0 {
+		err := errors.New("board not found")
+		util.ErrorJSON(w, err, http.StatusNotFound)
+		return
+	}
+
+	userID := r.Context().Value("user").(models.User).ID
+	if board.UserID != userID {
 		err := errors.New("board not found")
 		util.ErrorJSON(w, err, http.StatusNotFound)
 		return

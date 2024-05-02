@@ -3,8 +3,8 @@
 import * as React from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import BoardCard from './boardCard'
-import PostTask from '@/lib/postTask'
-import GetTask from '@/lib/getTask'
+import PostTask from '@/lib/task/postTask'
+import GetTask from '@/lib/task/getTask'
 import DialogBoard from '../dialogs/dialogBoard/dialogBoard'
 import { Circle } from 'lucide-react'
 import { Task } from '@/types/task'
@@ -46,9 +46,13 @@ export default function Board() {
 
   const handleDrop = (newTasks: Task[], status: string) => {}
 
-  const sendTask = async (description: string, status: string) => {
+  const sendTask = async (
+    description: string,
+    status: string,
+    boardId: number,
+  ) => {
     try {
-      await PostTask({ description, status })
+      await PostTask({ description, status, board_id: boardId })
       const updatedTasks = await GetTask()
       setTasks(updatedTasks)
     } catch (error) {

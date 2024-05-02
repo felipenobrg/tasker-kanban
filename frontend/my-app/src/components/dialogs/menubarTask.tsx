@@ -16,7 +16,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 
 interface MenubarTaskProps {
@@ -25,6 +24,7 @@ interface MenubarTaskProps {
 
 export default function MenubarTask(props: MenubarTaskProps) {
   const { handleDeleteTask } = props
+
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const handleDeleteConfirmation = () => {
@@ -53,7 +53,7 @@ export default function MenubarTask(props: MenubarTaskProps) {
           </button>
         </DropdownMenuItem>
       </DropdownMenuContent>
-      <AlertDialog open={isDialogOpen} onDismiss={handleCancelDelete}>
+      <AlertDialog open={isDialogOpen} onClose={() => handleCancelDelete()}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Tem certeza?</AlertDialogTitle>

@@ -73,12 +73,12 @@ export default function Header(props: HeaderProps) {
             />
           </div>
         </form>
-        <div>
+        <div className="flex items-center">
           <Button
             className="w-48 p-3 bg-indigo-500 text-white hover:bg-indigo600 flex gap-2 items-center"
             onClick={handleDialogOpen}
           >
-            Adicionar novo item <Plus size={20} />
+            <Plus size={18} /> Adicionar novo item
           </Button>
         </div>
       </div>

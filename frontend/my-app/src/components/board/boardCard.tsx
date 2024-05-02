@@ -5,8 +5,8 @@ import { Task } from '@/types/task'
 import { Card } from '../ui/card'
 import { Reorder } from 'framer-motion'
 import { useEffect, useState } from 'react'
-import DeleteTask from '@/lib/deleteTask'
-import UpdateTask from '@/lib/updateTask'
+import DeleteTask from '@/lib/task/deleteTask'
+import UpdateTask from '@/lib/task/updateTask'
 import DialogTask from '../dialogs/dialogTask/dialogTask'
 
 interface BoardCardProps {

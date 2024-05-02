@@ -2,17 +2,17 @@
 
 import axios from 'axios'
 
-interface DeleteTaskProps {
-    id: number;
+interface PostBoardProps {
+    boardName: string;
 }
 
-export default async function DeleteTask(props: DeleteTaskProps) {
-    const { id } = props;
+export default async function PostBoard(props: PostBoardProps) {
+    const { boardName } = props;
     try {
         if (!process.env.BASE_URL) {
             throw new Error('BASE_URL is not defined in the environment variables');
         }
-        const response = await axios.delete(`${process.env.BASE_URL}/delete/${id}`);
+        const response = await axios.post(`${process.env.BASE_URL}/boards/add`, { boardName });
         return response.data;
     } catch(error) {
         console.error('Error posting task:', error);

@@ -14,6 +14,7 @@ import { useDialog } from '@/context/dialogContext'
 import * as Dialog from '@radix-ui/react-dialog'
 import { useState } from 'react'
 import MenubarTask from '../menubarTask'
+import { useBoardId } from '@/context/boardIdContext'
 
 interface DialogBoardProps {
   statusOption: { status: string; circleColor: string }[]
@@ -25,13 +26,19 @@ export default function DialogBoard(props: DialogBoardProps) {
   const [dialogDescription, setDialogDescription] = useState('')
   const [dialogStatus, setDialogStatus] = useState('')
   const { isOpen, onClose } = useDialog()
+  const { boardId } = useBoardId()
+  console.log('BOARDID', boardId)
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     try {
-      sendTask(dialogDescription, dialogStatus)
-      setDialogDescription('')
-      setDialogStatus('')
+      if (boardId !== null) {
+        sendTask(boardId, dialogDescription, dialogStatus)
+        setDialogDescription('')
+        setDialogStatus('')
+      } else {
+        console.error('boardId is null')
+      }
     } catch (error) {
       console.error('Error posting task:', error)
     }

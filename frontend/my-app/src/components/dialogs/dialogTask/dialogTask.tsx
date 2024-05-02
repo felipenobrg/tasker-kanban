@@ -12,7 +12,7 @@ import {
   SelectValue,
 } from '../../ui/select'
 import { useState } from 'react'
-import UpdateTask from '@/lib/updateTask'
+import UpdateTask from '@/lib/task/updateTask'
 import MenubarTask from '../menubarTask'
 
 interface DialogTaskProps {

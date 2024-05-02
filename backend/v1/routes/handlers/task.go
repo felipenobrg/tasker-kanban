@@ -6,9 +6,11 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"gorm.io/gorm"
 
 	"tasker/models"
 	"tasker/util"
+
 )
 
 type TaskPayload struct {
@@ -17,10 +19,16 @@ type TaskPayload struct {
 	Status      string `json:"status"`
 }
 
-func (app *Handlers) GetTasks(w http.ResponseWriter, r *http.Request) {
+func getTasksForCurrentUser(r *http.Request, DB *gorm.DB) []models.Task {
 	var tasks []models.Task
+	userID := r.Context().Value("user").(models.User).ID
 
-	app.DB.Find(&tasks)
+	DB.Raw("SELECT tasks.id, tasks.created_at, tasks.updated_at, tasks.board_id, tasks.description, tasks.status FROM tasks JOIN boards ON tasks.board_id = boards.id WHERE boards.user_id = ?", userID).Scan(&tasks)
+	return tasks
+}
+
+func (app *Handlers) GetTasks(w http.ResponseWriter, r *http.Request) {
+	tasks := getTasksForCurrentUser(r, app.DB)
 
 	responsePayload := jsonResponse{
 		Error:   false,
@@ -54,7 +62,8 @@ func (app *Handlers) CreateTask(w http.ResponseWriter, r *http.Request) {
 
 	var board models.Board
 	app.DB.First(&board, fmt.Sprint(newTask.BoardID))
-	if board.ID == 0 {
+	userID := r.Context().Value("user").(models.User).ID
+	if board.ID == 0 || board.UserID != userID {
 		err := errors.New("the given board does not exist")
 		util.ErrorJSON(w, err, http.StatusBadRequest)
 		return
@@ -82,6 +91,15 @@ func (app *Handlers) DeleteTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var board models.Board
+	app.DB.First(&board, fmt.Sprint(task.BoardID))
+	userID := r.Context().Value("user").(models.User).ID
+	if board.ID == 0 || board.UserID != userID {
+		err := errors.New("task not found")
+		util.ErrorJSON(w, err, http.StatusBadRequest)
+		return
+	}
+
 	app.DB.Delete(&task)
 
 	responsePayload := jsonResponse{
@@ -99,6 +117,15 @@ func (app *Handlers) UpdateTask(w http.ResponseWriter, r *http.Request) {
 	if task.ID == 0 {
 		err := errors.New("task not found")
 		util.ErrorJSON(w, err, http.StatusNotFound)
+		return
+	}
+
+	var board models.Board
+	app.DB.First(&board, fmt.Sprint(task.BoardID))
+	userID := r.Context().Value("user").(models.User).ID
+	if board.ID == 0 || board.UserID != userID {
+		err := errors.New("task not found")
+		util.ErrorJSON(w, err, http.StatusBadRequest)
 		return
 	}
 

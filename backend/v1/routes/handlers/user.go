@@ -71,7 +71,7 @@ func (app *Handlers) Singin(w http.ResponseWriter, r *http.Request) {
 		Value:    token,
 		Path:     "/",
 		Domain:   "",
-		Expires:  time.Now().Add(30 * time.Minute),
+		Expires:  time.Now().Add(60 * time.Minute),
 		HttpOnly: true,
 		Secure:   false,
 	}
@@ -120,7 +120,7 @@ func (app *Handlers) Login(w http.ResponseWriter, r *http.Request) {
 		Value:    token,
 		Path:     "/",
 		Domain:   "",
-		Expires:  time.Now().Add(30 * time.Minute),
+		Expires:  time.Now().Add(60 * time.Minute),
 		HttpOnly: true,
 		Secure:   false,
 	}

@@ -4,7 +4,6 @@ import { Button } from '../../ui/button'
 import { Input } from '../../ui/input'
 import PostBoard from '@/lib/boards/postBoard'
 import { FormEvent, useState } from 'react'
-import { useBoardId } from '@/context/boardIdContext'
 
 interface DialogNewBoardProps {
   isOpen: boolean
@@ -16,7 +15,6 @@ export default function DialogNewBoard({
   onClose,
 }: DialogNewBoardProps) {
   const [boardName, setBoardName] = useState('')
-  const { setBoardId } = useBoardId()
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -24,7 +22,6 @@ export default function DialogNewBoard({
       const board = await PostBoard({
         boardName,
       })
-      setBoardId(board.ID)
       onClose()
     } catch (error) {
       console.error('Error updating task:', error)

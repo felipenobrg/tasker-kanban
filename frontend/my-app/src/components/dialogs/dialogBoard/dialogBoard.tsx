@@ -14,7 +14,7 @@ import { useDialog } from '@/context/dialogContext'
 import * as Dialog from '@radix-ui/react-dialog'
 import { useState } from 'react'
 import MenubarTask from '../menubarTask'
-import { useBoardId } from '@/context/boardIdContext'
+import { useBoard } from '@/context/boardContext'
 
 interface DialogBoardProps {
   statusOption: { status: string; circleColor: string }[]
@@ -26,8 +26,7 @@ export default function DialogBoard(props: DialogBoardProps) {
   const [dialogDescription, setDialogDescription] = useState('')
   const [dialogStatus, setDialogStatus] = useState('')
   const { isOpen, onClose } = useDialog()
-  const { boardId } = useBoardId()
-  console.log('BOARDID', boardId)
+  const { boardId } = useBoard()
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()

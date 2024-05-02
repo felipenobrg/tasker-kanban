@@ -47,13 +47,11 @@ export default function MenubarTask(props: MenubarTaskProps) {
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem>
-          <button onClick={handleDeleteConfirmation}>
-            <p className="text-red-500">Deletar tarefa</p>
-          </button>
+        <DropdownMenuItem onClick={handleDeleteConfirmation}>
+          <p className="text-red-500">Deletar tarefa</p>
         </DropdownMenuItem>
       </DropdownMenuContent>
-      <AlertDialog open={isDialogOpen} onClose={() => handleCancelDelete()}>
+      <AlertDialog open={isDialogOpen} onOpenChange={handleCancelDelete}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Tem certeza?</AlertDialogTitle>

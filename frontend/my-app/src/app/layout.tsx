@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/providers/theme-provider'
 import { DialogProvider } from '@/context/dialogContext'
+import { BoardProvider } from '@/context/boardContext'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,16 +22,18 @@ export default function RootLayout({
       <html lang="en" suppressHydrationWarning>
         <head />
         <body className={inter.className}>
-          <DialogProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              {children}
-            </ThemeProvider>
-          </DialogProvider>
+          <BoardProvider>
+            <DialogProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                {children}
+              </ThemeProvider>
+            </DialogProvider>
+          </BoardProvider>
         </body>
       </html>
     </>

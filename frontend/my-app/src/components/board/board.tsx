@@ -1,7 +1,6 @@
 'use client'
 
 import * as React from 'react'
-import * as Dialog from '@radix-ui/react-dialog'
 import BoardCard from './boardCard'
 import PostTask from '@/lib/task/postTask'
 import GetTask from '@/lib/task/getTask'
@@ -12,6 +11,7 @@ import { useState, useEffect } from 'react'
 import { Reorder } from 'framer-motion'
 import { useFilter } from '@/context/filterContext'
 import { useDialog } from '@/context/dialogContext'
+import { useBoard } from '@/context/boardContext'
 
 const statusOptions = [
   { status: 'Backlog', circleColor: 'gray' },
@@ -24,6 +24,7 @@ export default function Board() {
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([])
   const { filterValue } = useFilter()
   const { isOpen } = useDialog()
+  const { boardName } = useBoard()
 
   useEffect(() => {
     const fetchTasks = async () => {
@@ -63,6 +64,7 @@ export default function Board() {
   return (
     <main className="flex flex-1 gap-4 p-4 lg:gap-6 lg:p-6 relative">
       <div className="flex flex-col items-center gap-4">
+        <h1>{boardName}</h1>
         <div className="flex">
           {statusOptions.map(({ status, circleColor }) => (
             <div key={status} className="flex flex-col ml-20 items-center">

@@ -1,13 +1,6 @@
+'use client'
 import * as React from 'react'
-import {
-  Menu,
-  Link,
-  HomeIcon,
-  Search,
-  Sun,
-  MoonIcon,
-  SunIcon,
-} from 'lucide-react'
+import { Menu, Link, HomeIcon, Search, EllipsisVertical } from 'lucide-react'
 import { Button } from '../ui/button'
 import { SheetTrigger, SheetContent, Sheet } from '../ui/sheet'
 import { Input } from '../ui/input'
@@ -19,27 +12,51 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu'
 import { useFilter } from '@/context/filterContext'
-import { ChangeEvent } from 'react'
-import * as Dialog from '@radix-ui/react-dialog'
+import { ChangeEvent, useState } from 'react'
 import { Plus } from 'lucide-react'
-import { useDialog } from '@/context/dialogContext'
+import AlertDialog from './alertDialog'
+import DeleteBoard from '@/lib/boards/deleteBoard'
+import { useBoard } from '@/context/boardContext'
+import ChangeThemeButton from './changeThemeButton'
 
 interface HeaderProps {
   toggleTheme: () => void
 }
 
 export default function Header(props: HeaderProps) {
-  const { setTheme } = useTheme()
   const { setFilterValue } = useFilter()
-  const { onOpen: openDialog } = useDialog()
+  const { boardId } = useBoard()
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFilterValue(e.target.value)
   }
 
   const handleDialogOpen = () => {
-    openDialog()
+    setIsDialogOpen(true)
   }
+
+  const handleCancelDelete = () => {
+    setIsDialogOpen(false)
+  }
+
+  const handleEllipsisClick = () => {
+    setIsDialogOpen(true)
+  }
+
+  const handleDeleteConfirmation = () => {
+    setIsDialogOpen(true)
+  }
+
+  const handleDeleteBoard = async () => {
+    if (boardId !== null) {
+      await DeleteBoard({ id: boardId })
+      setIsDialogOpen(false)
+    } else {
+      console.error('Cannot delete board: boardId is null')
+    }
+  }
+
   return (
     <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
       <Sheet>
@@ -73,7 +90,7 @@ export default function Header(props: HeaderProps) {
             />
           </div>
         </form>
-        <div className="flex items-center">
+        <div>
           <Button
             className="w-48 p-3 bg-indigo-500 text-white hover:bg-indigo600 flex gap-2 items-center"
             onClick={handleDialogOpen}
@@ -81,27 +98,27 @@ export default function Header(props: HeaderProps) {
             <Plus size={18} /> Adicionar novo item
           </Button>
         </div>
+        <div className="flex items-center"></div>
+        <DropdownMenu>
+          <DropdownMenuTrigger className="justify-end">
+            <Button variant="ghost" onClick={handleEllipsisClick}>
+              <EllipsisVertical size={18} className="cursor-pointer" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem onClick={handleDeleteConfirmation}>
+              <p className="text-red-500">Deletar tarefa</p>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <AlertDialog
+          isDialogOpen={isDialogOpen}
+          setIsDialogOpen={setIsDialogOpen}
+          handleCancelDelete={handleCancelDelete}
+          handleDeleteBoard={handleDeleteBoard}
+        />
       </div>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="icon">
-            <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-            <span className="sr-only">Mudar tema</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => setTheme('light')}>
-            Claro
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setTheme('dark')}>
-            Escuro
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setTheme('system')}>
-            Padrão do Sistema
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <ChangeThemeButton />
     </header>
   )
 }

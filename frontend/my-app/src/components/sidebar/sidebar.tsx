@@ -1,3 +1,5 @@
+'use client'
+
 import * as React from 'react'
 import { LayoutPanelLeft, Plus, SquareCheckBig } from 'lucide-react'
 import Link from 'next/link'
@@ -5,12 +7,15 @@ import { Button } from '../ui/button'
 import DialogNewBoard from '../dialogs/dialogNewBoard/dialogNewBoard'
 import { useEffect, useState } from 'react'
 import getBoard from '@/lib/boards/getBoard'
-import { Board, Data } from '@/types/board'
+import { Data } from '@/types/board'
+import { useBoard } from '@/context/boardContext'
 
 export default function Sidebar() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [boardName, setBoardName] = useState<string[]>([])
+  const [boardNamesSide, setBoardNamesSide] = useState<string[]>([])
   const [boardSize, setBoardSize] = useState<number[]>([])
+  const [activeLink, setActiveLink] = useState<string>('')
+  const { setBoardId, setBoardName, boardName, boardId } = useBoard()
 
   const openDialog = () => {
     setIsDialogOpen(true)
@@ -25,16 +30,26 @@ export default function Sidebar() {
       try {
         const boardDataResponse = await getBoard()
         const boardData = boardDataResponse.data
-        const names = boardData.flatMap((board: Data) => board.name)
+        const names = boardData.map((board: Data) => board.name)
+        const boardId = boardData.map((board: Data) => board.ID)
         setBoardName(names)
-        const sizes = boardData.length
-        setBoardSize(sizes)
+        setBoardNamesSide(names)
+        setBoardId(boardId)
+        setBoardSize(boardData.length)
       } catch (error) {
         console.error('Error fetching board:', error)
       }
     }
     fetchBoard()
   }, [])
+
+  console.log('BOARDNAME', boardName)
+  console.log('boardId', boardId)
+
+  const handleLinkClick = async (item: string) => {
+    setActiveLink(item)
+    await getBoard()
+  }
 
   return (
     <div className="hidden border-r bg-muted/40 md:block">
@@ -51,13 +66,16 @@ export default function Sidebar() {
               Todos os boards ({boardSize.length === 0 ? '0' : boardSize})
             </p>
           </div>
-          {boardName.map((item, index) => (
+          {boardNamesSide.map((item, index) => (
             <nav
               key={index}
-              className="grid items-start px-2 text-sm font-medium lg:px-4 bg-indigo-500  relative rounded-l-lg rounded-r-full w-11/12"
+              className={`grid items-start px-2 text-sm font-medium lg:px-4 relative rounded-l-lg rounded-r-full w-11/12 ${
+                activeLink === item ? 'bg-indigo-500' : ''
+              }`}
             >
               <Link
                 href="/"
+                onClick={() => handleLinkClick(item)}
                 className="flex items-center gap-2 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
               >
                 <LayoutPanelLeft size={20} className="text-white" />

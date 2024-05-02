@@ -43,6 +43,7 @@ func (app *Config) Routes() http.Handler {
 
 	r.Route("/api/v1/boards", func(r chi.Router) {
 		r.Get("/", hand.GetBoards)
+		r.Get("/{id}", hand.GetBoardByID)
 		r.Post("/add", hand.CreateBoard)
 		r.Delete("/delete/{id}", hand.DeleteBoard)
 		r.Put("/update/{id}", hand.UpdateBoard)

@@ -13,7 +13,7 @@ import {
 } from '../../ui/select'
 import { useState } from 'react'
 import UpdateTask from '@/lib/updateTask'
-import MenubarTask from './menubarTask'
+import MenubarTask from '../menubarTask'
 
 interface DialogTaskProps {
   statusOption: { status: string; circleColor: string }[]
@@ -57,11 +57,17 @@ export default function DialogTask(props: DialogTaskProps) {
   }
 
   return (
-    <Dialog.Overlay className="fixed inset-0 backdrop-filter backdrop-blur-sm bg-opacity-30 bg-black">
+    <Dialog.Root modal>
+      <Dialog.Overlay className="fixed inset-0">
+        <div className="absolute inset-0 bg-black opacity-70"></div>
+      </Dialog.Overlay>{' '}
       <Dialog.Content className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded shadow-md bg-gray-900 p-5 w-80 h-80 flex flex-col gap-2 justify-center">
         <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
-          <MenubarTask handleDeleteTask={handleDeleteTask} />
-          <Dialog.Title>Editar descrição da Tarefa</Dialog.Title>
+          <div>
+            <MenubarTask handleDeleteTask={handleDeleteTask} />
+            <h1 className="text-base font-bold">Edição da Tarefa</h1>
+          </div>
+          <p className="text-sm mt-2">Editar descrição da Tarefa</p>
           <Input
             type="text"
             className="w-full"
@@ -69,7 +75,7 @@ export default function DialogTask(props: DialogTaskProps) {
             value={dialogDescription}
             onChange={(e) => setDialogDescription(e.target.value)}
           />
-          <Dialog.Title>Editar o status da Tarefa</Dialog.Title>
+          <p>Editar o status da Tarefa</p>
           <Select
             value={dialogStatus}
             onValueChange={(value) => setDialogStatus(value)}
@@ -92,6 +98,6 @@ export default function DialogTask(props: DialogTaskProps) {
           </Button>
         </form>
       </Dialog.Content>
-    </Dialog.Overlay>
+    </Dialog.Root>
   )
 }

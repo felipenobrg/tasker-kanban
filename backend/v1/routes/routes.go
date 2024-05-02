@@ -53,6 +53,7 @@ func (app *Config) Routes() http.Handler {
 
 			r.Get("/", hand.GetBoards)
 			r.Post("/", hand.CreateBoard)
+			r.Get("/{id}", hand.GetBoardByID)
 			r.Delete("/{id}", hand.DeleteBoard)
 			r.Put("/{id}", hand.UpdateBoard)
 		})

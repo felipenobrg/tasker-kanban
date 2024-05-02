@@ -3,6 +3,7 @@ package handlers
 import (
 	"errors"
 	"net/http"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 
@@ -11,13 +12,25 @@ import (
 
 )
 
+type data struct {
+	User   UserPayload    `json:"user"`
+	Boards []models.Board `json:"boards"`
+}
+
+type UserPayload struct {
+	CreateAt time.Time `json:"createAt"`
+	Name     string    `json:"name"`
+	Email    string    `json:"email"`
+}
+
 type BoardPayload struct {
 	Name  string        `json:"name"`
 	Tasks []TaskPayload `json:"tasks"`
 }
 
 func (app *Handlers) GetBoards(w http.ResponseWriter, r *http.Request) {
-	userID := r.Context().Value("user").(models.User).ID
+	user := r.Context().Value("user").(models.User)
+	userID := user.ID
 
 	var boards []models.Board
 	app.DB.Where("user_id = ?", userID).Find(&boards)
@@ -33,10 +46,16 @@ func (app *Handlers) GetBoards(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	userPayload := UserPayload{
+		CreateAt: user.CreatedAt,
+		Name:     user.Name,
+		Email:    user.Email,
+	}
+
 	responsePayload := jsonResponse{
 		Error:   false,
 		Message: "boards fetched successfully",
-		Data:    boards,
+		Data:    data{User: userPayload, Boards: boards},
 	}
 
 	util.WriteJSON(w, http.StatusOK, responsePayload)

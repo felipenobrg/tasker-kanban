@@ -13,8 +13,8 @@ type Model struct {
 
 type Task struct {
 	Model
-	BoardID     uint   `json:"board_id" gorm:"foreignKey:board_id"`
-	Description string `json:"description"`
+	BoardID     uint   `json:"board_id" gorm:"foreignKey:board_id;not null"`
+	Description string `json:"description" gorm:"not null"`
 	Status      string `json:"status" gorm:"default:'Backlog'"`
 }
 

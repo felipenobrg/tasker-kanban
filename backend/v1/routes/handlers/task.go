@@ -31,6 +31,34 @@ func (app *Handlers) GetTasks(w http.ResponseWriter, r *http.Request) {
 	util.WriteJSON(w, http.StatusOK, responsePayload)
 }
 
+func (app *Handlers) GetTasksByID(w http.ResponseWriter, r *http.Request) {
+	var task models.Task
+	taskID := chi.URLParam(r, "id")
+
+	app.DB.First(&task, taskID)
+	if task.ID == 0 {
+		err := errors.New("task not found")
+		util.ErrorJSON(w, err, http.StatusNotFound)
+		return
+	}
+
+	// var board models.Board
+	// app.DB.First(&board, fmt.Sprint(task.BoardID))
+	// userID := r.Context().Value("user").(models.User).ID
+	// if board.ID == 0 || board.UserID != userID {
+	// 	err := errors.New("task not found")
+	// 	util.ErrorJSON(w, err, http.StatusBadRequest)
+	// 	return
+	// }
+
+	responsePayload := jsonResponse{
+		Error:   false,
+		Message: "task fetched successfully",
+		Data:    task,
+	}
+	util.WriteJSON(w, http.StatusOK, responsePayload)
+}
+
 func (app *Handlers) CreateTask(w http.ResponseWriter, r *http.Request) {
 	payload := TaskPayload{}
 

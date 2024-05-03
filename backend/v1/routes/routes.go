@@ -36,6 +36,7 @@ func (app *Config) Routes() http.Handler {
 	// Routes
 	r.Route("/api/v1/tasks", func(r chi.Router) {
 		r.Get("/", hand.GetTasks)
+		r.Get("/{id}", hand.GetTasksByID)
 		r.Post("/add", hand.CreateTask)
 		r.Delete("/delete/{id}", hand.DeleteTask)
 		r.Put("/update/{id}", hand.UpdateTask)

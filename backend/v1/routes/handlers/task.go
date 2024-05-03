@@ -27,7 +27,19 @@ func getTasksForCurrentUser(r *http.Request, DB *gorm.DB) []models.Task {
 }
 
 func (app *Handlers) GetTasks(w http.ResponseWriter, r *http.Request) {
-	tasks := getTasksForCurrentUser(r, app.DB)
+	var tasks []models.Task
+	boardID := r.URL.Query().Get("boardId")
+	if boardID == "" {
+		tasks = getTasksForCurrentUser(r, app.DB)
+	} else {
+		userID := r.Context().Value("user").(models.User).ID
+
+		app.DB.Raw(`
+			SELECT tasks.* FROM tasks 
+			JOIN boards ON tasks.board_id = boards.id 
+			WHERE boards.user_id = ? AND tasks.board_id = ?
+		`, userID, boardID).Scan(&tasks)
+	}
 
 	responsePayload := jsonResponse{
 		Error:   false,

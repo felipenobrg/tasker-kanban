@@ -44,6 +44,7 @@ func (app *Config) Routes() http.Handler {
 
 			r.Get("/", hand.GetTasks)
 			r.Post("/", hand.CreateTask)
+			r.Get("/{id}", hand.GetTasksByID)
 			r.Delete("/{id}", hand.DeleteTask)
 			r.Put("/{id}", hand.UpdateTask)
 		})

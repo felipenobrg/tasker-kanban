@@ -23,13 +23,28 @@ func getSubTasksForCurrentUser(r *http.Request, DB *gorm.DB) []models.SubTask {
 	DB.Raw(`
 		SELECT sub_tasks.* FROM sub_tasks
 		JOIN tasks ON sub_tasks.task_id = tasks.id
-		JOIN boards ON tasks.board_id = boards.id WHERE boards.user_id = ?
+		JOIN boards ON tasks.board_id = boards.id 
+		WHERE boards.user_id = ?
 	`, userID).Scan(&subTasks)
 	return subTasks
 }
 
 func (app *Handlers) GetSubTasks(w http.ResponseWriter, r *http.Request) {
-	subTasks := getSubTasksForCurrentUser(r, app.DB)
+	var subTasks []models.SubTask
+	taskID := r.URL.Query().Get("taskId")
+
+	if taskID == "" {
+		subTasks = getSubTasksForCurrentUser(r, app.DB)
+	} else {
+		userID := r.Context().Value("user").(models.User).ID
+
+		app.DB.Raw(`
+			SELECT sub_tasks.* FROM sub_tasks
+			JOIN tasks ON sub_tasks.task_id = tasks.id
+			JOIN boards ON tasks.board_id = boards.id
+			WHERE boards.user_id = ? AND sub_tasks.task_id = ?
+		`, userID, taskID).Scan(&subTasks)
+	}
 
 	responsePayload := jsonResponse{
 		Error:   false,

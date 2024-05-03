@@ -22,7 +22,7 @@ func getTasksForCurrentUser(r *http.Request, DB *gorm.DB) []models.Task {
 	var tasks []models.Task
 	userID := r.Context().Value("user").(models.User).ID
 
-	DB.Raw("SELECT tasks.id, tasks.created_at, tasks.updated_at, tasks.board_id, tasks.description, tasks.status FROM tasks JOIN boards ON tasks.board_id = boards.id WHERE boards.user_id = ?", userID).Scan(&tasks)
+	DB.Raw("SELECT tasks.* FROM tasks JOIN boards ON tasks.board_id = boards.id WHERE boards.user_id = ?", userID).Scan(&tasks)
 	return tasks
 }
 
@@ -128,6 +128,7 @@ func (app *Handlers) DeleteTask(w http.ResponseWriter, r *http.Request) {
 	}
 
 	app.DB.Delete(&task)
+	app.DB.Where("task_id = ?", taskID).Delete(&models.SubTask{})
 
 	responsePayload := jsonResponse{
 		Error:   false,

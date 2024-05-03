@@ -128,7 +128,6 @@ func (app *Handlers) DeleteTask(w http.ResponseWriter, r *http.Request) {
 	}
 
 	app.DB.Delete(&task)
-	app.DB.Where("task_id = ?", taskID).Delete(&models.SubTask{})
 
 	responsePayload := jsonResponse{
 		Error:   false,

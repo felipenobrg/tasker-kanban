@@ -139,7 +139,6 @@ func (app *Handlers) DeleteBoard(w http.ResponseWriter, r *http.Request) {
 	}
 
 	app.DB.Delete(&board)
-	app.DB.Where("board_id = ?", boardID).Delete(&models.Task{})
 
 	responsePayload := jsonResponse{
 		Error:   false,

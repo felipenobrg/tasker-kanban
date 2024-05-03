@@ -32,6 +32,9 @@ export default function Sidebar() {
       try {
         const boardDataResponse = await getBoard()
         const boardData = boardDataResponse.data
+        if (boardData.length > 0) {
+          handleLinkClick(boardData[0].ID)
+        }
         setBoard(boardData)
         setBoardSize(boardData.length)
       } catch (error) {
@@ -48,6 +51,7 @@ export default function Sidebar() {
       const tasksData = tasksResponse.data
       const boardId = tasksData.ID
       const boardName = tasksData.name
+
       setBoardName(boardName)
       setBoardId(boardId)
       setBoard((prevBoard) =>
@@ -81,7 +85,7 @@ export default function Sidebar() {
           {board.map((item, index) => (
             <nav
               key={index}
-              className={`grid items-start px-2 text-sm font-medium lg:px-4 relative rounded-l-lg rounded-r-full w-11/12 hover:bg-gray-500 text-indigo-500 ${
+              className={`grid items-start px-2 gap-3 text-sm font-medium lg:px-4 relative rounded-l-lg rounded-r-full w-11/12 hover:bg-gray-500 text-indigo-500 ${
                 activeLink === item.ID.toString() ? 'bg-indigo-500' : ''
               }`}
             >

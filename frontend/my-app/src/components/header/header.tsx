@@ -1,15 +1,9 @@
 'use client'
 
 import * as React from 'react'
-import { Menu, Link, HomeIcon, EllipsisVertical } from 'lucide-react'
+import { Menu, Link, HomeIcon } from 'lucide-react'
 import { Button } from '../ui/button'
 import { SheetTrigger, SheetContent, Sheet } from '../ui/sheet'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '../ui/dropdown-menu'
 import { useFilter } from '@/context/filterContext'
 import { ChangeEvent, useState } from 'react'
 import { Plus } from 'lucide-react'
@@ -18,6 +12,7 @@ import DeleteBoard from '@/lib/boards/deleteBoard'
 import { useBoard } from '@/context/boardContext'
 import HeaderInput from './headerInput'
 import DialogBoard from '../dialogs/dialogBoard/dialogBoard'
+import DropdownDeleteBoard from './dropdownDeleteBoard'
 
 interface HeaderProps {
   toggleTheme: () => void
@@ -57,6 +52,8 @@ export default function Header(props: HeaderProps) {
     if (boardId !== null) {
       await DeleteBoard({ id: boardId })
       setIsDialogOpen(false)
+      setIsAlertOpen(false)
+      window.location.reload()
     } else {
       console.error('Cannot delete board: boardId is null')
     }
@@ -104,18 +101,10 @@ export default function Header(props: HeaderProps) {
         isOpen={isDialogOpen}
         statusOption={STATUS_OPTION}
       />
-      <DropdownMenu>
-        <DropdownMenuTrigger className="justify-end">
-          <Button variant="ghost" onClick={handleEllipsisClick}>
-            <EllipsisVertical size={18} className="cursor-pointer" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem onClick={handleDeleteConfirmation}>
-            <p className="text-red-500">Deletar tarefa</p>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <DropdownDeleteBoard
+        handleEllipsisClick={handleEllipsisClick}
+        handleDeleteConfirmation={handleDeleteConfirmation}
+      />
       <AlertDialog
         isDialogOpen={isAlertOpen}
         setIsDialogOpen={setIsDialogOpen}

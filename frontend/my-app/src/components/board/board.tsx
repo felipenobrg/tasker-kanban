@@ -2,14 +2,13 @@
 
 import * as React from 'react'
 import BoardCard from './boardCard'
-import PostTask from '@/lib/task/postTask'
-import GetTask from '@/lib/task/getTask'
 import { Circle } from 'lucide-react'
 import { Task } from '@/types/task'
 import { useState, useEffect } from 'react'
 import { Reorder } from 'framer-motion'
 import { useFilter } from '@/context/filterContext'
-import { useDialog } from '@/context/dialogContext'
+import GetTaskById from '@/lib/task/getTaskById'
+import { useBoard } from '@/context/boardContext'
 
 const statusOptions = [
   { status: 'Backlog', circleColor: 'gray' },
@@ -21,18 +20,19 @@ export default function Board() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([])
   const { filterValue } = useFilter()
+  const { boardId } = useBoard()
 
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const tasksData = await GetTask()
+        const tasksData = await GetTaskById({ id: boardId })
         setTasks(tasksData)
       } catch (error) {
         console.error('Error fetching tasks:', error)
       }
     }
     fetchTasks()
-  }, [])
+  }, [boardId])
 
   useEffect(() => {
     const updatedFilteredTasks = tasks.filter((task) =>

@@ -7,15 +7,17 @@ import { Button } from '../ui/button'
 import DialogNewBoard from '../dialogs/dialogNewBoard/dialogNewBoard'
 import { useEffect, useState } from 'react'
 import getBoard from '@/lib/boards/getBoard'
-import { Data } from '@/types/board'
+import { BoardData } from '@/types/board'
 import { useBoard } from '@/context/boardContext'
+import GetBoardById from '@/lib/boards/getBoardById'
+import ChangeThemeButton from '../header/changeThemeButton'
 
 export default function Sidebar() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [boardNamesSide, setBoardNamesSide] = useState<string[]>([])
+  const [board, setBoard] = useState<BoardData[]>([])
   const [boardSize, setBoardSize] = useState<number[]>([])
   const [activeLink, setActiveLink] = useState<string>('')
-  const { setBoardId, setBoardName, boardName, boardId } = useBoard()
+  const { setBoardId, setBoardName } = useBoard()
 
   const openDialog = () => {
     setIsDialogOpen(true)
@@ -30,11 +32,7 @@ export default function Sidebar() {
       try {
         const boardDataResponse = await getBoard()
         const boardData = boardDataResponse.data
-        const names = boardData.map((board: Data) => board.name)
-        const boardId = boardData.map((board: Data) => board.ID)
-        setBoardName(names)
-        setBoardNamesSide(names)
-        setBoardId(boardId)
+        setBoard(boardData)
         setBoardSize(boardData.length)
       } catch (error) {
         console.error('Error fetching board:', error)
@@ -43,12 +41,26 @@ export default function Sidebar() {
     fetchBoard()
   }, [])
 
-  console.log('BOARDNAME', boardName)
-  console.log('boardId', boardId)
-
-  const handleLinkClick = async (item: string) => {
-    setActiveLink(item)
-    await getBoard()
+  const handleLinkClick = async (id: number) => {
+    setActiveLink(id.toString())
+    try {
+      const tasksResponse = await GetBoardById({ id: id })
+      const tasksData = tasksResponse.data
+      const boardId = tasksData.ID
+      const boardName = tasksData.name
+      setBoardName(boardName)
+      setBoardId(boardId)
+      setBoard((prevBoard) =>
+        prevBoard.map((item) => {
+          if (item.ID === id) {
+            return tasksData
+          }
+          return item
+        }),
+      )
+    } catch (error) {
+      console.error('Error fetching tasks by board name:', error)
+    }
   }
 
   return (
@@ -66,33 +78,36 @@ export default function Sidebar() {
               Todos os boards ({boardSize.length === 0 ? '0' : boardSize})
             </p>
           </div>
-          {boardNamesSide.map((item, index) => (
+          {board.map((item, index) => (
             <nav
               key={index}
-              className={`grid items-start px-2 text-sm font-medium lg:px-4 relative rounded-l-lg rounded-r-full w-11/12 ${
-                activeLink === item ? 'bg-indigo-500' : ''
+              className={`grid items-start px-2 text-sm font-medium lg:px-4 relative rounded-l-lg rounded-r-full w-11/12 hover:bg-gray-500 text-indigo-500 ${
+                activeLink === item.ID.toString() ? 'bg-indigo-500' : ''
               }`}
             >
               <Link
                 href="/"
-                onClick={() => handleLinkClick(item)}
-                className="flex items-center gap-2 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                onClick={() => handleLinkClick(item.ID)}
+                className="flex items-center gap-2 rounded-lg px-3 py-2 w-11/12 text-muted-foreground transition-all hover:text-primary"
               >
                 <LayoutPanelLeft size={20} className="text-white" />
-                <p className="text-white">{item}</p>
+                <p className="text-white">{item.name}</p>
               </Link>
             </nav>
           ))}
           <Button
             variant="ghost"
-            className="mt-3 flex items-center flex-row gap-1 text-indigo-500 ml-3"
+            className="mt-3 flex items-center  flex-row gap-1 text-indigo-500 ml-3 hover:rounded-l-lg rounded-r-full"
             onClick={openDialog}
           >
             <LayoutPanelLeft size={20} /> <Plus size={15} /> Criar Novo Board
           </Button>
+          <div className="mt-10 ml-5 gap-2">
+            <ChangeThemeButton />
+          </div>
         </div>
+        <DialogNewBoard isOpen={isDialogOpen} onClose={closeDialog} />
       </div>
-      <DialogNewBoard isOpen={isDialogOpen} onClose={closeDialog} />
     </div>
   )
 }

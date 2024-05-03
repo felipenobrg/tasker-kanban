@@ -1,10 +1,9 @@
 'use client'
+
 import * as React from 'react'
-import { Menu, Link, HomeIcon, Search, EllipsisVertical } from 'lucide-react'
+import { Menu, Link, HomeIcon, EllipsisVertical } from 'lucide-react'
 import { Button } from '../ui/button'
 import { SheetTrigger, SheetContent, Sheet } from '../ui/sheet'
-import { Input } from '../ui/input'
-import { useTheme } from 'next-themes'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,16 +16,22 @@ import { Plus } from 'lucide-react'
 import AlertDialog from './alertDialog'
 import DeleteBoard from '@/lib/boards/deleteBoard'
 import { useBoard } from '@/context/boardContext'
-import ChangeThemeButton from './changeThemeButton'
+import HeaderInput from './headerInput'
+import DialogBoard from '../dialogs/dialogBoard/dialogBoard'
 
 interface HeaderProps {
   toggleTheme: () => void
 }
 
+const STATUS_OPTION = ['Backlog', 'Em andamento', 'Feito']
+
 export default function Header(props: HeaderProps) {
   const { setFilterValue } = useFilter()
   const { boardId } = useBoard()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [isAlertOpen, setIsAlertOpen] = useState(false)
+  const { boardName } = useBoard()
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFilterValue(e.target.value)
@@ -36,16 +41,16 @@ export default function Header(props: HeaderProps) {
     setIsDialogOpen(true)
   }
 
-  const handleCancelDelete = () => {
+  const handleCloseDialog = () => {
     setIsDialogOpen(false)
   }
 
   const handleEllipsisClick = () => {
-    setIsDialogOpen(true)
+    setIsDropdownOpen(!isDropdownOpen)
   }
 
   const handleDeleteConfirmation = () => {
-    setIsDialogOpen(true)
+    setIsAlertOpen(true)
   }
 
   const handleDeleteBoard = async () => {
@@ -55,6 +60,10 @@ export default function Header(props: HeaderProps) {
     } else {
       console.error('Cannot delete board: boardId is null')
     }
+  }
+
+  const handleCloseDialogBoard = () => {
+    setIsDialogOpen(false)
   }
 
   return (
@@ -78,47 +87,41 @@ export default function Header(props: HeaderProps) {
           </nav>
         </SheetContent>
       </Sheet>
-      <div className="w-full flex flex-1 items-center">
-        <form className="w-full">
-          <div className="relative">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Pesquisar campos..."
-              className="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
-              onChange={handleInputChange}
-            />
-          </div>
-        </form>
-        <div>
-          <Button
-            className="w-48 p-3 bg-indigo-500 text-white hover:bg-indigo600 flex gap-2 items-center"
-            onClick={handleDialogOpen}
-          >
-            <Plus size={18} /> Adicionar novo item
-          </Button>
-        </div>
-        <div className="flex items-center"></div>
-        <DropdownMenu>
-          <DropdownMenuTrigger className="justify-end">
-            <Button variant="ghost" onClick={handleEllipsisClick}>
-              <EllipsisVertical size={18} className="cursor-pointer" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem onClick={handleDeleteConfirmation}>
-              <p className="text-red-500">Deletar tarefa</p>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <AlertDialog
-          isDialogOpen={isDialogOpen}
-          setIsDialogOpen={setIsDialogOpen}
-          handleCancelDelete={handleCancelDelete}
-          handleDeleteBoard={handleDeleteBoard}
-        />
+      <div className="mr-8">
+        <h1 className="text-lg font-bold">{boardName}</h1>
       </div>
-      <ChangeThemeButton />
+      <HeaderInput handleInputChange={handleInputChange} />
+      <div>
+        <Button
+          className="w-48 p-3 bg-indigo-500 text-white hover:bg-indigo600 flex gap-2 items-center"
+          onClick={handleDialogOpen}
+        >
+          <Plus size={18} /> Adicionar nova Tarefa
+        </Button>
+      </div>
+      <DialogBoard
+        onClose={handleCloseDialogBoard}
+        isOpen={isDialogOpen}
+        statusOption={STATUS_OPTION}
+      />
+      <DropdownMenu>
+        <DropdownMenuTrigger className="justify-end">
+          <Button variant="ghost" onClick={handleEllipsisClick}>
+            <EllipsisVertical size={18} className="cursor-pointer" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem onClick={handleDeleteConfirmation}>
+            <p className="text-red-500">Deletar tarefa</p>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <AlertDialog
+        isDialogOpen={isAlertOpen}
+        setIsDialogOpen={setIsDialogOpen}
+        handleCancelDelete={handleCloseDialog}
+        handleDeleteBoard={handleDeleteBoard}
+      />
     </header>
   )
 }

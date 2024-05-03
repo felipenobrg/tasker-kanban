@@ -1,6 +1,6 @@
 import { Task } from "./task";
 
-export interface Data {
+export interface BoardData {
     ID: number,
     CreatedAt: string,
     UpdatedAt: string,
@@ -12,5 +12,5 @@ export interface Data {
 export interface Board {
     error: boolean,
     message: string,
-    data: Data[]
+    data: BoardData[]
 }

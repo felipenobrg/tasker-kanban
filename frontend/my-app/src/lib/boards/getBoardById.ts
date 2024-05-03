@@ -3,7 +3,7 @@
 import axios from 'axios'
 
 interface GetBoardById {
-    id: number
+    id: number | null
 }
 
 export default async function GetBoardById(props: GetBoardById) {

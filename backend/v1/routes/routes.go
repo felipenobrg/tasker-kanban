@@ -39,16 +39,6 @@ func (app *Config) Routes() http.Handler {
 		r.Post("/singin", hand.Singin)
 		r.Post("/login", hand.Login)
 
-		r.Route("/tasks", func(r chi.Router) {
-			r.Use(app.AuthenticatedOnly)
-
-			r.Get("/", hand.GetTasks)
-			r.Post("/", hand.CreateTask)
-			r.Get("/{id}", hand.GetTasksByID)
-			r.Delete("/{id}", hand.DeleteTask)
-			r.Put("/{id}", hand.UpdateTask)
-		})
-
 		r.Route("/boards", func(r chi.Router) {
 			r.Use(app.AuthenticatedOnly)
 
@@ -59,6 +49,25 @@ func (app *Config) Routes() http.Handler {
 			r.Put("/{id}", hand.UpdateBoard)
 		})
 
+		r.Route("/tasks", func(r chi.Router) {
+			r.Use(app.AuthenticatedOnly)
+
+			r.Get("/", hand.GetTasks)
+			r.Post("/", hand.CreateTask)
+			r.Get("/{id}", hand.GetTasksByID)
+			r.Delete("/{id}", hand.DeleteTask)
+			r.Put("/{id}", hand.UpdateTask)
+		})
+
+		r.Route("/subtasks", func(r chi.Router) {
+			r.Use(app.AuthenticatedOnly)
+
+			r.Get("/", hand.GetSubTasks)
+			r.Post("/", hand.CreateSubTask)
+			r.Get("/{id}", hand.GetSubTasksByID)
+			r.Delete("/{id}", hand.DeleteSubTask)
+			r.Put("/{id}", hand.UpdateSubTask)
+		})
 	})
 
 	return r

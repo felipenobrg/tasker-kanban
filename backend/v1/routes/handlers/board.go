@@ -91,6 +91,37 @@ func (app *Handlers) GetBoardByID(w http.ResponseWriter, r *http.Request) {
 	util.WriteJSON(w, http.StatusOK, responsePayload)
 }
 
+func (app *Handlers) GetBoardByID(w http.ResponseWriter, r *http.Request) {
+	var board models.Board
+	boardID := chi.URLParam(r, "id")
+
+	app.DB.First(&board, boardID)
+	if board.ID == 0 {
+		err := errors.New("board not found")
+		util.ErrorJSON(w, err, http.StatusNotFound)
+		return
+	}
+
+	// userID := r.Context().Value("user").(models.User).ID
+	// if board.UserID != userID {
+	// 	err := errors.New("board not found")
+	// 	util.ErrorJSON(w, err, http.StatusNotFound)
+	// 	return
+	// }
+
+	var tasks []models.Task
+	app.DB.Where("board_id = ?", boardID).Find(&tasks)
+	board.Tasks = tasks
+
+	responsePayload := jsonResponse{
+		Error:   false,
+		Message: "board fetched successfully",
+		Data:    board,
+	}
+
+	util.WriteJSON(w, http.StatusOK, responsePayload)
+}
+
 func (app *Handlers) CreateBoard(w http.ResponseWriter, r *http.Request) {
 	payload := BoardPayload{}
 	userID := r.Context().Value("user").(models.User).ID

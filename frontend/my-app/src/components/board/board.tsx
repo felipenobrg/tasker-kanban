@@ -1,17 +1,14 @@
 'use client'
 
 import * as React from 'react'
-import * as Dialog from '@radix-ui/react-dialog'
 import BoardCard from './boardCard'
-import PostTask from '@/lib/postTask'
-import GetTask from '@/lib/getTask'
-import DialogBoard from '../dialogs/dialogBoard/dialogBoard'
 import { Circle } from 'lucide-react'
 import { Task } from '@/types/task'
 import { useState, useEffect } from 'react'
 import { Reorder } from 'framer-motion'
 import { useFilter } from '@/context/filterContext'
-import { useDialog } from '@/context/dialogContext'
+import GetTaskById from '@/lib/task/getTaskById'
+import { useBoard } from '@/context/boardContext'
 
 const statusOptions = [
   { status: 'Backlog', circleColor: 'gray' },
@@ -23,19 +20,19 @@ export default function Board() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([])
   const { filterValue } = useFilter()
-  const { dialogOpen, setDialogOpen } = useDialog()
+  const { boardId } = useBoard()
 
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const tasksData = await GetTask()
+        const tasksData = await GetTaskById({ id: boardId })
         setTasks(tasksData)
       } catch (error) {
         console.error('Error fetching tasks:', error)
       }
     }
     fetchTasks()
-  }, [])
+  }, [boardId])
 
   useEffect(() => {
     const updatedFilteredTasks = tasks.filter((task) =>
@@ -46,61 +43,40 @@ export default function Board() {
 
   const handleDrop = (newTasks: Task[], status: string) => {}
 
-  const sendTask = async (description: string, status: string) => {
-    try {
-      await PostTask({ description, status })
-      const updatedTasks = await GetTask()
-      setTasks(updatedTasks)
-    } catch (error) {
-      console.error('Error posting task:', error)
-    }
-  }
-
   return (
-    <Dialog.Root>
-      <main className="flex flex-1 gap-4 p-4 lg:gap-6 lg:p-6 relative">
-        <div className="flex flex-col items-center gap-4">
-          <div className="flex">
-            {statusOptions.map(({ status, circleColor }) => (
-              <div key={status} className="flex flex-col ml-20 items-center">
-                <div className="flex items-center justify-center gap-2">
-                  <Circle size={18} color={circleColor} fill={circleColor} />
-                  <p className="mb-2 mt-2 text-sm">{status}</p>
-                </div>
-                <Reorder.Group
-                  className="flex flex-col gap-5"
-                  values={filteredTasks.filter(
-                    (task) => task.status === status,
-                  )}
-                  onReorder={(newTasks: Task[]) => handleDrop(newTasks, status)}
-                >
-                  {filteredTasks
-                    .filter((task) => task.status === status)
-                    .map((task) => (
-                      <BoardCard
-                        key={task.ID}
-                        data={task}
-                        statusOption={statusOptions}
-                      />
-                    ))}
-                  {filteredTasks.length === 0 && (
-                    <p className="text-sm mt-2">
-                      Não há tarefas nesta categoria.
-                    </p>
-                  )}
-                </Reorder.Group>
+    <main className="flex flex-1 gap-4 p-4 lg:gap-6 lg:p-6 relative">
+      <div className="flex flex-col items-center gap-4">
+        <div className="flex">
+          {statusOptions.map(({ status, circleColor }) => (
+            <div key={status} className="flex flex-col ml-20 items-center">
+              <div className="flex items-center justify-center gap-2">
+                <Circle size={18} color={circleColor} fill={circleColor} />
+                <p className="mb-2 mt-2 text-sm text-gray-400 ">{status}</p>
               </div>
-            ))}
-            {dialogOpen && (
-              <DialogBoard
-                statusOption={statusOptions}
-                setDialogOpen={setDialogOpen}
-                sendTask={sendTask}
-              />
-            )}
-          </div>
+              <Reorder.Group
+                className="flex flex-col gap-5"
+                values={filteredTasks.filter((task) => task.status === status)}
+                onReorder={(newTasks: Task[]) => handleDrop(newTasks, status)}
+              >
+                {filteredTasks
+                  .filter((task) => task.status === status)
+                  .map((task) => (
+                    <BoardCard
+                      key={task.ID}
+                      data={task}
+                      statusOption={statusOptions}
+                    />
+                  ))}
+                {filteredTasks.length === 0 && (
+                  <p className="text-gray-400 text-sm mt-2">
+                    Não há tarefas nesta categoria.
+                  </p>
+                )}
+              </Reorder.Group>
+            </div>
+          ))}
         </div>
-      </main>
-    </Dialog.Root>
+      </div>
+    </main>
   )
 }

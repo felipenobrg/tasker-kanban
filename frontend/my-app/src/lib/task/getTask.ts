@@ -9,7 +9,7 @@ export default async function GetTask() {
         if (!process.env.BASE_URL) {
             throw new Error('BASE_URL is not defined in the environment variables');
         }
-        const response = await axios.get(process.env.BASE_URL);
+        const response = await axios.get(`${process.env.BASE_URL}/tasks`);
         return response.data.data;
     } catch(error) {
         console.error('Error fetching tasks:', error);

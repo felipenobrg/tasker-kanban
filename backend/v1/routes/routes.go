@@ -34,6 +34,41 @@ func (app *Config) Routes() http.Handler {
 	r.Use(middleware.Heartbeat("/ping"))
 
 	// Routes
+	r.Route("/api/v1", func(r chi.Router) {
+
+		r.Post("/singin", hand.Singin)
+		r.Post("/login", hand.Login)
+
+		r.Route("/boards", func(r chi.Router) {
+			r.Use(app.AuthenticatedOnly)
+
+			r.Get("/", hand.GetBoards)
+			r.Post("/", hand.CreateBoard)
+			r.Get("/{id}", hand.GetBoardByID)
+			r.Delete("/{id}", hand.DeleteBoard)
+			r.Put("/{id}", hand.UpdateBoard)
+		})
+
+		r.Route("/tasks", func(r chi.Router) {
+			r.Use(app.AuthenticatedOnly)
+
+			r.Get("/", hand.GetTasks)
+			r.Post("/", hand.CreateTask)
+			r.Get("/{id}", hand.GetTasksByID)
+			r.Delete("/{id}", hand.DeleteTask)
+			r.Put("/{id}", hand.UpdateTask)
+		})
+
+		r.Route("/subtasks", func(r chi.Router) {
+			r.Use(app.AuthenticatedOnly)
+
+			r.Get("/", hand.GetSubTasks)
+			r.Post("/", hand.CreateSubTask)
+			r.Get("/{id}", hand.GetSubTasksByID)
+			r.Delete("/{id}", hand.DeleteSubTask)
+			r.Put("/{id}", hand.UpdateSubTask)
+		})
+
 	r.Route("/api/v1/tasks", func(r chi.Router) {
 		r.Get("/", hand.GetTasks)
 		r.Get("/{id}", hand.GetTasksByID)

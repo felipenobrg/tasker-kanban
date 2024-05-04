@@ -3,6 +3,8 @@ package models
 import (
 	"errors"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Model struct {
@@ -13,9 +15,14 @@ type Model struct {
 
 type Task struct {
 	Model
-	BoardID     uint   `json:"board_id" gorm:"foreignKey:board_id"`
-	Description string `json:"description"`
+	BoardID     uint   `json:"board_id" gorm:"foreignKey:board_id;not null"`
+	Description string `json:"description" gorm:"not null"`
 	Status      string `json:"status" gorm:"default:'Backlog'"`
+}
+
+func (t *Task) BeforeDelete(tx *gorm.DB) error {
+	tx.Where("task_id = ?", t.ID).Delete(&SubTask{})
+	return nil
 }
 
 func (b *Task) Validate() error {

@@ -3,6 +3,7 @@ package handlers
 import (
 	"errors"
 	"net/http"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 
@@ -10,14 +11,28 @@ import (
 	"tasker/util"
 )
 
+type data struct {
+	User   UserPayload    `json:"user"`
+	Boards []models.Board `json:"boards"`
+}
+
+type UserPayload struct {
+	CreateAt time.Time `json:"createAt"`
+	Name     string    `json:"name"`
+	Email    string    `json:"email"`
+}
+
 type BoardPayload struct {
 	Name  string        `json:"name"`
 	Tasks []TaskPayload `json:"tasks"`
 }
 
 func (app *Handlers) GetBoards(w http.ResponseWriter, r *http.Request) {
+	user := r.Context().Value("user").(models.User)
+	userID := user.ID
+
 	var boards []models.Board
-	app.DB.Find(&boards)
+	app.DB.Where("user_id = ?", userID).Find(&boards)
 
 	var tasks []models.Task
 	app.DB.Find(&tasks)
@@ -30,10 +45,47 @@ func (app *Handlers) GetBoards(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	userPayload := UserPayload{
+		CreateAt: user.CreatedAt,
+		Name:     user.Name,
+		Email:    user.Email,
+	}
+
 	responsePayload := jsonResponse{
 		Error:   false,
 		Message: "boards fetched successfully",
-		Data:    boards,
+		Data:    data{User: userPayload, Boards: boards},
+	}
+
+	util.WriteJSON(w, http.StatusOK, responsePayload)
+}
+
+func (app *Handlers) GetBoardByID(w http.ResponseWriter, r *http.Request) {
+	var board models.Board
+	boardID := chi.URLParam(r, "id")
+
+	app.DB.First(&board, boardID)
+	if board.ID == 0 {
+		err := errors.New("board not found")
+		util.ErrorJSON(w, err, http.StatusNotFound)
+		return
+	}
+
+	userID := r.Context().Value("user").(models.User).ID
+	if board.UserID != userID {
+		err := errors.New("board not found")
+		util.ErrorJSON(w, err, http.StatusNotFound)
+		return
+	}
+
+	var tasks []models.Task
+	app.DB.Where("board_id = ?", boardID).Find(&tasks)
+	board.Tasks = tasks
+
+	responsePayload := jsonResponse{
+		Error:   false,
+		Message: "board fetched successfully",
+		Data:    board,
 	}
 
 	util.WriteJSON(w, http.StatusOK, responsePayload)
@@ -72,6 +124,8 @@ func (app *Handlers) GetBoardByID(w http.ResponseWriter, r *http.Request) {
 
 func (app *Handlers) CreateBoard(w http.ResponseWriter, r *http.Request) {
 	payload := BoardPayload{}
+	userID := r.Context().Value("user").(models.User).ID
+	userEmail := r.Context().Value("user").(models.User).Email
 
 	err := util.ReadJson(w, r, &payload)
 	if err != nil {
@@ -80,8 +134,10 @@ func (app *Handlers) CreateBoard(w http.ResponseWriter, r *http.Request) {
 	}
 
 	newBoard := models.Board{
-		Name:  payload.Name,
-		Tasks: []models.Task{},
+		UserID: userID,
+		User:   userEmail,
+		Name:   payload.Name,
+		Tasks:  []models.Task{},
 	}
 
 	app.DB.Create(&newBoard)
@@ -106,8 +162,14 @@ func (app *Handlers) DeleteBoard(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	userID := r.Context().Value("user").(models.User).ID
+	if board.UserID != userID {
+		err := errors.New("board not found")
+		util.ErrorJSON(w, err, http.StatusNotFound)
+		return
+	}
+
 	app.DB.Delete(&board)
-	app.DB.Where("board_id = ?", boardID).Delete(&models.Task{})
 
 	responsePayload := jsonResponse{
 		Error:   false,
@@ -122,6 +184,13 @@ func (app *Handlers) UpdateBoard(w http.ResponseWriter, r *http.Request) {
 
 	app.DB.First(&board, boardID)
 	if board.ID == 0 {
+		err := errors.New("board not found")
+		util.ErrorJSON(w, err, http.StatusNotFound)
+		return
+	}
+
+	userID := r.Context().Value("user").(models.User).ID
+	if board.UserID != userID {
 		err := errors.New("board not found")
 		util.ErrorJSON(w, err, http.StatusNotFound)
 		return

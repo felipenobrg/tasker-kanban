@@ -13,20 +13,18 @@ import { useBoard } from '@/context/boardContext'
 import HeaderInput from './headerInput'
 import DialogBoard from '../dialogs/dialogBoard/dialogBoard'
 import DropdownDeleteBoard from './dropdownDeleteBoard'
-
-interface HeaderProps {
-  toggleTheme: () => void
-}
+import { signIn, signOut, useSession } from 'next-auth/react'
 
 const STATUS_OPTION = ['Backlog', 'Em andamento', 'Feito']
 
-export default function Header(props: HeaderProps) {
+export default function Header() {
   const { setFilterValue } = useFilter()
   const { boardId } = useBoard()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [isAlertOpen, setIsAlertOpen] = useState(false)
   const { boardName } = useBoard()
+  const { data: session } = useSession()
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFilterValue(e.target.value)
@@ -87,6 +85,11 @@ export default function Header(props: HeaderProps) {
       <div className="mr-8">
         <h1 className="text-lg font-bold">{boardName}</h1>
       </div>
+      {session?.user ? (
+        <button onClick={() => signOut()}>Signout</button>
+      ) : (
+        <button onClick={() => signIn()}>Signin</button>
+      )}
       <HeaderInput handleInputChange={handleInputChange} />
       <div>
         <Button

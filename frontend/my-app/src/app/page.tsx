@@ -1,32 +1,21 @@
-'use client'
-
 import Sidebar from '@/components/sidebar/sidebar'
 import Header from '@/components/header/header'
 import Board from '@/components/board/board'
-import { useState } from 'react'
-import { FilterProvider } from '@/context/filterContext'
-import { DialogProvider } from '@/context/dialogContext'
+import { getServerSession } from 'next-auth'
 
-export default function Home() {
-  const [darkTheme, setDarkTheme] = useState(true)
-
-  const toggleTheme = () => {
-    setDarkTheme((prevTheme) => !prevTheme)
-  }
+export default async function Home() {
+  const session = await getServerSession()
 
   return (
     <div
-      className={`grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] ${darkTheme ? 'dark' : ''}`}
+      className={`grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] `}
     >
-      <DialogProvider>
-        <FilterProvider>
-          <Sidebar />
-          <div className="flex flex-col">
-            <Header toggleTheme={toggleTheme} />
-            <Board />
-          </div>
-        </FilterProvider>
-      </DialogProvider>
+      <Sidebar />
+      <div className="flex flex-col">
+        <Header />
+        <Board />
+      </div>
+      <h1>Olá {session?.user?.name}</h1>
     </div>
   )
 }

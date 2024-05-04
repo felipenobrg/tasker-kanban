@@ -2,6 +2,7 @@ package routes
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
@@ -31,6 +32,7 @@ func (app *Config) Routes() http.Handler {
 	// Middlewares
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
+	r.Use(middleware.Timeout(2500 * time.Millisecond))
 	r.Use(middleware.Heartbeat("/ping"))
 
 	// Routes

@@ -31,7 +31,7 @@ export default function Sidebar() {
     const fetchBoard = async () => {
       try {
         const boardDataResponse = await getBoard()
-        const boardData = boardDataResponse.data
+        const boardData = boardDataResponse.data.boards
         if (boardData.length > 0) {
           handleLinkClick(boardData[0].ID)
         }

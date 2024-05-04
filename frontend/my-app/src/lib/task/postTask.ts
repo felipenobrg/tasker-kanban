@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from 'axios';
 import { BASE_URL } from '../../../apiConfig';
 
 interface PostTaskProps {
@@ -10,7 +10,9 @@ interface PostTaskProps {
 export default async function PostTask(props: PostTaskProps) {
     const { description, status, board_id } = props;
     try {
-        const response = await axios.post(`${BASE_URL}/tasks/`, { board_id, description, status });
+        const response = await axios.post(`${BASE_URL}/tasks/`, 
+        { board_id, description, status }, 
+        { withCredentials: true });
         return response.data;
     } catch(error) {
         console.error('Error posting task:', error);

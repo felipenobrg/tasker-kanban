@@ -22,7 +22,7 @@ interface DialogTaskProps {
   id: number
   setDialogOpen: (isOpen: boolean) => void
   onUpdateTask: (id: number, description: string, status: string) => void
-  handleDeleteTask: (id: number, description: string, status: string) => void
+  handleDeleteTask?: (id: number, description: string, status: string) => void
 }
 
 export default function DialogTask(props: DialogTaskProps) {

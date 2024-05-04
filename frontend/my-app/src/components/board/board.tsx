@@ -9,6 +9,7 @@ import { Reorder } from 'framer-motion'
 import { useFilter } from '@/context/filterContext'
 import GetTaskById from '@/lib/task/getTaskById'
 import { useBoard } from '@/context/boardContext'
+import GetTask from '@/lib/task/getTask'
 
 const statusOptions = [
   { status: 'Backlog', circleColor: 'gray' },
@@ -25,12 +26,15 @@ export default function Board() {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const tasksData = await GetTaskById({ id: boardId })
+        const getTasks = await GetTask()
+        const tasksData = getTasks.data
         setTasks(tasksData)
+        console.log('TASKS', tasksData)
       } catch (error) {
         console.error('Error fetching tasks:', error)
       }
     }
+
     fetchTasks()
   }, [boardId])
 

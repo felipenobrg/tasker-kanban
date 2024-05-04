@@ -15,7 +15,6 @@ export default async function Home() {
         <Header />
         <Board />
       </div>
-      <h1>Olá {session?.user?.name}</h1>
     </div>
   )
 }

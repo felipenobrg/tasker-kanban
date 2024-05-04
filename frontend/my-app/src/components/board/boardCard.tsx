@@ -82,7 +82,7 @@ export default function BoardCard(props: BoardCardProps) {
                 <Dialog.Trigger asChild>
                   <Card
                     onClick={handleDialogOpen}
-                    className="flex flex-col bg-gray-800"
+                    className="flex flex-col bg-gray-800 w-44 h-28"
                   >
                     <div className="flex items-end justify-between">
                       <p className="text-gray-200 text-sm ml-1 break-words">
@@ -104,7 +104,6 @@ export default function BoardCard(props: BoardCardProps) {
           id={data.ID}
           setDialogOpen={setDialogOpen}
           onUpdateTask={handleUpdateTask}
-          handleDeleteTask={handleDeleteTask}
         />
       )}
     </Dialog.Root>

@@ -70,15 +70,6 @@ func (app *Handlers) GetTasksByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var board models.Board
-	app.DB.First(&board, fmt.Sprint(task.BoardID))
-	userID := r.Context().Value("user").(models.User).ID
-	if board.ID == 0 || board.UserID != userID {
-		err := errors.New("task not found")
-		util.ErrorJSON(w, err, http.StatusBadRequest)
-		return
-	}
-
 	responsePayload := jsonResponse{
 		Error:   false,
 		Message: "task fetched successfully",

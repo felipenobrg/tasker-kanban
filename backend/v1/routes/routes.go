@@ -68,21 +68,6 @@ func (app *Config) Routes() http.Handler {
 			r.Delete("/{id}", hand.DeleteSubTask)
 			r.Put("/{id}", hand.UpdateSubTask)
 		})
-
-	r.Route("/api/v1/tasks", func(r chi.Router) {
-		r.Get("/", hand.GetTasks)
-		r.Get("/{id}", hand.GetTasksByID)
-		r.Post("/add", hand.CreateTask)
-		r.Delete("/delete/{id}", hand.DeleteTask)
-		r.Put("/update/{id}", hand.UpdateTask)
-	})
-
-	r.Route("/api/v1/boards", func(r chi.Router) {
-		r.Get("/", hand.GetBoards)
-		r.Get("/{id}", hand.GetBoardByID)
-		r.Post("/add", hand.CreateBoard)
-		r.Delete("/delete/{id}", hand.DeleteBoard)
-		r.Put("/update/{id}", hand.UpdateBoard)
 	})
 
 	return r

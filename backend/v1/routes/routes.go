@@ -2,6 +2,7 @@ package routes
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/chi/v5"
@@ -31,23 +32,44 @@ func (app *Config) Routes() http.Handler {
 	// Middlewares
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
+	r.Use(middleware.Timeout(2500 * time.Millisecond))
 	r.Use(middleware.Heartbeat("/ping"))
 
 	// Routes
-	r.Route("/api/v1/tasks", func(r chi.Router) {
-		r.Get("/", hand.GetTasks)
-		r.Get("/{id}", hand.GetTasksByID)
-		r.Post("/add", hand.CreateTask)
-		r.Delete("/delete/{id}", hand.DeleteTask)
-		r.Put("/update/{id}", hand.UpdateTask)
-	})
+	r.Route("/api/v1", func(r chi.Router) {
 
-	r.Route("/api/v1/boards", func(r chi.Router) {
-		r.Get("/", hand.GetBoards)
-		r.Get("/{id}", hand.GetBoardByID)
-		r.Post("/add", hand.CreateBoard)
-		r.Delete("/delete/{id}", hand.DeleteBoard)
-		r.Put("/update/{id}", hand.UpdateBoard)
+		r.Post("/singin", hand.Singin)
+		r.Post("/login", hand.Login)
+
+		r.Route("/boards", func(r chi.Router) {
+			r.Use(app.AuthenticatedOnly)
+
+			r.Get("/", hand.GetBoards)
+			r.Post("/", hand.CreateBoard)
+			r.Get("/{id}", hand.GetBoardByID)
+			r.Delete("/{id}", hand.DeleteBoard)
+			r.Put("/{id}", hand.UpdateBoard)
+		})
+
+		r.Route("/tasks", func(r chi.Router) {
+			r.Use(app.AuthenticatedOnly)
+
+			r.Get("/", hand.GetTasks)
+			r.Post("/", hand.CreateTask)
+			r.Get("/{id}", hand.GetTasksByID)
+			r.Delete("/{id}", hand.DeleteTask)
+			r.Put("/{id}", hand.UpdateTask)
+		})
+
+		r.Route("/subtasks", func(r chi.Router) {
+			r.Use(app.AuthenticatedOnly)
+
+			r.Get("/", hand.GetSubTasks)
+			r.Post("/", hand.CreateSubTask)
+			r.Get("/{id}", hand.GetSubTasksByID)
+			r.Delete("/{id}", hand.DeleteSubTask)
+			r.Put("/{id}", hand.UpdateSubTask)
+		})
 	})
 
 	return r

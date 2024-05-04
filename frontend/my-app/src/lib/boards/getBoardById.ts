@@ -8,7 +8,9 @@ interface GetBoardById {
 export default async function GetBoardById(props: GetBoardById) {
     const { id } = props
     try {
-        const response = await axios.get(`${BASE_URL}/boards/${id}`);
+        const response = await axios.get(`${BASE_URL}/boards/${id}`, {
+            withCredentials: true
+        });
 
         return response.data;
     } catch(error) {

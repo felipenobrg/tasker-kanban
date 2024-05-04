@@ -8,7 +8,9 @@ interface GetTaskByIdProps {
 export default async function GetTaskById(props: GetTaskByIdProps) {
   const { id } = props
   try {
-    const response = await axios.get(`${BASE_URL}/tasks/${id}`)
+    const response = await axios.get(`${BASE_URL}/tasks/${id}`, {
+      withCredentials: true
+    })
     console.log('RESPONSESS', response.data)
     return response.data.tasks
   } catch (error) {

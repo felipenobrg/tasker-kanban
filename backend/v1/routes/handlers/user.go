@@ -64,6 +64,7 @@ func (app *Handlers) Singin(w http.ResponseWriter, r *http.Request) {
 	responsePayload := jsonResponse{
 		Error:   false,
 		Message: "user created successfully",
+		Data:    map[string]string{"session_token": token},
 	}
 
 	cookie := http.Cookie{
@@ -113,6 +114,7 @@ func (app *Handlers) Login(w http.ResponseWriter, r *http.Request) {
 	responsePayload := jsonResponse{
 		Error:   false,
 		Message: "login successful",
+		Data:    map[string]string{"session_token": token},
 	}
 
 	cookie := http.Cookie{

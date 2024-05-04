@@ -12,7 +12,7 @@ export default async function DeleteTask(props: DeleteTaskProps) {
         if (!process.env.BASE_URL) {
             throw new Error('BASE_URL is not defined in the environment variables');
         }
-        const response = await axios.delete(`${process.env.BASE_URL}/tasks/delete/${id}`);
+        const response = await axios.delete(`${process.env.BASE_URL}/tasks/${id}`);
         return response.data;
     } catch(error) {
         console.error('Error posting task:', error);

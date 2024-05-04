@@ -1,6 +1,9 @@
 package models
 
 import (
+	"net"
+	"strings"
+
 	"github.com/go-playground/validator/v10"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -17,7 +20,20 @@ var validate = validator.New(validator.WithRequiredStructEnabled())
 
 func (user *User) ValidaUser() error {
 	validate.RegisterAlias("name", "required,min=3,max=50,excludesall=!@#?")
-	return validate.Struct(user)
+	err := validate.Struct(user)
+	if err != nil {
+		return err
+	}
+
+	// Check if the email address exists
+	i := strings.Index(user.Email, "@")
+	host := user.Email[i+1:]
+
+	_, err = net.LookupMX(host)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (user *User) GenerateHash() (string, error) {

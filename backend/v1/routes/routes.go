@@ -38,7 +38,7 @@ func (app *Config) Routes() http.Handler {
 	// Routes
 	r.Route("/api/v1", func(r chi.Router) {
 
-		r.Post("/singin", hand.Singin)
+		r.Post("/signin", hand.Signin)
 		r.Post("/login", hand.Login)
 
 		r.Route("/boards", func(r chi.Router) {

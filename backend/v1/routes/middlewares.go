@@ -2,7 +2,6 @@ package routes
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -18,7 +17,6 @@ func (app *Config) AuthenticatedOnly(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		cookie, err := r.Cookie("session_token")
-		fmt.Println("COOKIE:", cookie)
 		if err != nil {
 			http.Error(w, http.StatusText(statusUnauthorized), statusUnauthorized)
 			return

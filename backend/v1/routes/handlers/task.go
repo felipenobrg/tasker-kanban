@@ -14,6 +14,7 @@ import (
 
 type TaskPayload struct {
 	BoardID     uint   `json:"board_id"`
+	Title       string `json:"title"`
 	Description string `json:"description"`
 	Status      string `json:"status"`
 }
@@ -89,6 +90,7 @@ func (app *Handlers) CreateTask(w http.ResponseWriter, r *http.Request) {
 
 	newTask := models.Task{
 		BoardID:     payload.BoardID,
+		Title:       payload.Title,
 		Description: payload.Description,
 		Status:      payload.Status,
 	}
@@ -175,6 +177,7 @@ func (app *Handlers) UpdateTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	task.Title = taskPayload.Title
 	task.Description = taskPayload.Description
 	task.Status = taskPayload.Status
 

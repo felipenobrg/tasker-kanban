@@ -1,10 +1,22 @@
+'use client'
+
 import Sidebar from '@/components/sidebar/sidebar'
 import Header from '@/components/header/header'
 import Board from '@/components/board/board'
-import { getServerSession } from 'next-auth'
+import { useRouter } from 'next/navigation'
+import { Session } from 'next-auth'
 
-export default async function Home() {
-  const session = await getServerSession()
+interface Props {
+  session: Session | null
+}
+
+export default function Home({ session }: Props) {
+  const router = useRouter()
+
+  if (!session) {
+    router.push('/login')
+    return null
+  }
 
   return (
     <div

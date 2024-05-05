@@ -7,9 +7,7 @@ import { Task } from '@/types/task'
 import { useState, useEffect } from 'react'
 import { Reorder } from 'framer-motion'
 import { useFilter } from '@/context/filterContext'
-import GetTaskById from '@/lib/task/getTaskById'
 import { useBoard } from '@/context/boardContext'
-import GetTask from '@/lib/task/getTask'
 
 const statusOptions = [
   { status: 'Backlog', circleColor: 'gray' },
@@ -21,22 +19,15 @@ export default function Board() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([])
   const { filterValue } = useFilter()
-  const { boardId } = useBoard()
 
   useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const getTasks = await GetTask()
-        const tasksData = getTasks.data
-        setTasks(tasksData)
-        console.log('TASKS', tasksData)
-      } catch (error) {
-        console.error('Error fetching tasks:', error)
-      }
+    if (tasks) {
+      const updatedFilteredTasks = tasks.filter((task) =>
+        task.description.toLowerCase().includes(filterValue.toLowerCase()),
+      )
+      setFilteredTasks(updatedFilteredTasks)
     }
-
-    fetchTasks()
-  }, [boardId])
+  }, [filterValue, tasks])
 
   useEffect(() => {
     const updatedFilteredTasks = tasks.filter((task) =>

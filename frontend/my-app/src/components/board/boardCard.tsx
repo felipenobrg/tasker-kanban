@@ -35,8 +35,8 @@ export default function BoardCard(props: BoardCardProps) {
     setDialogOpen(true)
   }
 
-  const handleDeleteTask = async (id: number, event: React.MouseEvent) => {
-    event.stopPropagation()
+  const handleDeleteTask = async (id: number, event?: React.MouseEvent) => {
+    event?.stopPropagation()
     await DeleteTask({ id })
     const updatedTasks = task.filter((item) => item.ID !== id)
     setTask(updatedTasks)
@@ -68,7 +68,7 @@ export default function BoardCard(props: BoardCardProps) {
   }, [data, setTask])
 
   return (
-    <Dialog.Root>
+    <div>
       <div className="flex flex-row ml-5">
         <div className="flex flex-col gap-4">
           <Reorder.Group
@@ -79,33 +79,32 @@ export default function BoardCard(props: BoardCardProps) {
           >
             {task.map((item) => (
               <Reorder.Item value={item} key={item.ID}>
-                <Dialog.Trigger asChild>
-                  <Card
-                    onClick={handleDialogOpen}
-                    className="flex flex-col bg-gray-800 w-44 h-28"
-                  >
-                    <div className="flex items-end justify-between">
-                      <p className="text-gray-200 text-sm ml-1 break-words">
-                        {truncateDescription(item.description, 15)}
-                      </p>
-                    </div>
-                  </Card>
-                </Dialog.Trigger>
+                <Card
+                  onClick={handleDialogOpen}
+                  className="flex flex-col bg-gray-800 w-44 h-28"
+                >
+                  <div className="flex items-end justify-between">
+                    <p className="text-gray-200 text-sm ml-1 break-words">
+                      {truncateDescription(item.description, 15)}
+                    </p>
+                  </div>
+                </Card>
               </Reorder.Item>
             ))}
           </Reorder.Group>
         </div>
       </div>
-      {dialogOpen && (
-        <DialogTask
-          statusOption={statusOption}
-          initialDescription={data.description}
-          initialStatus={data.status}
-          id={data.ID}
-          setDialogOpen={setDialogOpen}
-          onUpdateTask={handleUpdateTask}
-        />
-      )}
-    </Dialog.Root>
+      <DialogTask
+        statusOption={statusOption}
+        initialDescription={data.description}
+        initialStatus={data.status}
+        id={data.ID}
+        setDialogOpen={setDialogOpen}
+        onUpdateTask={handleUpdateTask}
+        isOpen={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        handleDeleteTask={() => handleDeleteTask(data.ID)}
+      />
+    </div>
   )
 }

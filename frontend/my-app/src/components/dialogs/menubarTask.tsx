@@ -19,11 +19,12 @@ import {
 } from '@/components/ui/alert-dialog'
 
 interface MenubarTaskProps {
-  handleDeleteTask?: (id: number, description: string, status: string) => void
+  handleDeleteTask?: (id: number) => void
+  id: number
 }
 
 export default function MenubarTask(props: MenubarTaskProps) {
-  const { handleDeleteTask } = props
+  const { handleDeleteTask, id } = props
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
@@ -36,12 +37,15 @@ export default function MenubarTask(props: MenubarTaskProps) {
   }
 
   const handleContinueDelete = () => {
-    setIsDialogOpen(false)
+    if (handleDeleteTask) {
+      handleDeleteTask(id)
+      setIsDialogOpen(false)
+    }
   }
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="justify-end">
+      <DropdownMenuTrigger className="justify-end outline-none">
         <div className="justify-end">
           <EllipsisVertical size={20} className="cursor-pointer" />
         </div>

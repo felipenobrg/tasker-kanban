@@ -9,6 +9,12 @@ import (
 	"tasker/util"
 )
 
+type UserPayload struct {
+	CreateAt time.Time `json:"createAt"`
+	Name     string    `json:"name"`
+	Email    string    `json:"email"`
+}
+
 type singinPayload struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`
@@ -61,10 +67,16 @@ func (app *Handlers) Singin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	userPayload := UserPayload{
+		CreateAt: newUser.CreatedAt,
+		Name:     newUser.Name,
+		Email:    newUser.Email,
+	}
+
 	responsePayload := jsonResponse{
 		Error:   false,
 		Message: "user created successfully",
-		Data:    map[string]string{"session_token": token},
+		Data:    map[string]any{"session_token": token, "user": userPayload},
 	}
 
 	cookie := http.Cookie{
@@ -111,10 +123,16 @@ func (app *Handlers) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	userPayload := UserPayload{
+		CreateAt: user.CreatedAt,
+		Name:     user.Name,
+		Email:    user.Email,
+	}
+
 	responsePayload := jsonResponse{
 		Error:   false,
 		Message: "login successful",
-		Data:    map[string]string{"session_token": token},
+		Data:    map[string]any{"session_token": token, "user": userPayload},
 	}
 
 	cookie := http.Cookie{

@@ -3,7 +3,6 @@ package handlers
 import (
 	"errors"
 	"net/http"
-	"time"
 
 	"github.com/go-chi/chi/v5"
 
@@ -14,12 +13,6 @@ import (
 type data struct {
 	User   UserPayload    `json:"user"`
 	Boards []models.Board `json:"boards"`
-}
-
-type UserPayload struct {
-	CreateAt time.Time `json:"createAt"`
-	Name     string    `json:"name"`
-	Email    string    `json:"email"`
 }
 
 type BoardPayload struct {

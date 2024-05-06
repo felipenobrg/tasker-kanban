@@ -13,10 +13,11 @@ import (
 )
 
 type TaskPayload struct {
-	BoardID     uint   `json:"board_id"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Status      string `json:"status"`
+	BoardID     uint             `json:"board_id"`
+	Title       string           `json:"title"`
+	Description string           `json:"description"`
+	Status      string           `json:"status"`
+	SubTasks    []models.SubTask `json:"subtasks"`
 }
 
 func getTasksForCurrentUser(r *http.Request, DB *gorm.DB) []models.Task {
@@ -40,6 +41,17 @@ func (app *Handlers) GetTasks(w http.ResponseWriter, r *http.Request) {
 			JOIN boards ON tasks.board_id = boards.id 
 			WHERE boards.user_id = ? AND tasks.board_id = ?
 		`, userID, boardID).Scan(&tasks)
+	}
+
+	var subtasks []models.SubTask
+	app.DB.Find(&subtasks)
+
+	for i := range tasks {
+		for j := range subtasks {
+			if subtasks[j].TaskID == tasks[i].ID {
+				tasks[i].SubTasks = append(tasks[i].SubTasks, subtasks[j])
+			}
+		}
 	}
 
 	responsePayload := jsonResponse{

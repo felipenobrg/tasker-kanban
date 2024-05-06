@@ -15,10 +15,11 @@ type Model struct {
 
 type Task struct {
 	Model
-	BoardID     uint   `json:"board_id" gorm:"foreignKey:board_id;not null"`
-	Title       string `json:"title" gorm:"not null"`
-	Description string `json:"description" gorm:"not null"`
-	Status      string `json:"status" gorm:"default:'Pendente'"`
+	BoardID     uint      `json:"board_id" gorm:"foreignKey:board_id;not null"`
+	Title       string    `json:"title" gorm:"not null"`
+	Description string    `json:"description" gorm:"not null"`
+	Status      string    `json:"status" gorm:"default:'Pendente'"`
+	SubTasks    []SubTask `json:"subtasks" gorm:"-"`
 }
 
 func (t *Task) BeforeDelete(tx *gorm.DB) error {

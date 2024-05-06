@@ -8,17 +8,15 @@ import { useFilter } from '@/context/filterContext'
 import { ChangeEvent, useState } from 'react'
 import { Plus } from 'lucide-react'
 import AlertDialog from './alertDialog'
-import DeleteBoard from '@/lib/boards/deleteBoard'
 import { useBoard } from '@/context/boardContext'
 import HeaderInput from './headerInput'
-import DialogBoard from '../dialogs/dialogBoard/dialogBoard'
 import DropdownDeleteBoard from './dropdownDeleteBoard'
+import DialogAddNewTask from '../dialogs/DialogAddNewTask/DialogAddNewTask'
 
 const STATUS_OPTION = ['Backlog', 'Em andamento', 'Feito']
 
 export default function Header() {
   const { setFilterValue } = useFilter()
-  const { boardId } = useBoard()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [isAlertOpen, setIsAlertOpen] = useState(false)
@@ -42,17 +40,6 @@ export default function Header() {
 
   const handleDeleteConfirmation = () => {
     setIsAlertOpen(true)
-  }
-
-  const handleDeleteBoard = async () => {
-    if (boardId !== null) {
-      await DeleteBoard({ id: boardId })
-      setIsDialogOpen(false)
-      setIsAlertOpen(false)
-      window.location.reload()
-    } else {
-      console.error('Cannot delete board: boardId is null')
-    }
   }
 
   const handleCloseDialogBoard = () => {
@@ -92,7 +79,7 @@ export default function Header() {
           <Plus size={18} /> Adicionar nova Tarefa
         </Button>
       </div>
-      <DialogBoard
+      <DialogAddNewTask
         onClose={handleCloseDialogBoard}
         isOpen={isDialogOpen}
         statusOption={STATUS_OPTION}
@@ -105,7 +92,7 @@ export default function Header() {
         isDialogOpen={isAlertOpen}
         setIsDialogOpen={setIsDialogOpen}
         handleCancelDelete={handleCloseDialog}
-        handleDeleteBoard={handleDeleteBoard}
+        setIsAlertOpen={setIsAlertOpen}
       />
     </header>
   )

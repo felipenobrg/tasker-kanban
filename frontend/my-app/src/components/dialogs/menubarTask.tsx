@@ -42,7 +42,6 @@ export default function MenubarTask(props: MenubarTaskProps) {
       setIsDialogOpen(false)
     }
   }
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="justify-end outline-none">

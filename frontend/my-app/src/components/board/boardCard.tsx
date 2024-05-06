@@ -1,13 +1,12 @@
 'use client'
 
-import * as Dialog from '@radix-ui/react-dialog'
 import { Task } from '@/types/task'
 import { Card } from '../ui/card'
 import { Reorder } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import DeleteTask from '@/lib/task/deleteTask'
 import UpdateTask from '@/lib/task/updateTask'
-import DialogTask from '../dialogs/dialogTask/dialogTask'
+import DialogEditTask from '../dialogs/dialogEditTask/dialogEditTask'
 
 interface BoardCardProps {
   data: Task
@@ -81,7 +80,7 @@ export default function BoardCard(props: BoardCardProps) {
               <Reorder.Item value={item} key={item.ID}>
                 <Card
                   onClick={handleDialogOpen}
-                  className="flex flex-col bg-gray-800 w-44 h-28"
+                  className="flex flex-col bg-gray-800 w-60 h-28"
                 >
                   <div className="flex items-end justify-between">
                     <p className="text-gray-200 text-sm ml-1 break-words">
@@ -94,7 +93,7 @@ export default function BoardCard(props: BoardCardProps) {
           </Reorder.Group>
         </div>
       </div>
-      <DialogTask
+      <DialogEditTask
         statusOption={statusOption}
         initialDescription={data.description}
         initialStatus={data.status}

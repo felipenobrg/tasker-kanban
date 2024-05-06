@@ -1,5 +1,11 @@
 'use client'
 
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+import { signIn } from 'next-auth/react'
+import { useForm, SubmitHandler } from 'react-hook-form'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import {
@@ -11,14 +17,12 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm, SubmitHandler } from 'react-hook-form'
 import LoginAuth from '@/lib/auth/login'
-import { useRouter } from 'next/navigation'
-import { signIn } from 'next-auth/react'
 
 export default function Login() {
+  const { data: session } = useSession()
+  const router = useRouter()
+
   const schema = z.object({
     email: z
       .string()
@@ -27,8 +31,6 @@ export default function Login() {
       .string()
       .min(6, { message: 'A senha deve ter pelo menos 6 caracteres' }),
   })
-  const router = useRouter()
-
   type FormFields = z.infer<typeof schema>
 
   const {
@@ -52,7 +54,7 @@ export default function Login() {
           email: data.email,
           password: data.password,
           callbackUrl: '/',
-          redirect: true,
+          redirect: false,
         })
 
         if (result?.error) {

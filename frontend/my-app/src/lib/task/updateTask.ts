@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { BASE_URL } from '../../../apiConfig'
 
-interface UpdateTaskProps {
+export interface UpdateTaskProps {
   description?: string
   status: string
   id: number

@@ -15,7 +15,7 @@ type UserPayload struct {
 	Email    string    `json:"email"`
 }
 
-type singinPayload struct {
+type signinPayload struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
@@ -26,8 +26,8 @@ type loginPayload struct {
 	Password string `json:"password"`
 }
 
-func (app *Handlers) Singin(w http.ResponseWriter, r *http.Request) {
-	var payload singinPayload
+func (app *Handlers) Signin(w http.ResponseWriter, r *http.Request) {
+	var payload signinPayload
 	err := util.ReadJson(w, r, &payload)
 	if err != nil {
 		util.ErrorJSON(w, err, http.StatusBadRequest)

@@ -13,9 +13,11 @@ import (
 )
 
 type TaskPayload struct {
-	BoardID     uint   `json:"board_id"`
-	Description string `json:"description"`
-	Status      string `json:"status"`
+	BoardID     uint             `json:"board_id"`
+	Title       string           `json:"title"`
+	Description string           `json:"description"`
+	Status      string           `json:"status"`
+	SubTasks    []models.SubTask `json:"subtasks"`
 }
 
 func getTasksForCurrentUser(r *http.Request, DB *gorm.DB) []models.Task {
@@ -39,6 +41,17 @@ func (app *Handlers) GetTasks(w http.ResponseWriter, r *http.Request) {
 			JOIN boards ON tasks.board_id = boards.id 
 			WHERE boards.user_id = ? AND tasks.board_id = ?
 		`, userID, boardID).Scan(&tasks)
+	}
+
+	var subtasks []models.SubTask
+	app.DB.Find(&subtasks)
+
+	for i := range tasks {
+		for j := range subtasks {
+			if subtasks[j].TaskID == tasks[i].ID {
+				tasks[i].SubTasks = append(tasks[i].SubTasks, subtasks[j])
+			}
+		}
 	}
 
 	responsePayload := jsonResponse{
@@ -89,6 +102,7 @@ func (app *Handlers) CreateTask(w http.ResponseWriter, r *http.Request) {
 
 	newTask := models.Task{
 		BoardID:     payload.BoardID,
+		Title:       payload.Title,
 		Description: payload.Description,
 		Status:      payload.Status,
 	}
@@ -175,6 +189,7 @@ func (app *Handlers) UpdateTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	task.Title = taskPayload.Title
 	task.Description = taskPayload.Description
 	task.Status = taskPayload.Status
 

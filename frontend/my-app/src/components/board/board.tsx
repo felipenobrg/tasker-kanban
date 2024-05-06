@@ -8,10 +8,10 @@ import { useState, useEffect } from 'react'
 import { Reorder } from 'framer-motion'
 import { useFilter } from '@/context/filterContext'
 import GetTask from '@/lib/task/getTask'
-import UpdateTask, { UpdateTaskProps } from '@/lib/task/updateTask'
+import UpdateTask from '@/lib/task/updateTask'
 
 const statusOptions = [
-  { status: 'Backlog', circleColor: 'gray' },
+  { status: 'Pendente', circleColor: 'gray' },
   { status: 'Em andamento', circleColor: 'purple' },
   { status: 'Feito', circleColor: 'green' },
 ]
@@ -26,13 +26,12 @@ export default function Board() {
       try {
         const taskValue = await GetTask()
         setTasks(taskValue)
-        console.log('TASKS', tasks)
       } catch (error) {
         console.error('Error fetching tasks:', error)
       }
     }
     fetchData()
-  }, [tasks])
+  }, [])
 
   useEffect(() => {
     if (tasks && filterValue) {

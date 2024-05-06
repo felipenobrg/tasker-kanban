@@ -19,8 +19,8 @@ const config = {
     },
     extend: {
       fontFamily: {
-        PlayfairDisplay: ['Plus Jakarta Sans', 'sans-serif'],
-       },
+        'plus-jakarta-sans': ['Plus Jakarta Sans', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

@@ -7,8 +7,11 @@ export default function ChangeThemeButton() {
   const { setTheme, theme } = useTheme()
 
   const handleThemeChange = (selectedTheme: SetStateAction<string>) => {
+    console.log('Selected Theme:', selectedTheme)
     setTheme(selectedTheme)
   }
+
+  console.log('Current Theme:', theme)
 
   return (
     <div className="flex items-center">

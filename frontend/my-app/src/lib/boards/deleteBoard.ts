@@ -1,6 +1,5 @@
-"use server"
-
 import axios from 'axios'
+import { BASE_URL } from '../../../apiConfig';
 
 interface DeleteBoardProps {
     id: number
@@ -8,11 +7,11 @@ interface DeleteBoardProps {
 
 export default async function DeleteBoard(props: DeleteBoardProps) {
     const { id } = props
+    console.log('ID', id)
     try {
-        if (!process.env.BASE_URL) {
-            throw new Error('BASE_URL is not defined in the environment variables');
-        }
-        const response = await axios.delete(`${process.env.BASE_URL}/boards/delete/${id}`);
+        const response = await axios.delete(`${BASE_URL}/boards/${id}`, {
+            withCredentials: true
+        });
         return response.data;
     } catch(error) {
         console.error('Error posting task:', error);

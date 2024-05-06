@@ -31,7 +31,7 @@ export default function Sidebar() {
     const fetchBoard = async () => {
       try {
         const boardDataResponse = await getBoard()
-        const boardData = boardDataResponse.data
+        const boardData = boardDataResponse.data.boards
         if (boardData.length > 0) {
           handleLinkClick(boardData[0].ID)
         }
@@ -99,13 +99,13 @@ export default function Sidebar() {
               </Link>
             </nav>
           ))}
-          <Button
-            variant="ghost"
-            className="mt-3 flex items-center  flex-row gap-1 text-indigo-500 ml-3 hover:rounded-l-lg rounded-r-full"
+          <Link
+            href="/"
+            className="mt-3 flex items-center  flex-row gap-1 text-indigo-500 ml-7 hover:rounded-l-lg rounded-r-full"
             onClick={openDialog}
           >
             <LayoutPanelLeft size={20} /> <Plus size={15} /> Criar Novo Board
-          </Button>
+          </Link>
           <div className="mt-10 ml-5 gap-2">
             <ChangeThemeButton />
           </div>

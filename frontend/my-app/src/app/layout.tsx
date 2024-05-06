@@ -10,19 +10,17 @@ export const metadata: Metadata = {
   description: 'Gerenciador de Tarefas',
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<{
+interface RootLayoutProps {
   children: React.ReactNode
-}>) {
+}
+
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <>
-      <html lang="en" suppressHydrationWarning>
-        <head />
-        <body className={inter.className}>
-          <Providers>{children}</Providers>
-        </body>
-      </html>
-    </>
+    <html lang="en" suppressHydrationWarning>
+      <head />
+      <body className={inter.className}>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
   )
 }

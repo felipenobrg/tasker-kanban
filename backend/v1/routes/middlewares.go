@@ -9,7 +9,6 @@ import (
 
 	"tasker/models"
 	"tasker/util"
-
 )
 
 const statusUnauthorized = http.StatusUnauthorized

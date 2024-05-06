@@ -15,22 +15,26 @@ import { useState } from 'react'
 import UpdateTask from '@/lib/task/updateTask'
 import MenubarTask from '../menubarTask'
 
-interface DialogTaskProps {
+interface DialogEditTaskProps {
   statusOption: { status: string; circleColor: string }[]
   initialDescription: string
   initialStatus: string
   id: number
+  isOpen: boolean
+  onClose: () => void
   setDialogOpen: (isOpen: boolean) => void
   onUpdateTask: (id: number, description: string, status: string) => void
-  handleDeleteTask: (id: number, description: string, status: string) => void
+  handleDeleteTask?: (id: number) => void
 }
 
-export default function DialogTask(props: DialogTaskProps) {
+export default function DialogEditTask(props: DialogEditTaskProps) {
   const {
     statusOption,
     initialDescription,
     initialStatus,
     id,
+    isOpen,
+    onClose,
     setDialogOpen,
     onUpdateTask,
     handleDeleteTask,
@@ -50,22 +54,24 @@ export default function DialogTask(props: DialogTaskProps) {
       setDialogDescription('')
       setDialogStatus('')
       setDialogOpen(false)
-      window.location.reload()
     } catch (error) {
       console.error('Error updating task:', error)
     }
   }
 
   return (
-    <Dialog.Root modal>
+    <Dialog.Root modal open={isOpen} onOpenChange={onClose}>
       <Dialog.Overlay className="fixed inset-0">
         <div className="absolute inset-0 bg-black opacity-70"></div>
       </Dialog.Overlay>{' '}
-      <Dialog.Content className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded shadow-md bg-gray-900 p-5 w-80 h-80 flex flex-col gap-2 justify-center">
+      <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 rounded-lg shadow-md bg-gray-900 p-5 w-96 h-96 flex flex-col gap-2 justify-center">
         <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
-          <div>
-            <MenubarTask handleDeleteTask={handleDeleteTask} />
-            <h1 className="text-base font-bold">Edição da Tarefa</h1>
+          <div className="flex justify-between">
+            <h1 className="text-lg font-bold">Edição da Tarefa</h1>
+            <MenubarTask
+              id={id}
+              handleDeleteTask={() => handleDeleteTask?.(id)}
+            />
           </div>
           <p className="text-sm mt-2">Editar descrição da Tarefa</p>
           <Input

@@ -7,8 +7,8 @@ import { Task } from '@/types/task'
 import { useState, useEffect } from 'react'
 import { Reorder } from 'framer-motion'
 import { useFilter } from '@/context/filterContext'
-import GetTaskById from '@/lib/task/getTaskById'
-import { useBoard } from '@/context/boardContext'
+import GetTask from '@/lib/task/getTask'
+import UpdateTask, { UpdateTaskProps } from '@/lib/task/updateTask'
 
 const statusOptions = [
   { status: 'Backlog', circleColor: 'gray' },
@@ -20,19 +20,30 @@ export default function Board() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([])
   const { filterValue } = useFilter()
-  const { boardId } = useBoard()
 
   useEffect(() => {
-    const fetchTasks = async () => {
+    const fetchData = async () => {
       try {
-        const tasksData = await GetTaskById({ id: boardId })
-        setTasks(tasksData)
+        const taskValue = await GetTask()
+        setTasks(taskValue)
+        console.log('TASKS', tasks)
       } catch (error) {
         console.error('Error fetching tasks:', error)
       }
     }
-    fetchTasks()
-  }, [boardId])
+    fetchData()
+  }, [tasks])
+
+  useEffect(() => {
+    if (tasks && filterValue) {
+      const updatedFilteredTasks = tasks.filter(
+        (task) =>
+          task.description &&
+          task.description.toLowerCase().includes(filterValue.toLowerCase()),
+      )
+      setFilteredTasks(updatedFilteredTasks)
+    }
+  }, [filterValue, tasks])
 
   useEffect(() => {
     const updatedFilteredTasks = tasks.filter((task) =>
@@ -41,7 +52,22 @@ export default function Board() {
     setFilteredTasks(updatedFilteredTasks)
   }, [filterValue, tasks])
 
-  const handleDrop = (newTasks: Task[], status: string) => {}
+  const handleDrop = async (newTasks: Task[], newStatus: string) => {
+    try {
+      const updatedTasks = newTasks.map((task) => ({
+        ...task,
+        status: newStatus,
+      }))
+
+      for (const updatedTask of updatedTasks) {
+        await UpdateTask(updatedTask)
+      }
+
+      setTasks(updatedTasks)
+    } catch (error) {
+      console.error('Error updating tasks:', error)
+    }
+  }
 
   return (
     <main className="flex flex-1 gap-4 p-4 lg:gap-6 lg:p-6 relative">

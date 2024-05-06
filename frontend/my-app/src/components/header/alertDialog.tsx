@@ -29,7 +29,6 @@ export default function AlertDialog(props: AlertDialogProps) {
       await DeleteBoard({ id: boardId })
       setIsDialogOpen(false)
       setIsAlertOpen(false)
-      window.location.reload()
     } else {
       console.error('Cannot delete board: boardId is null')
     }

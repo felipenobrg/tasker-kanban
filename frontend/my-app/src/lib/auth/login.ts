@@ -9,8 +9,7 @@ interface LoginAuthProps {
 export default async function LoginAuth(props: LoginAuthProps) {
     const { email, password } = props;
     try {
-        const response = await axios.post(`${BASE_URL}/login`, { email, password }, { withCredentials: true });
-        localStorage.setItem('session_token', response.data.session_token);
+        const response = await axios.post(`${BASE_URL}/login`, { email, password },{ withCredentials: true });
         return response.data;
     } catch(error) {
         console.error('Error posting task:', error);

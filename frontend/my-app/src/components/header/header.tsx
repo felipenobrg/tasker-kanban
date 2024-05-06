@@ -11,9 +11,8 @@ import AlertDialog from './alertDialog'
 import { useBoard } from '@/context/boardContext'
 import HeaderInput from './headerInput'
 import DropdownDeleteBoard from './dropdownDeleteBoard'
-import DialogAddNewTask from '../dialogs/DialogAddNewTask/DialogAddNewTask'
-
-const STATUS_OPTION = ['Backlog', 'Em andamento', 'Feito']
+import DialogAddNewTask from '../dialogs/dialogAddNewTask/DialogAddNewTask'
+import { statusOption } from '@/types/statusOption'
 
 export default function Header() {
   const { setFilterValue } = useFilter()
@@ -82,7 +81,7 @@ export default function Header() {
       <DialogAddNewTask
         onClose={handleCloseDialogBoard}
         isOpen={isDialogOpen}
-        statusOption={STATUS_OPTION}
+        statusOption={statusOption}
       />
       <DropdownDeleteBoard
         handleEllipsisClick={handleEllipsisClick}

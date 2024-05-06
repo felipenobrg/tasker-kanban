@@ -82,6 +82,6 @@
 
   body {
     @apply bg-background text-foreground font-sans;
-    font-family: var(--font-sans);
+    font-family: 'plus-jakarta-sans', sans-serif;
   }
 }

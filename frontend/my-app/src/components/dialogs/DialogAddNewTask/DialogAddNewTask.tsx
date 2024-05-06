@@ -89,8 +89,9 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
       </Dialog.Overlay>{' '}
       <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded shadow-md bg-gray-900 p-5 w-[30rem] flex flex-col gap-2 justify-center items-center z-50 overflow-auto">
         <form
-          className="flex flex-col gap-3 "
+          className="flex flex-col gap-3"
           onSubmit={handleSubmit(onSubmit)}
+          noValidate
         >
           <div className="flex justify-start">
             <h1 className="text-lg font-bold">Adicionar uma nova tarefa</h1>
@@ -130,7 +131,7 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
               <Button
                 type="button"
                 onClick={() => handleRemoveSubTask(index)}
-                className="text-gray-500"
+                className="text-gray-500 transition-colors duration-300 hover:text-red-500 bg-none"
                 variant="ghost"
               >
                 <X />

@@ -28,7 +28,11 @@ func (app *Handlers) GetBoards(w http.ResponseWriter, r *http.Request) {
 	app.DB.Where("user_id = ?", userID).Find(&boards)
 
 	var tasks []models.Task
-	app.DB.Find(&tasks)
+	app.DB.Raw(`
+		SELECT tasks.* FROM tasks 
+		JOIN boards ON tasks.board_id = boards.id 
+		WHERE boards.user_id = ?
+	`, userID).Scan(&tasks)
 
 	for i := range boards {
 		for j := range tasks {

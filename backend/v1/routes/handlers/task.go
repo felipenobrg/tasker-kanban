@@ -24,18 +24,22 @@ func getTasksForCurrentUser(r *http.Request, DB *gorm.DB) []models.Task {
 	var tasks []models.Task
 	userID := r.Context().Value("user").(models.User).ID
 
-	DB.Raw("SELECT tasks.* FROM tasks JOIN boards ON tasks.board_id = boards.id WHERE boards.user_id = ?", userID).Scan(&tasks)
+	DB.Raw(`
+		SELECT tasks.* FROM tasks 
+		JOIN boards ON tasks.board_id = boards.id 
+		WHERE boards.user_id = ?
+	`, userID).Scan(&tasks)
 	return tasks
 }
 
 func (app *Handlers) GetTasks(w http.ResponseWriter, r *http.Request) {
 	var tasks []models.Task
 	boardID := r.URL.Query().Get("boardId")
+	userID := r.Context().Value("user").(models.User).ID
+
 	if boardID == "" {
 		tasks = getTasksForCurrentUser(r, app.DB)
 	} else {
-		userID := r.Context().Value("user").(models.User).ID
-
 		app.DB.Raw(`
 			SELECT tasks.* FROM tasks 
 			JOIN boards ON tasks.board_id = boards.id 
@@ -44,7 +48,12 @@ func (app *Handlers) GetTasks(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var subtasks []models.SubTask
-	app.DB.Find(&subtasks)
+	app.DB.Raw(`
+		SELECT sub_tasks.* FROM sub_tasks 
+		JOIN tasks on sub_tasks.task_id = tasks.id
+		JOIN boards ON tasks.board_id = boards.id 
+		WHERE boards.user_id = ?
+	`, userID).Scan(&subtasks)
 
 	for i := range tasks {
 		for j := range subtasks {

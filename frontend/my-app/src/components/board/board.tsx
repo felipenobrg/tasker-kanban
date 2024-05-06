@@ -45,7 +45,7 @@ export default function Board() {
   }, [filterValue, tasks])
 
   useEffect(() => {
-    const updatedFilteredTasks = tasks.filter((task) =>
+    const updatedFilteredTasks = tasks?.filter((task) =>
       task.description.toLowerCase().includes(filterValue.toLowerCase()),
     )
     setFilteredTasks(updatedFilteredTasks)

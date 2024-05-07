@@ -46,6 +46,7 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
   const { boardId } = useBoard()
 
   const onSubmit = async (data: any) => {
+    console.log('dddddddddd')
     try {
       if (boardId) {
         const taskData = {

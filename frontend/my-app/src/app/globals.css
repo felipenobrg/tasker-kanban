@@ -1,11 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Sedan+SC&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@font-face {
-  font-family: 'Plus Jakarta Sans';
-  src: url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
-}
-
 
 @layer base {
   :root {
@@ -72,16 +68,11 @@
 }
 
 @layer base {
-  :root {
-    --font-sans: 'Plus Jakarta Sans', sans-serif;
-  }
-
   * {
     @apply border-border;
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
-    font-family: 'plus-jakarta-sans', sans-serif;
+    @apply bg-background text-foreground;
   }
 }

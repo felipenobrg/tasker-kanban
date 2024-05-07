@@ -45,7 +45,7 @@ export default function Board() {
   }, [filterValue, tasks])
 
   useEffect(() => {
-    const updatedFilteredTasks = tasks.filter((task) =>
+    const updatedFilteredTasks = tasks?.filter((task) =>
       task.description.toLowerCase().includes(filterValue.toLowerCase()),
     )
     setFilteredTasks(updatedFilteredTasks)
@@ -56,6 +56,7 @@ export default function Board() {
       const updatedTasks = newTasks.map((task) => ({
         ...task,
         status: newStatus,
+        id: task.ID, // Add the id property
       }))
 
       for (const updatedTask of updatedTasks) {
@@ -78,13 +79,13 @@ export default function Board() {
                 <Circle size={18} color={circleColor} fill={circleColor} />
                 <p className="mb-2 mt-2 text-sm text-gray-400 ">{status}</p>
               </div>
-              <Reorder.Group
+              {filteredTasks && <Reorder.Group
                 className="flex flex-col gap-5"
-                values={filteredTasks.filter((task) => task.status === status)}
+                values={filteredTasks?.filter((task) => task.status === status)}
                 onReorder={(newTasks: Task[]) => handleDrop(newTasks, status)}
               >
                 {filteredTasks
-                  .filter((task) => task.status === status)
+                  ?.filter((task) => task.status === status)
                   .map((task) => (
                     <BoardCard
                       key={task.ID}
@@ -92,12 +93,12 @@ export default function Board() {
                       statusOption={statusOptions}
                     />
                   ))}
-                {filteredTasks.length === 0 && (
+                {filteredTasks?.length === 0 && (
                   <p className="text-gray-400 text-sm mt-2">
                     Não há tarefas nesta categoria.
                   </p>
                 )}
-              </Reorder.Group>
+              </Reorder.Group>}
             </div>
           ))}
         </div>

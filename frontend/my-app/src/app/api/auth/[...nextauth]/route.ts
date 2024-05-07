@@ -1,5 +1,6 @@
 import NextAuth, { NextAuthOptions, Session } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { BASE_URL } from '../../../../../apiConfig';
 
 interface CustomUser {
   name?: string;
@@ -16,7 +17,7 @@ const nextAuthOptions: NextAuthOptions = {
         password: { label: 'password', type: 'password' },
       },
       async authorize(credentials, req) {
-        const response = await fetch('http://localhost:8080/api/v1/login', {
+        const response = await fetch(`${BASE_URL}/login`, {
           method: 'POST',
           headers: {
             'Content-type': 'application/json',

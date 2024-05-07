@@ -16,7 +16,7 @@ import { useBoard } from '@/context/boardContext'
 import PostTask from '@/lib/task/postTask'
 import { Plus, X } from 'lucide-react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { FieldValues, useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 interface DialogAddNewTaskProps {
@@ -45,9 +45,11 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
   console.log('substasks', subTasks)
   const { boardId } = useBoard()
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: FieldValues) => {
     try {
-      if (boardId) {
+      if (boardId === null) {
+        throw new Error("boardId não pode ser null");
+      }
         const taskData = {
           title: data.title,
           board_id: boardId,
@@ -58,12 +60,9 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
             status: 'Enabled',
           })),
         }
-
+        console.log('taskData', taskData);
         await PostTask(taskData)
         setSubTasks([])
-      } else {
-        console.error('boardId is null')
-      }
     } catch (error) {
       console.error('Error posting task:', error)
     }

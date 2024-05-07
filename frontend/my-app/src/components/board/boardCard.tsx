@@ -7,9 +7,11 @@ import { useEffect, useState } from 'react'
 import DeleteTask from '@/lib/task/deleteTask'
 import UpdateTask from '@/lib/task/updateTask'
 import DialogEditTask from '../dialogs/dialogEditTask/dialogEditTask'
+import { useTask } from '@/context/taskContext'
 
 interface BoardCardProps {
   data: Task
+  taskId: number
   statusOption: { status: string; circleColor: string }[]
 }
 
@@ -26,9 +28,10 @@ const truncateDescription = (
 }
 
 export default function BoardCard(props: BoardCardProps) {
-  const { data, statusOption } = props
+  const { data, statusOption, taskId } = props
   const [task, setTask] = useState<Task[]>([])
   const [dialogOpen, setDialogOpen] = useState(false)
+  const { setTaskId } = useTask()
 
   const handleDialogOpen = () => {
     setDialogOpen(true)
@@ -65,6 +68,10 @@ export default function BoardCard(props: BoardCardProps) {
   useEffect(() => {
     setTask([data])
   }, [data, setTask])
+
+  useEffect(() => {
+    setTaskId(taskId)
+  }, [taskId, setTaskId])
 
   return (
     <div>

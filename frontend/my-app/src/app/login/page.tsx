@@ -70,10 +70,10 @@ export default function Login() {
     }
   }
 
-  if (session) {
-    router.replace('/')
-    return null
-  }
+  // if (session) {
+  //   router.replace('/')
+  //   return null
+  // }
 
   return (
     <div className="flex items-center flex-col justify-center h-screen">

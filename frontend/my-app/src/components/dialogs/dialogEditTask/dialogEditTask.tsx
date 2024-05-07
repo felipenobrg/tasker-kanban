@@ -33,8 +33,8 @@ interface DialogEditTaskProps {
 }
 
 const schema = z.object({
-  description: z.string().min(1),
-  status: z.string().min(1),
+  description: z.string(),
+  status: z.string(),
 })
 
 export default function DialogEditTask(props: DialogEditTaskProps) {

@@ -11,7 +11,7 @@ import AlertDialog from './alertDialog'
 import { useBoard } from '@/context/boardContext'
 import HeaderInput from './headerInput'
 import DropdownDeleteBoard from './dropdownDeleteBoard'
-import DialogAddNewTask from '../dialogs/DialogAddNewTask/DialogAddNewTask'
+import DialogAddNewTask from '../dialogs/dialogAddNewTask/DialogAddNewTask'
 import { statusOption } from '@/types/statusOption'
 
 export default function Header() {

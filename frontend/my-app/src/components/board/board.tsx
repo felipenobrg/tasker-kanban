@@ -92,6 +92,7 @@ export default function Board() {
                     .map((task) => (
                       <BoardCard
                         key={task.ID}
+                        taskId={task.ID}
                         data={task}
                         statusOption={statusOptions}
                       />

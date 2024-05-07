@@ -12,10 +12,9 @@ export default async function PostTask(props: PostTaskProps) {
   const { title, description, status, board_id } = props
   try {
     const response = await axios.post(
-      `${BASE_URL}/tasks`,
+      `${BASE_URL}/tasks`, 
       { board_id, title, description, status },
-      { withCredentials: true },
-    )
+      { withCredentials: true })
     console.log("response", response.data)
     return response.data
   } catch (error) {

@@ -70,6 +70,11 @@ export default function Login() {
     }
   }
 
+  if (session) {
+    router.replace('/')
+    return null
+  }
+
   return (
     <div className="flex items-center flex-col justify-center h-screen">
       <Card className="max-w-sm">
@@ -98,12 +103,6 @@ export default function Login() {
               <div className="grid gap-2">
                 <div className="flex items-center">
                   <Label htmlFor="password">Senha</Label>
-                  <Link
-                    href="#"
-                    className="ml-auto inline-block text-sm underline"
-                  >
-                    Esqueceu senha?
-                  </Link>
                 </div>
                 <Input
                   id="password"
@@ -111,6 +110,12 @@ export default function Login() {
                   {...register('password')}
                   required
                 />
+                <Link
+                  href="#"
+                  className="ml-auto inline-block text-sm underline"
+                >
+                  Esqueceu senha?
+                </Link>
                 {errors.password && (
                   <span className="text-red-500">
                     {errors.password.message}

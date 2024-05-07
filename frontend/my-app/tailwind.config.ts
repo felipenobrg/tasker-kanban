@@ -19,7 +19,8 @@ const config = {
     },
     extend: {
       fontFamily: {
-        'plus-jakarta-sans': ['Plus Jakarta Sans', 'sans-serif'],
+        jakarta: ['Plus Jakarta Sans', 'sans-serif'],
+        sedan: ['Sedan', 'sans-serif'], 
       },
       colors: {
         border: "hsl(var(--border))",

@@ -3,6 +3,7 @@
 import { BoardProvider } from '@/context/boardContext'
 import { DialogProvider } from '@/context/dialogContext'
 import { FilterProvider } from '@/context/filterContext'
+import { ContextProvider } from '@/context/taskContext'
 import { SessionProvider } from 'next-auth/react'
 import { ThemeProvider } from 'next-themes'
 import React from 'react'
@@ -17,14 +18,16 @@ export default function Providers({ children }: ProvidersProps) {
       <BoardProvider>
         <DialogProvider>
           <FilterProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              {children}
-            </ThemeProvider>
+            <ContextProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                {children}
+              </ThemeProvider>
+            </ContextProvider>
           </FilterProvider>
         </DialogProvider>
       </BoardProvider>

@@ -17,11 +17,7 @@ import PostTask from '@/lib/task/postTask'
 import { Plus, X } from 'lucide-react'
 import { FieldValues, useForm } from 'react-hook-form'
 import { useTask } from '@/context/taskContext'
-
-interface SubTask {
-  id: string
-  name: string
-}
+import PostSubtask from '@/lib/subtasks/postSubtasks'
 
 interface DialogAddNewTaskProps {
   statusOption: string[]
@@ -31,7 +27,6 @@ interface DialogAddNewTaskProps {
 
 export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
   const { statusOption, isOpen, onClose } = props
-  const { taskId } = useTask()
   const {
     register,
     handleSubmit,
@@ -40,26 +35,31 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
   } = useForm()
   const [subTasks, setSubTasks] = useState([{ name: '' }])
   const { boardId } = useBoard()
+  const { taskId } = useTask()
+  console.log('TASKID', taskId)
 
   const onSubmit = async (data: FieldValues) => {
-    console.log('DATA', data)
     try {
-      if (boardId === null) {
-        throw new Error('boardId não pode ser null')
-      }
       const taskData = {
         title: data.title,
-        board_id: boardId,
         description: data.description,
         status: data.status,
-        subtasks: subTasks.map((subTask) => ({
-          task_id: taskId,
-          name: subTask.name,
-          status: 'Enabled',
-        })),
+        board_id: boardId,
       }
-      console.log('taskData', taskData)
-      await PostTask(taskData)
+      const mainTaskResponse = await PostTask(taskData)
+      if (!mainTaskResponse) {
+        return
+      }
+      for (const subTask of subTasks) {
+        if (subTask.name.trim() !== '') {
+          const subTaskData = {
+            task_id: taskId,
+            name: subTask.name,
+            status: 'Enabled',
+          }
+          await PostSubtask(subTaskData)
+        }
+      }
       reset()
       onClose()
       setSubTasks([])
@@ -67,7 +67,6 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
       console.error('Error posting task:', error)
     }
   }
-
   const handleAddSubTask = () => {
     setSubTasks([...subTasks, { name: '' }])
   }
@@ -86,12 +85,6 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
 
   const handleSubmitButtonClick = () => {
     handleSubmit(onSubmit)()
-  }
-
-  const handleSelectClick = (
-    e: React.MouseEvent<HTMLDivElement> | React.MouseEvent<HTMLButtonElement>,
-  ) => {
-    e.stopPropagation()
   }
 
   return (

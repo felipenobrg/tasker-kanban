@@ -87,10 +87,13 @@ export default function BoardCard(props: BoardCardProps) {
               <Reorder.Item value={item} key={item.ID}>
                 <Card
                   onClick={handleDialogOpen}
-                  className="flex flex-col bg-gray-800 w-60 h-28"
+                  className="flex flex-col bg-gray-800 w-60 h-28 p-3"
                 >
-                  <div className="flex items-end justify-between">
-                    <p className="text-gray-200 text-sm ml-1 break-words">
+                  <div className="flex flex-col items-start justify-start">
+                    <p className="text-gray-200 text-base font-semibold">
+                      {item.title}
+                    </p>
+                    <p className="text-gray-200 text-sm ml-1 break-words mt-2">
                       {truncateDescription(item.description, 15)}
                     </p>
                   </div>

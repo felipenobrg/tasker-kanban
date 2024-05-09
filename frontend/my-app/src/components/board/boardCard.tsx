@@ -107,6 +107,7 @@ export default function BoardCard(props: BoardCardProps) {
         statusOption={statusOption}
         initialDescription={data.description}
         initialStatus={data.status}
+        title={data.title}
         id={data.ID}
         setDialogOpen={setDialogOpen}
         onUpdateTask={handleUpdateTask}

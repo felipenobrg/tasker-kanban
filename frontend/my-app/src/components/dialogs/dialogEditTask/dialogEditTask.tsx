@@ -18,6 +18,7 @@ import MenubarTask from '../menubarTask'
 import SubtaskCard from './subtaskCards'
 import GetSubtaskById from '@/lib/subtasks/getSubtaskById'
 import { Subtasks } from '@/types/subtasks'
+import { useForm } from 'react-hook-form'
 
 interface DialogEditTaskProps {
   statusOption: { status: string; circleColor: string }[]
@@ -25,6 +26,7 @@ interface DialogEditTaskProps {
   initialStatus: string
   id: number
   isOpen: boolean
+  title: string
   onClose: () => void
   setDialogOpen: (isOpen: boolean) => void
   onUpdateTask: (id: number, description: string, status: string) => void
@@ -38,31 +40,15 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
     initialStatus,
     id,
     isOpen,
+    title,
     onClose,
     setDialogOpen,
     onUpdateTask,
     handleDeleteTask,
   } = props
 
-  const [dialogDescription, setDialogDescription] = useState(initialDescription)
-  const [dialogStatus, setDialogStatus] = useState(initialStatus)
+  const { register, handleSubmit } = useForm()
   const [subtaskData, setSubtaskData] = useState<Subtasks[]>([])
-
-  const onSubmit = async () => {
-    try {
-      await UpdateTask({
-        description: dialogDescription,
-        status: dialogStatus,
-        id,
-      })
-      onUpdateTask(id, dialogDescription, dialogStatus)
-      setDialogDescription('')
-      setDialogStatus('')
-      setDialogOpen(false)
-    } catch (error) {
-      console.error('Error updating task:', error)
-    }
-  }
 
   useEffect(() => {
     const fetchSubtaskData = async () => {
@@ -75,7 +61,21 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
     }
 
     fetchSubtaskData()
-  }, [])
+  }, [id])
+
+  const onSubmit = async (formData: any) => {
+    try {
+      await UpdateTask({
+        description: formData.dialogDescription,
+        status: formData.dialogStatus,
+        id,
+      })
+      onUpdateTask(id, formData.dialogDescription, formData.dialogStatus)
+      setDialogOpen(false)
+    } catch (error) {
+      console.error('Error updating task:', error)
+    }
+  }
 
   console.log('SUBSTASKS', subtaskData)
 
@@ -83,9 +83,9 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
     <Dialog.Root modal open={isOpen} onOpenChange={onClose}>
       <Dialog.Overlay className="fixed inset-0">
         <div className="absolute inset-0 bg-black opacity-70"></div>
-      </Dialog.Overlay>{' '}
+      </Dialog.Overlay>
       <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded shadow-md bg-gray-900 p-5 w-[30rem] flex flex-col gap-2 justify-center items-center z-50 overflow-y-auto">
-        <form className="flex flex-col gap-3" onSubmit={onSubmit}>
+        <form className="flex flex-col gap-3" onSubmit={handleSubmit(onSubmit)}>
           <div className="flex justify-between">
             <h1 className="text-lg font-bold">Edição da Tarefa</h1>
             <MenubarTask
@@ -98,16 +98,16 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
             type="text"
             className="w-[20rem]"
             placeholder="Informe..."
-            value={dialogDescription}
-            onChange={(e) => setDialogDescription(e.target.value)}
+            {...register('title')}
+            value={title}
           />
           <p className="text-sm mt-2">Editar descrição da Tarefa</p>
           <Input
             type="text"
             className="w-[20rem]"
             placeholder="Informe..."
-            value={dialogDescription}
-            onChange={(e) => setDialogDescription(e.target.value)}
+            {...register('description')}
+            value={initialDescription}
           />
           <p className="text-sm mt-2">Editar Sub Tarefa</p>
           {subtaskData &&
@@ -115,10 +115,7 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
               <SubtaskCard name={item.name} key={item.ID} />
             ))}
           <p>Editar o Status da Tarefa</p>
-          <Select
-            value={dialogStatus}
-            onValueChange={(value) => setDialogStatus(value)}
-          >
+          <Select value={initialStatus} {...register('dialogStatus')}>
             <SelectTrigger className="w-[20rem]">
               <SelectValue placeholder="Selecione um status" />
             </SelectTrigger>

@@ -90,11 +90,11 @@ export default function BoardCard(props: BoardCardProps) {
                   className="flex flex-col bg-gray-800 w-60 h-28 p-3"
                 >
                   <div className="flex flex-col items-start justify-start">
-                    <p className="text-gray-200 text-base font-semibold">
+                    <h2 className="text-gray-200 text-base font-bold">
                       {item.title}
-                    </p>
-                    <p className="text-gray-200 text-sm ml-1 break-words mt-2">
-                      {truncateDescription(item.description, 15)}
+                    </h2>
+                    <p className="text-gray-300 text-sm break-words mt-2 font-medium">
+                      {truncateDescription(item.description, 25)}
                     </p>
                   </div>
                 </Card>

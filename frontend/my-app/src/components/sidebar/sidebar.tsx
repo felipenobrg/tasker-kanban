@@ -3,7 +3,6 @@
 import * as React from 'react'
 import { LayoutPanelLeft, Plus, SquareCheckBig } from 'lucide-react'
 import Link from 'next/link'
-import { Button } from '../ui/button'
 import DialogNewBoard from '../dialogs/dialogNewBoard/dialogNewBoard'
 import { useEffect, useState } from 'react'
 import getBoard from '@/lib/boards/getBoard'

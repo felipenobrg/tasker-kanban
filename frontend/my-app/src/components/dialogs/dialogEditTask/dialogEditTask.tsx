@@ -19,6 +19,7 @@ import SubtaskCard from './subtaskCards'
 import GetSubtaskById from '@/lib/subtasks/getSubtaskById'
 import { Subtasks } from '@/types/subtasks'
 import { useForm } from 'react-hook-form'
+import UpdateSubtasks from '@/lib/subtasks/updateSubtask'
 
 interface DialogEditTaskProps {
   statusOption: { status: string; circleColor: string }[]
@@ -59,7 +60,6 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
         console.error('Error fetching subtask data:', error)
       }
     }
-
     fetchSubtaskData()
   }, [id])
 
@@ -84,7 +84,7 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
       <Dialog.Overlay className="fixed inset-0">
         <div className="absolute inset-0 bg-black opacity-70"></div>
       </Dialog.Overlay>
-      <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded shadow-md bg-gray-900 p-5 w-[30rem] flex flex-col gap-2 justify-center items-center z-50 overflow-y-auto">
+      <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded shadow-md bg-gray-900 p-6 w-[30rem] flex flex-col gap-2 justify-center items-center z-50 overflow-y-auto">
         <form className="flex flex-col gap-3" onSubmit={handleSubmit(onSubmit)}>
           <div className="flex justify-between">
             <h1 className="text-lg font-bold">Edição da Tarefa</h1>
@@ -109,12 +109,12 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
             {...register('description')}
             value={initialDescription}
           />
-          <p className="text-sm mt-2">Editar Sub Tarefa</p>
+          <p className="text-sm mt-2">Editar Checklist</p>
           {subtaskData &&
             subtaskData.map((item) => (
               <SubtaskCard name={item.name} key={item.ID} />
             ))}
-          <p>Editar o Status da Tarefa</p>
+          <p className="text-sm mt-2">Editar o Status da Tarefa</p>
           <Select value={initialStatus} {...register('dialogStatus')}>
             <SelectTrigger className="w-[20rem]">
               <SelectValue placeholder="Selecione um status" />

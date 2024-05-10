@@ -27,12 +27,7 @@ interface DialogAddNewTaskProps {
 
 export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
   const { statusOption, isOpen, onClose } = props
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm()
+  const { register, handleSubmit, reset } = useForm()
   const [subTasks, setSubTasks] = useState([{ name: '' }])
   const { boardId } = useBoard()
   const { taskId } = useTask()
@@ -97,8 +92,8 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
       <Dialog.Overlay className="fixed inset-0">
         <div className="absolute inset-0 bg-black opacity-70"></div>
       </Dialog.Overlay>{' '}
-      <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded shadow-md bg-gray-900 p-5 w-[30rem] flex flex-col gap-2 justify-center items-center z-50 overflow-y-auto">
-        <form className="flex flex-col gap-3" noValidate>
+      <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded shadow-md bg-gray-900 p-5 w-[30rem] flex flex-col gap-2 justify-center items-center z-50 overflow-auto">
+        <form className="flex flex-col gap-3 overflow-auto">
           <div className="flex justify-start">
             <h1 className="text-lg font-bold">Adicionar uma nova tarefa</h1>
           </div>
@@ -116,7 +111,7 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
             placeholder="e.g Discutir os objetivos e metas da semana com a equipe."
             {...register('description')}
           />
-          <p className="text-sm mt-2">Sub tarefas</p>
+          <p className="text-sm mt-2">Checklist</p>
           {subTasks.map((subTask, index) => (
             <div key={index} className="flex items-center">
               <Input

@@ -7,17 +7,16 @@ export default function ChangeThemeButton() {
   const { setTheme, theme } = useTheme()
 
   const handleThemeChange = (selectedTheme: SetStateAction<string>) => {
-    console.log('Selected Theme:', selectedTheme)
     setTheme(selectedTheme)
   }
-
-  console.log('Current Theme:', theme)
 
   return (
     <div className="flex items-center">
       <Switch
         checked={theme === 'dark'}
-        onChange={(checked) => handleThemeChange(checked ? 'dark' : 'light')}
+        onCheckedChange={(checked) =>
+          handleThemeChange(checked ? 'dark' : 'light')
+        }
         className="mr-2"
       />
       <SunIcon

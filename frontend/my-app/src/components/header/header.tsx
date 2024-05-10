@@ -11,8 +11,9 @@ import AlertDialog from './alertDialog'
 import { useBoard } from '@/context/boardContext'
 import HeaderInput from './headerInput'
 import DropdownDeleteBoard from './dropdownDeleteBoard'
-import DialogAddNewTask from '../dialogs/dialogAddNewTask/DialogAddNewTask'
+import DialogAddNewTask from '../dialogs/dialogAddNewTask/dialogAddNewTask'
 import { statusOption } from '@/types/statusOption'
+import Profile from '../profile/profile'
 
 export default function Header() {
   const { setFilterValue } = useFilter()
@@ -31,6 +32,7 @@ export default function Header() {
 
   const handleCloseDialog = () => {
     setIsDialogOpen(false)
+    setIsAlertOpen(false)
   }
 
   const handleEllipsisClick = () => {
@@ -93,6 +95,7 @@ export default function Header() {
         handleCancelDelete={handleCloseDialog}
         setIsAlertOpen={setIsAlertOpen}
       />
+      <Profile />
     </header>
   )
 }

@@ -21,7 +21,7 @@ const TaskContext = createContext<TaskContextType>({
 
 export const useTask = () => useContext(TaskContext)
 
-export const ContextProvider = ({ children }: { children: ReactNode }) => {
+export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const [taskId, setTaskId] = useState<number | null>(null)
 
   return (

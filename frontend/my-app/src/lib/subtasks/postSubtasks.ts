@@ -4,7 +4,7 @@ import { BASE_URL } from '../../../apiConfig';
 interface PostSubtasksProps {
     name: string;
     status: string
-    task_id: string
+    task_id: string | null
 }
 
 export default async function PostSubtask(props: PostSubtasksProps) {

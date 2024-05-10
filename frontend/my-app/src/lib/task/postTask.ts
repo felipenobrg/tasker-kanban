@@ -5,7 +5,7 @@ interface PostTaskProps {
   title: string;
   description: string;
   status: string;
-  board_id: number;
+  board_id: number | null;
 }
 
 export default async function PostTask(props: PostTaskProps) {

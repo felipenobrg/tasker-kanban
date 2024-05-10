@@ -21,6 +21,8 @@ export default function Board() {
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([])
   const { filterValue } = useFilter()
 
+  console.log('FILTEREDTASK', filteredTasks)
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -52,16 +54,17 @@ export default function Board() {
   }, [filterValue, tasks])
 
   const handleDrop = async (newTasks: Task[], newStatus: string) => {
+    console.log('NEWTASKS', newTasks)
+    console.log('newStatus', newStatus)
     try {
-      const updatedTasks = newTasks.map((task) => ({
+      const updatedTasks = newTasks.map((task, index) => ({
         ...task,
         status: newStatus,
         id: task.ID,
+        order: index,
       }))
 
-      for (const updatedTask of updatedTasks) {
-        await UpdateTask(updatedTask)
-      }
+      await Promise.all(updatedTasks.map((task) => UpdateTask(task)))
 
       setTasks(updatedTasks)
     } catch (error) {
@@ -82,10 +85,18 @@ export default function Board() {
               {filteredTasks && (
                 <Reorder.Group
                   className="flex flex-col gap-5"
-                  values={filteredTasks?.filter(
-                    (task) => task.status === status,
-                  )}
-                  onReorder={(newTasks: Task[]) => handleDrop(newTasks, status)}
+                  values={filteredTasks
+                    .filter((task) => task.status === status)
+                    .map((task) => task.ID)}
+                  onReorder={(newOrder) => {
+                    console.log('New order:', newOrder)
+                    const newTasksOrder = newOrder.map(
+                      (taskId) =>
+                        filteredTasks.find((task) => task.ID === taskId)!,
+                    )
+                    handleDrop(newTasksOrder, status)
+                  }}
+                  axis="x"
                 >
                   {filteredTasks
                     ?.filter((task) => task.status === status)
@@ -97,7 +108,8 @@ export default function Board() {
                         statusOption={statusOptions}
                       />
                     ))}
-                  {filteredTasks?.length === 0 && (
+                  {tasks.filter((task) => task.status === status).length ===
+                    0 && (
                     <p className="text-gray-400 text-sm mt-2">
                       Não há tarefas nesta categoria.
                     </p>

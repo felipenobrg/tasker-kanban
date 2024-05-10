@@ -117,7 +117,7 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
               <Input
                 type="text"
                 className="w-[17rem] mb-2 mr-2"
-                placeholder="Adicionar uma sub tarefa"
+                placeholder="Adicionar uma nova checklist"
                 value={subTask.name}
                 onChange={(e) => handleSubTaskChange(index, e.target.value)}
               />
@@ -132,7 +132,7 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
             className="flex flex-row items-center bg-indigo-500 hover:bg-indigo-600  text-white w-[20rem]"
             type="button"
           >
-            <Plus color="white" size={18} /> Adicionar Sub Tarefas
+            <Plus color="white" size={18} /> Adicionar Checklist
           </Button>
           <p className="text-sm mt-2">Status</p>
           <Select {...register('status')}>

@@ -19,65 +19,85 @@ import SubtaskCard from './subtaskCards'
 import GetSubtaskById from '@/lib/subtasks/getSubtaskById'
 import { Subtasks } from '@/types/subtasks'
 import { useForm } from 'react-hook-form'
-import UpdateSubtasks from '@/lib/subtasks/updateSubtask'
+
+interface FormDataProps {
+  title: string
+  description: string
+  dialogStatus: string
+}
 
 interface DialogEditTaskProps {
   statusOption: { status: string; circleColor: string }[]
   initialDescription: string
   initialStatus: string
   id: number
+  taskId: number
   isOpen: boolean
   title: string
   onClose: () => void
   setDialogOpen: (isOpen: boolean) => void
-  onUpdateTask: (id: number, description: string, status: string) => void
+  onUpdateTask: (
+    title: string,
+    id: number,
+    description: string,
+    status: string,
+  ) => void
   handleDeleteTask?: (id: number) => void
 }
 
 export default function DialogEditTask(props: DialogEditTaskProps) {
   const {
     statusOption,
-    initialDescription,
-    initialStatus,
     id,
     isOpen,
-    title,
+    taskId,
     onClose,
     setDialogOpen,
     onUpdateTask,
     handleDeleteTask,
   } = props
 
-  const { register, handleSubmit } = useForm()
+  const { register, handleSubmit, getValues, setValue } = useForm({
+    defaultValues: {
+      title: props.title,
+      description: props.initialDescription,
+      dialogStatus: props.initialStatus,
+    },
+  })
+
   const [subtaskData, setSubtaskData] = useState<Subtasks[]>([])
 
-  useEffect(() => {
-    const fetchSubtaskData = async () => {
-      try {
-        const subtaskData = await GetSubtaskById({ id })
-        setSubtaskData([subtaskData])
-      } catch (error) {
-        console.error('Error fetching subtask data:', error)
-      }
-    }
-    fetchSubtaskData()
-  }, [id])
-
-  const onSubmit = async (formData: any) => {
+  const onSubmit = async (formData: FormDataProps) => {
     try {
       await UpdateTask({
-        description: formData.dialogDescription,
+        title: formData.title,
+        description: formData.description,
         status: formData.dialogStatus,
         id,
       })
-      onUpdateTask(id, formData.dialogDescription, formData.dialogStatus)
+      onUpdateTask(
+        formData.title,
+        taskId,
+        formData.description,
+        formData.dialogStatus,
+      )
       setDialogOpen(false)
     } catch (error) {
       console.error('Error updating task:', error)
     }
   }
 
-  console.log('SUBSTASKS', subtaskData)
+  useEffect(() => {
+    const fetchSubtaskData = async () => {
+      try {
+        const subtaskData = await GetSubtaskById({ id: taskId })
+        setSubtaskData([subtaskData])
+      } catch (error) {
+        console.error('Error fetching subtask data:', error)
+      }
+    }
+    fetchSubtaskData()
+  }, [taskId])
 
   return (
     <Dialog.Root modal open={isOpen} onOpenChange={onClose}>
@@ -99,7 +119,6 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
             className="w-[20rem]"
             placeholder="Informe..."
             {...register('title')}
-            value={title}
           />
           <p className="text-sm mt-2">Editar descrição da Tarefa</p>
           <Input
@@ -107,7 +126,6 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
             className="w-[20rem]"
             placeholder="Informe..."
             {...register('description')}
-            value={initialDescription}
           />
           <p className="text-sm mt-2">Editar Checklist</p>
           {subtaskData &&
@@ -115,7 +133,13 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
               <SubtaskCard name={item.name} key={item.ID} />
             ))}
           <p className="text-sm mt-2">Editar o Status da Tarefa</p>
-          <Select value={initialStatus} {...register('dialogStatus')}>
+          <Select
+            {...register('dialogStatus')}
+            value={getValues('dialogStatus')}
+            onValueChange={(newValue) => {
+              setValue('dialogStatus', newValue)
+            }}
+          >
             <SelectTrigger className="w-[20rem]">
               <SelectValue placeholder="Selecione um status" />
             </SelectTrigger>

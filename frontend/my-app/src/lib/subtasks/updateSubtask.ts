@@ -14,7 +14,7 @@ export default async function UpdateSubtasks(props: UpdateSubtasksProps) {
       { withCredentials: true })
     return response.data
   } catch (error) {
-    console.error('Error posting task:', error)
+    console.error('Error posting subtask:', error)
     throw error
   }
 }

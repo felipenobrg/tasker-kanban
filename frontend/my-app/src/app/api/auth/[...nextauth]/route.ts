@@ -5,7 +5,6 @@ import { BASE_URL } from '../../../../../apiConfig';
 interface CustomUser {
   name?: string;
   email?: string;
-  image?: string;
 }
 
 const nextAuthOptions: NextAuthOptions = {
@@ -29,7 +28,6 @@ const nextAuthOptions: NextAuthOptions = {
         });
         const user = await response.json();
         if (user && response.ok) {
-          console.log("USERR", user);
           return user;
         }
         return null;
@@ -38,6 +36,7 @@ const nextAuthOptions: NextAuthOptions = {
   ],
   pages: {
     signIn: '/login',
+    signOut: '/login'
   },
   callbacks: {
     async jwt({ token, user }) {

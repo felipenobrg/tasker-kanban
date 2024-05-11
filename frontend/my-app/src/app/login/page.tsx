@@ -17,7 +17,10 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import 'react-toastify/dist/ReactToastify.css'
 import LoginAuth from '@/lib/auth/login'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 export default function Login() {
   const { data: session } = useSession()
@@ -63,13 +66,14 @@ export default function Login() {
           console.error('Authentication Error:', result.error)
         } else {
           router.replace('/')
+          toast.success('Login bem-sucedido!')
         }
       }
     } catch (error) {
       console.error('Error:', error)
+      setError('password', { message: 'Email ou senha incorretos' })
     }
   }
-
   // if (session) {
   //   router.replace('/')
   //   return null
@@ -85,7 +89,7 @@ export default function Login() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onSubmit)} noValidate>
             <div className="grid gap-4">
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
@@ -110,12 +114,6 @@ export default function Login() {
                   {...register('password')}
                   required
                 />
-                <Link
-                  href="#"
-                  className="ml-auto inline-block text-sm underline"
-                >
-                  Esqueceu senha?
-                </Link>
                 {errors.password && (
                   <span className="text-red-500">
                     {errors.password.message}
@@ -124,9 +122,6 @@ export default function Login() {
               </div>
               <Button type="submit" className="w-full" disabled={isSubmitting}>
                 {isSubmitting ? 'Entrando...' : 'Login'}
-              </Button>
-              <Button variant="outline" className="w-full">
-                Acesse com o Google
               </Button>
             </div>
           </form>

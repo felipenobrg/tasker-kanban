@@ -42,17 +42,20 @@ export default function BoardCard(props: BoardCardProps) {
     await DeleteTask({ id })
     const updatedTasks = task.filter((item) => item.ID !== id)
     setTask(updatedTasks)
+    setDialogOpen(false)
   }
 
   const handleUpdateTask = async (
+    title: string,
     id: number,
     description: string,
     status: string,
   ) => {
     try {
-      await UpdateTask({ id, description, status })
+      await UpdateTask({ id, title, description, status })
       const updatedTask = {
         ...task.find((item) => item.ID === id),
+        title,
         description,
         status,
       }
@@ -77,12 +80,7 @@ export default function BoardCard(props: BoardCardProps) {
     <div>
       <div className="flex flex-row ml-5">
         <div className="flex flex-col gap-4">
-          <Reorder.Group
-            className="flex flex-col gap-5"
-            values={task}
-            onReorder={setTask}
-            axis="x"
-          >
+          <div>
             {task.map((item) => (
               <Reorder.Item value={item} key={item.ID}>
                 <Card
@@ -94,13 +92,13 @@ export default function BoardCard(props: BoardCardProps) {
                       {item.title}
                     </h2>
                     <p className="text-gray-300 text-sm break-words mt-2 font-medium">
-                      {truncateDescription(item.description, 25)}
+                      {truncateDescription(item.description, 35)}
                     </p>
                   </div>
                 </Card>
               </Reorder.Item>
             ))}
-          </Reorder.Group>
+          </div>
         </div>
       </div>
       <DialogEditTask
@@ -109,6 +107,7 @@ export default function BoardCard(props: BoardCardProps) {
         initialStatus={data.status}
         title={data.title}
         id={data.ID}
+        taskId={taskId}
         setDialogOpen={setDialogOpen}
         onUpdateTask={handleUpdateTask}
         isOpen={dialogOpen}

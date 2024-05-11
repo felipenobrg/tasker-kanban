@@ -7,8 +7,9 @@ import { Task } from '@/types/task'
 import { useState, useEffect } from 'react'
 import { Reorder } from 'framer-motion'
 import { useFilter } from '@/context/filterContext'
-import GetTask from '@/lib/task/getTask'
 import UpdateTask from '@/lib/task/updateTask'
+import { useBoard } from '@/context/boardContext'
+import GetBoardById from '@/lib/boards/getBoardById'
 
 const statusOptions = [
   { status: 'Pendente', circleColor: 'gray' },
@@ -20,18 +21,20 @@ export default function Board() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([])
   const { filterValue } = useFilter()
+  const { boardId } = useBoard()
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const taskValue = await GetTask()
-        setTasks(taskValue)
+        const boardResponse = await GetBoardById({ id: boardId })
+        const boardData = boardResponse.data
+        setTasks(boardData.tasks || [])
       } catch (error) {
         console.error('Error fetching tasks:', error)
       }
     }
     fetchData()
-  }, [])
+  }, [boardId])
 
   useEffect(() => {
     if (tasks && filterValue) {
@@ -45,23 +48,24 @@ export default function Board() {
   }, [filterValue, tasks])
 
   useEffect(() => {
-    const updatedFilteredTasks = tasks?.filter((task) =>
-      task.description.toLowerCase().includes(filterValue.toLowerCase()),
+    const updatedFilteredTasks = tasks?.filter(
+      (task) =>
+        task.description &&
+        task.description.toLowerCase().includes(filterValue.toLowerCase()),
     )
-    setFilteredTasks(updatedFilteredTasks)
+    setFilteredTasks(updatedFilteredTasks || [])
   }, [filterValue, tasks])
 
   const handleDrop = async (newTasks: Task[], newStatus: string) => {
     try {
-      const updatedTasks = newTasks.map((task) => ({
+      const updatedTasks = newTasks.map((task, index) => ({
         ...task,
         status: newStatus,
         id: task.ID,
+        order: index,
       }))
 
-      for (const updatedTask of updatedTasks) {
-        await UpdateTask(updatedTask)
-      }
+      await Promise.all(updatedTasks.map((task) => UpdateTask(task)))
 
       setTasks(updatedTasks)
     } catch (error) {
@@ -82,22 +86,32 @@ export default function Board() {
               {filteredTasks && (
                 <Reorder.Group
                   className="flex flex-col gap-5"
-                  values={filteredTasks?.filter(
-                    (task) => task.status === status,
-                  )}
-                  onReorder={(newTasks: Task[]) => handleDrop(newTasks, status)}
+                  values={filteredTasks
+                    .filter((task) => task.status === status)
+                    .map((task) => task.ID)}
+                  onReorder={(newOrder) => {
+                    console.log('New order:', newOrder)
+                    const newTasksOrder = newOrder.map(
+                      (taskId) =>
+                        filteredTasks.find((task) => task.ID === taskId)!,
+                    )
+                    handleDrop(newTasksOrder, status)
+                  }}
+                  axis="x"
                 >
-                  {filteredTasks
-                    ?.filter((task) => task.status === status)
-                    .map((task) => (
-                      <BoardCard
-                        key={task.ID}
-                        taskId={task.ID}
-                        data={task}
-                        statusOption={statusOptions}
-                      />
-                    ))}
-                  {filteredTasks?.length === 0 && (
+                  {Array.isArray(tasks) &&
+                    tasks
+                      .filter((task) => task.status === status)
+                      .map((task) => (
+                        <BoardCard
+                          key={task.ID}
+                          taskId={task.ID}
+                          data={task}
+                          statusOption={statusOptions}
+                        />
+                      ))}
+                  {tasks.filter((task) => task.status === status).length ===
+                    0 && (
                     <p className="text-gray-400 text-sm mt-2">
                       Não há tarefas nesta categoria.
                     </p>

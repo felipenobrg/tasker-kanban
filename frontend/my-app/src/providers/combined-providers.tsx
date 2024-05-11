@@ -7,6 +7,7 @@ import { TaskProvider } from '@/context/taskContext'
 import { SessionProvider } from 'next-auth/react'
 import { ThemeProvider } from 'next-themes'
 import React from 'react'
+import { ToastContainer } from 'react-toastify'
 
 interface ProvidersProps {
   children: React.ReactNode
@@ -19,6 +20,7 @@ export default function Providers({ children }: ProvidersProps) {
         <DialogProvider>
           <FilterProvider>
             <TaskProvider>
+              <ToastContainer theme="dark" />
               <ThemeProvider
                 attribute="class"
                 defaultTheme="system"

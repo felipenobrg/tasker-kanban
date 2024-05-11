@@ -11,7 +11,7 @@ export default async function GetBoardById(props: GetBoardById) {
         const response = await axios.get(`${BASE_URL}/boards/${id}`, {
             withCredentials: true
         });
-
+        console.log("RESPONSEBOARD", response.data.data)
         return response.data;
     } catch(error) {
         console.error('Error posting task:', error);

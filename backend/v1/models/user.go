@@ -14,6 +14,7 @@ type User struct {
 	Name     string `json:"name" gorm:"not null" validate:"name"`
 	Email    string `json:"email" gorm:"unique;not null" validate:"email"`
 	Password string `json:"password" gorm:"not null" validate:"min=6"`
+	Active   bool   `json:"active" gorm:"default:false"`
 }
 
 var validate = validator.New(validator.WithRequiredStructEnabled())

@@ -40,6 +40,8 @@ func (app *Config) Routes() http.Handler {
 
 		r.Post("/signin", hand.Signin)
 		r.Post("/login", hand.Login)
+		r.Post("/verifycode", hand.VerifyCode)
+		r.Post("/resendcode", hand.ResendCode)
 
 		r.Route("/boards", func(r chi.Router) {
 			r.Use(app.AuthenticatedOnly)

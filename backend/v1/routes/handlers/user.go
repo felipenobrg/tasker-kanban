@@ -60,12 +60,24 @@ func (app *Handlers) Signin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := util.GenerateToken(&newUser)
-	if err != nil {
-		err = errors.New("error generating jwt token")
+	verifyCode := models.VerifyCode{
+		UserID: newUser.ID,
+		Code:   util.GenerateVerifyCode(),
+	}
+	app.DB.Create(&verifyCode)
+	if verifyCode.ID == 0 {
+		err := errors.New("error creating verification code")
 		util.ErrorJSON(w, err, http.StatusInternalServerError)
 		return
 	}
+
+	msg := util.Message{
+		To:      newUser.Email,
+		Subject: "Tasker - Verify your email",
+		Data:    verifyCode.Code,
+	}
+	verifyMsg := "verification code sent to email"
+	go msg.SendGomail()
 
 	userPayload := UserPayload{
 		CreateAt: newUser.CreatedAt,
@@ -76,20 +88,9 @@ func (app *Handlers) Signin(w http.ResponseWriter, r *http.Request) {
 	responsePayload := jsonResponse{
 		Error:   false,
 		Message: "user created successfully",
-		Data:    map[string]any{"session_token": token, "user": userPayload},
+		Data:    map[string]any{"user": userPayload, "verify_code": verifyMsg},
 	}
 
-	cookie := http.Cookie{
-		Name:     "session_token",
-		Value:    token,
-		Path:     "/",
-		Domain:   "",
-		Expires:  time.Now().Add(60 * time.Minute),
-		HttpOnly: true,
-		Secure:   false,
-	}
-
-	http.SetCookie(w, &cookie)
 	util.WriteJSON(w, http.StatusCreated, responsePayload)
 }
 
@@ -112,6 +113,12 @@ func (app *Handlers) Login(w http.ResponseWriter, r *http.Request) {
 	err = user.PasswordValidate(payload.Password)
 	if err != nil {
 		err := errors.New("invalid credentials")
+		util.ErrorJSON(w, err, http.StatusUnauthorized)
+		return
+	}
+
+	if !user.Active {
+		err := errors.New("user not verified")
 		util.ErrorJSON(w, err, http.StatusUnauthorized)
 		return
 	}

@@ -51,13 +51,14 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
     id,
     isOpen,
     taskId,
+    initialStatus,
     onClose,
     setDialogOpen,
     onUpdateTask,
     handleDeleteTask,
   } = props
 
-  const { register, handleSubmit, getValues, setValue } = useForm({
+  const { register, handleSubmit, setValue } = useForm({
     defaultValues: {
       title: props.title,
       description: props.initialDescription,
@@ -128,17 +129,23 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
             {...register('description')}
           />
           <p className="text-sm mt-2">Editar Checklist</p>
-          {subtaskData &&
-            subtaskData.map((item) => (
-              <SubtaskCard name={item.name} key={item.ID} />
-            ))}
+          {subtaskData.length === 0 ? (
+            <p className="text-sm mt-2 text-gray-400">
+              Nenhuma Checklist disponível
+            </p>
+          ) : (
+            <>
+              {subtaskData.map((item) => (
+                <SubtaskCard name={item.name} key={item.ID} />
+              ))}
+            </>
+          )}
           <p className="text-sm mt-2">Editar o Status da Tarefa</p>
           <Select
-            {...register('dialogStatus')}
-            value={getValues('dialogStatus')}
             onValueChange={(newValue) => {
               setValue('dialogStatus', newValue)
             }}
+            value={initialStatus}
           >
             <SelectTrigger className="w-[20rem]">
               <SelectValue placeholder="Selecione um status" />

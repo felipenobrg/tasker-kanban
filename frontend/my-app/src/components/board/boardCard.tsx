@@ -101,19 +101,21 @@ export default function BoardCard(props: BoardCardProps) {
           </div>
         </div>
       </div>
-      <DialogEditTask
-        statusOption={statusOption}
-        initialDescription={data.description}
-        initialStatus={data.status}
-        title={data.title}
-        id={data.ID}
-        taskId={taskId}
-        setDialogOpen={setDialogOpen}
-        onUpdateTask={handleUpdateTask}
-        isOpen={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-        handleDeleteTask={() => handleDeleteTask(data.ID)}
-      />
+      {dialogOpen && (
+        <DialogEditTask
+          statusOption={statusOption}
+          initialDescription={data.description}
+          initialStatus={data.status}
+          title={data.title}
+          id={data.ID}
+          taskId={taskId}
+          setDialogOpen={setDialogOpen}
+          onUpdateTask={handleUpdateTask}
+          isOpen={dialogOpen}
+          onClose={() => setDialogOpen(false)}
+          handleDeleteTask={() => handleDeleteTask(data.ID)}
+        />
+      )}
     </div>
   )
 }

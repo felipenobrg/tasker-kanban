@@ -109,7 +109,9 @@ export default function Sidebar() {
             <ChangeThemeButton />
           </div>
         </div>
-        <DialogNewBoard isOpen={isDialogOpen} onClose={closeDialog} />
+        {isDialogOpen && (
+          <DialogNewBoard isOpen={isDialogOpen} onClose={closeDialog} />
+        )}
       </div>
     </div>
   )

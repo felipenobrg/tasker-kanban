@@ -11,7 +11,7 @@ import AlertDialog from './alertDialog'
 import { useBoard } from '@/context/boardContext'
 import HeaderInput from './headerInput'
 import DropdownDeleteBoard from './dropdownDeleteBoard'
-import DialogAddNewTask from '../dialogs/dialogAddNewTask/dialogAddNewTask'
+import DialogAddNewTask from '../dialogs/dialogAddNewTask/DialogAddNewTask'
 import { statusOption } from '@/types/statusOption'
 import Profile from '../profile/profile'
 
@@ -72,30 +72,32 @@ export default function Header() {
         <h1 className="text-lg font-bold">{boardName}</h1>
       </div>
       <HeaderInput handleInputChange={handleInputChange} />
-      <div>
-        <Button
-          className="w-48 p-3 bg-indigo-500 text-white hover:bg-indigo600 flex gap-2 items-center"
-          onClick={handleDialogOpen}
-        >
-          <Plus size={18} /> Adicionar nova Tarefa
-        </Button>
+      <div className="flex items-center ml-5">
+        <div>
+          <Button
+            className="w-48 p-3 bg-indigo-500 text-white hover:bg-indigo600 flex gap-2 items-center"
+            onClick={handleDialogOpen}
+          >
+            <Plus size={18} /> Adicionar nova Tarefa
+          </Button>
+        </div>
+        <DialogAddNewTask
+          onClose={handleCloseDialogBoard}
+          isOpen={isDialogOpen}
+          statusOption={statusOption}
+        />
+        <DropdownDeleteBoard
+          handleEllipsisClick={handleEllipsisClick}
+          handleDeleteConfirmation={handleDeleteConfirmation}
+        />
+        <AlertDialog
+          isDialogOpen={isAlertOpen}
+          setIsDialogOpen={setIsDialogOpen}
+          handleCancelDelete={handleCloseDialog}
+          setIsAlertOpen={setIsAlertOpen}
+        />
+        <Profile />
       </div>
-      <DialogAddNewTask
-        onClose={handleCloseDialogBoard}
-        isOpen={isDialogOpen}
-        statusOption={statusOption}
-      />
-      <DropdownDeleteBoard
-        handleEllipsisClick={handleEllipsisClick}
-        handleDeleteConfirmation={handleDeleteConfirmation}
-      />
-      <AlertDialog
-        isDialogOpen={isAlertOpen}
-        setIsDialogOpen={setIsDialogOpen}
-        handleCancelDelete={handleCloseDialog}
-        setIsAlertOpen={setIsAlertOpen}
-      />
-      <Profile />
     </header>
   )
 }

@@ -81,10 +81,10 @@ export default function Sidebar() {
               Todos os boards ({boardSize.length === 0 ? '0' : boardSize})
             </p>
           </div>
-          {board.map((item, index) => (
+          {board.map((item) => (
             <nav
-              key={index}
-              className={`grid items-start px-2 gap-3 text-sm font-medium lg:px-4 relative rounded-l-lg rounded-r-full w-11/12 hover:bg-gray-500 text-indigo-500 ${
+              key={item.ID}
+              className={`grid items-start px-2 gap-3 text-sm font-medium lg:px-4 relative mt-2 mb-2 rounded-l-lg rounded-r-full w-11/12 hover:bg-gray-400 text-indigo-500 ${
                 activeLink === item.ID.toString() ? 'bg-indigo-500' : ''
               }`}
             >

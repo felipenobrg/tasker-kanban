@@ -17,7 +17,10 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import 'react-toastify/dist/ReactToastify.css'
 import LoginAuth from '@/lib/auth/login'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 export default function Login() {
   const { data: session } = useSession()
@@ -63,6 +66,7 @@ export default function Login() {
           console.error('Authentication Error:', result.error)
         } else {
           router.replace('/')
+          toast.success('Login bem-sucedido!')
         }
       }
     } catch (error) {

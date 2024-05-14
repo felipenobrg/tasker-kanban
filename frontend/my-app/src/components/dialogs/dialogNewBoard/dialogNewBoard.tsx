@@ -6,6 +6,7 @@ import PostBoard from '@/lib/boards/postBoard'
 import { FormEvent, useState } from 'react'
 import { useBoard } from '@/context/boardContext'
 import { Plus } from 'lucide-react'
+import { useQueryClient } from 'react-query'
 
 interface DialogNewBoardProps {
   isOpen: boolean
@@ -18,6 +19,7 @@ export default function DialogNewBoard({
 }: DialogNewBoardProps) {
   const [boardName, setBoardName] = useState('')
   const { setBoardId, setBoardName: setContextBoardName } = useBoard()
+  const queryClient = useQueryClient()
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -27,7 +29,7 @@ export default function DialogNewBoard({
       setBoardId(newBoardId)
       setContextBoardName(boardName)
       onClose()
-      window.location.reload()
+      queryClient.invalidateQueries('boardData')
     } catch (error) {
       console.error('Error updating task:', error)
     }

@@ -13,14 +13,22 @@ import {
 
 interface AlertDialogProps {
   isDialogOpen: boolean
+  boardName: string | null
   setIsAlertOpen: (open: boolean) => void
   setIsDialogOpen: (open: boolean) => void
   handleCancelDelete: () => void
+  setBoardName: (name: string) => void
 }
 
 export default function AlertDialog(props: AlertDialogProps) {
-  const { isDialogOpen, setIsDialogOpen, handleCancelDelete, setIsAlertOpen } =
-    props
+  const {
+    isDialogOpen,
+    boardName,
+    setIsDialogOpen,
+    handleCancelDelete,
+    setIsAlertOpen,
+    setBoardName,
+  } = props
 
   const { boardId } = useBoard()
 
@@ -29,6 +37,7 @@ export default function AlertDialog(props: AlertDialogProps) {
       await DeleteBoard({ id: boardId })
       setIsDialogOpen(false)
       setIsAlertOpen(false)
+      setBoardName('')
     } else {
       console.error('Cannot delete board: boardId is null')
     }
@@ -41,7 +50,7 @@ export default function AlertDialog(props: AlertDialogProps) {
           <AlertDialogTitle>Tem certeza?</AlertDialogTitle>
           <AlertDialogDescription>
             Esta ação não pode ser desfeita. Isso excluirá permanentemente o
-            board.
+            board <strong>{boardName}</strong>.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

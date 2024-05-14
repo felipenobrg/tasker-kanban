@@ -100,6 +100,9 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
     fetchSubtaskData()
   }, [taskId])
 
+  console.log('TASKID', taskId)
+  console.log('SUBTASK', subtaskData)
+
   return (
     <Dialog.Root modal open={isOpen} onOpenChange={onClose}>
       <Dialog.Overlay className="fixed inset-0">

@@ -10,6 +10,7 @@ import { BoardData } from '@/types/board'
 import { useBoard } from '@/context/boardContext'
 import GetBoardById from '@/lib/boards/getBoardById'
 import ChangeThemeButton from '../header/changeThemeButton'
+import { useQueryClient } from 'react-query'
 
 export default function Sidebar() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -17,6 +18,7 @@ export default function Sidebar() {
   const [boardSize, setBoardSize] = useState<number[]>([])
   const [activeLink, setActiveLink] = useState<string>('')
   const { setBoardId, setBoardName } = useBoard()
+  const queryClient = useQueryClient()
 
   const openDialog = () => {
     setIsDialogOpen(true)
@@ -36,6 +38,7 @@ export default function Sidebar() {
         }
         setBoard(boardData)
         setBoardSize(boardData.length)
+        queryClient.invalidateQueries('boardData')
       } catch (error) {
         console.error('Error fetching board:', error)
       }

@@ -20,7 +20,7 @@ export default function Header() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [isAlertOpen, setIsAlertOpen] = useState(false)
-  const { boardName } = useBoard()
+  const { boardName, setBoardName } = useBoard()
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFilterValue(e.target.value)
@@ -91,10 +91,12 @@ export default function Header() {
           handleDeleteConfirmation={handleDeleteConfirmation}
         />
         <AlertDialog
+          boardName={boardName}
           isDialogOpen={isAlertOpen}
           setIsDialogOpen={setIsDialogOpen}
           handleCancelDelete={handleCloseDialog}
           setIsAlertOpen={setIsAlertOpen}
+          setBoardName={setBoardName}
         />
         <Profile />
       </div>

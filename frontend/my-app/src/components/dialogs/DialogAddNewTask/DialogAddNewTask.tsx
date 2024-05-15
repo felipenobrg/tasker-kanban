@@ -27,13 +27,13 @@ interface DialogAddNewTaskProps {
 
 export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
   const { statusOption, isOpen, onClose } = props
-  const { register, handleSubmit, reset } = useForm()
+  const { register, handleSubmit, reset, setValue } = useForm()
   const [subTasks, setSubTasks] = useState([{ name: '' }])
   const { boardId } = useBoard()
   const { taskId } = useTask()
-  console.log('TASKID', taskId)
 
   const onSubmit = async (data: FieldValues) => {
+    console.log('DATA', data.status)
     try {
       const taskData = {
         title: data.title,
@@ -50,7 +50,7 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
           const subTaskData = {
             task_id: taskId,
             name: subTask.name,
-            status: 'Enabled',
+            status: 'Disabled',
           }
           await PostSubtask(subTaskData)
         }
@@ -135,7 +135,11 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
             <Plus color="white" size={18} /> Adicionar Checklist
           </Button>
           <p className="text-sm mt-2">Status</p>
-          <Select {...register('status')}>
+          <Select
+            onValueChange={(newValue) => {
+              setValue('status', newValue)
+            }}
+          >
             <SelectTrigger className="w-[20rem]">
               <SelectValue placeholder="Selecione um status" />
             </SelectTrigger>
@@ -149,6 +153,7 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
               </SelectGroup>
             </SelectContent>
           </Select>
+
           <Button
             onClick={handleSubmitButtonClick}
             className="mt-6 w-[20rem]"

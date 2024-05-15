@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Button } from '../../ui/button'
 import { Input } from '../../ui/input'
@@ -58,7 +58,7 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
     handleDeleteTask,
   } = props
 
-  const { register, handleSubmit, setValue } = useForm({
+  const { register, handleSubmit, setValue, reset } = useForm({
     defaultValues: {
       title: props.title,
       description: props.initialDescription,
@@ -68,37 +68,45 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
 
   const [subtaskData, setSubtaskData] = useState<Subtasks[]>([])
 
-  const onSubmit = async (formData: FormDataProps) => {
-    try {
-      await UpdateTask({
-        title: formData.title,
-        description: formData.description,
-        status: formData.dialogStatus,
-        id,
-      })
-      onUpdateTask(
-        formData.title,
-        taskId,
-        formData.description,
-        formData.dialogStatus,
-      )
-      setDialogOpen(false)
-    } catch (error) {
-      console.error('Error updating task:', error)
-    }
-  }
+  const onSubmit = useCallback(
+    async (formData: FormDataProps) => {
+      try {
+        await UpdateTask({
+          title: formData.title,
+          description: formData.description,
+          status: formData.dialogStatus,
+          id,
+        })
+        onUpdateTask(
+          formData.title,
+          taskId,
+          formData.description,
+          formData.dialogStatus,
+        )
+        setDialogOpen(false)
+      } catch (error) {
+        console.error('Error updating task:', error)
+      }
+    },
+    [id, taskId, onUpdateTask, setDialogOpen],
+  )
 
   useEffect(() => {
     const fetchSubtaskData = async () => {
       try {
         const subtaskData = await GetSubtaskById({ id: taskId })
-        setSubtaskData([subtaskData])
+        setSubtaskData(subtaskData)
+        reset({
+          title: props.title,
+          description: props.initialDescription,
+          dialogStatus: props.initialStatus,
+        })
       } catch (error) {
         console.error('Error fetching subtask data:', error)
       }
     }
     fetchSubtaskData()
-  }, [taskId])
+  }, [taskId, onSubmit])
 
   console.log('TASKID', taskId)
   console.log('SUBTASK', subtaskData)
@@ -132,17 +140,23 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
             {...register('description')}
           />
           <p className="text-sm mt-2">Editar Checklist</p>
-          {subtaskData.length === 0 ? (
+          {subtaskData === null || subtaskData.length === 0 ? (
             <p className="text-sm mt-2 text-gray-400">
               Nenhuma Checklist disponível
             </p>
           ) : (
             <>
               {subtaskData.map((item) => (
-                <SubtaskCard name={item.name} key={item.ID} />
+                <SubtaskCard
+                  name={item.name}
+                  subtaskId={item.ID}
+                  key={item.ID}
+                  status={item.status}
+                />
               ))}
             </>
           )}
+
           <p className="text-sm mt-2">Editar o Status da Tarefa</p>
           <Select
             onValueChange={(newValue) => {

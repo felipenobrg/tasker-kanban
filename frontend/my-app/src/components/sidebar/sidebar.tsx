@@ -94,10 +94,10 @@ export default function Sidebar() {
               <Link
                 href="/"
                 onClick={() => handleLinkClick(item.ID)}
-                className="flex items-center gap-2 rounded-lg px-3 py-2 w-11/12 text-muted-foreground transition-all hover:text-primary"
+                className="flex text-white items-center gap-2 rounded-lg px-3 py-2 w-11/12 text-muted-foreground transition-all hover:text-primary"
               >
                 <LayoutPanelLeft size={20} className="text-white" />
-                <p className="text-white">{item.name}</p>
+                {item.name}
               </Link>
             </nav>
           ))}

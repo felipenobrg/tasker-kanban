@@ -8,7 +8,6 @@ import (
 
 	"tasker/models"
 	"tasker/util"
-
 )
 
 type verifyCodePayload struct {
@@ -89,6 +88,12 @@ func (app *Handlers) ResendCode(w http.ResponseWriter, r *http.Request) {
 	if user.ID == 0 {
 		err := errors.New("user not found")
 		util.ErrorJSON(w, err, http.StatusNotFound)
+		return
+	}
+
+	if user.Active {
+		err := errors.New("user already verified")
+		util.ErrorJSON(w, err, http.StatusBadRequest)
 		return
 	}
 

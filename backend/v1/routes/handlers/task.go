@@ -10,6 +10,7 @@ import (
 
 	"tasker/models"
 	"tasker/util"
+
 )
 
 type TaskPayload struct {
@@ -20,9 +21,18 @@ type TaskPayload struct {
 	SubTasks    []models.SubTask `json:"subtasks"`
 }
 
-func getTasksForCurrentUser(r *http.Request, DB *gorm.DB) []models.Task {
+func getTasksForCurrentUser(r *http.Request, DB *gorm.DB, boardId string) []models.Task {
 	var tasks []models.Task
 	userID := r.Context().Value("user").(models.User).ID
+
+	if boardId != "" {
+		DB.Raw(`
+			SELECT tasks.* FROM tasks 
+			JOIN boards ON tasks.board_id = boards.id 
+			WHERE boards.user_id = ? AND tasks.board_id = ?
+		`, userID, boardId).Scan(&tasks)
+		return tasks
+	}
 
 	DB.Raw(`
 		SELECT tasks.* FROM tasks 
@@ -37,15 +47,7 @@ func (app *Handlers) GetTasks(w http.ResponseWriter, r *http.Request) {
 	boardID := r.URL.Query().Get("boardId")
 	userID := r.Context().Value("user").(models.User).ID
 
-	if boardID == "" {
-		tasks = getTasksForCurrentUser(r, app.DB)
-	} else {
-		app.DB.Raw(`
-			SELECT tasks.* FROM tasks 
-			JOIN boards ON tasks.board_id = boards.id 
-			WHERE boards.user_id = ? AND tasks.board_id = ?
-		`, userID, boardID).Scan(&tasks)
-	}
+	tasks = getTasksForCurrentUser(r, app.DB, boardID)
 
 	var subtasks []models.SubTask
 	app.DB.Raw(`

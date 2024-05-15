@@ -3,11 +3,12 @@ package handlers
 import (
 	"errors"
 	"net/http"
-	"tasker/models"
-	"tasker/util"
 
 	"github.com/go-chi/chi/v5"
 	"gorm.io/gorm"
+
+	"tasker/models"
+	"tasker/util"
 )
 
 type SubTaskPayload struct {
@@ -16,9 +17,19 @@ type SubTaskPayload struct {
 	Status string `json:"status"`
 }
 
-func getSubTasksForCurrentUser(r *http.Request, DB *gorm.DB) []models.SubTask {
+func getSubTasksForCurrentUser(r *http.Request, DB *gorm.DB, taskId string) []models.SubTask {
 	var subTasks []models.SubTask
 	userID := r.Context().Value("user").(models.User).ID
+
+	if taskId != "" {
+		DB.Raw(`
+			SELECT sub_tasks.* FROM sub_tasks
+			JOIN tasks ON sub_tasks.task_id = tasks.id
+			JOIN boards ON tasks.board_id = boards.id
+			WHERE boards.user_id = ? AND sub_tasks.task_id = ?
+		`, userID, taskId).Scan(&subTasks)
+		return subTasks
+	}
 
 	DB.Raw(`
 		SELECT sub_tasks.* FROM sub_tasks
@@ -33,18 +44,7 @@ func (app *Handlers) GetSubTasks(w http.ResponseWriter, r *http.Request) {
 	var subTasks []models.SubTask
 	taskID := r.URL.Query().Get("taskId")
 
-	if taskID == "" {
-		subTasks = getSubTasksForCurrentUser(r, app.DB)
-	} else {
-		userID := r.Context().Value("user").(models.User).ID
-
-		app.DB.Raw(`
-			SELECT sub_tasks.* FROM sub_tasks
-			JOIN tasks ON sub_tasks.task_id = tasks.id
-			JOIN boards ON tasks.board_id = boards.id
-			WHERE boards.user_id = ? AND sub_tasks.task_id = ?
-		`, userID, taskID).Scan(&subTasks)
-	}
+	subTasks = getSubTasksForCurrentUser(r, app.DB, taskID)
 
 	responsePayload := jsonResponse{
 		Error:   false,

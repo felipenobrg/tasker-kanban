@@ -28,12 +28,11 @@ interface DialogAddNewTaskProps {
 export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
   const { statusOption, isOpen, onClose } = props
   const { register, handleSubmit, reset, setValue } = useForm()
-  const [subTasks, setSubTasks] = useState([{ name: '' }])
   const { boardId } = useBoard()
   const { taskId } = useTask()
+  const [subTasks, setSubTasks] = useState([{ name: '' }])
 
   const onSubmit = async (data: FieldValues) => {
-    console.log('DATA', data.status)
     try {
       const taskData = {
         title: data.title,
@@ -143,7 +142,7 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
             <SelectTrigger className="w-[20rem]">
               <SelectValue placeholder="Selecione um status" />
             </SelectTrigger>
-            <SelectContent className="w-[20rem]">
+            <SelectContent>
               <SelectGroup>
                 {statusOption.map((status, index) => (
                   <SelectItem key={index} value={status}>

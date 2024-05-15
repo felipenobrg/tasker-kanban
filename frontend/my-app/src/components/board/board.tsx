@@ -10,6 +10,7 @@ import { useFilter } from '@/context/filterContext'
 import UpdateTask from '@/lib/task/updateTask'
 import { useBoard } from '@/context/boardContext'
 import GetBoardById from '@/lib/boards/getBoardById'
+import { useTask } from '@/context/taskContext'
 
 const statusOptions = [
   { status: 'Pendente', circleColor: 'gray' },
@@ -18,10 +19,9 @@ const statusOptions = [
 ]
 
 export default function Board() {
-  const [tasks, setTasks] = useState<Task[]>([])
-  const [filteredTasks, setFilteredTasks] = useState<Task[]>([])
   const { filterValue } = useFilter()
   const { boardId } = useBoard()
+  const { setTaskData, taskData } = useTask()
 
   const handleDrop = async (newTasks: Task[], newStatus: string) => {
     try {
@@ -32,7 +32,7 @@ export default function Board() {
         order: index,
       }))
       await Promise.all(updatedTasks.map((task) => UpdateTask(task)))
-      setTasks(updatedTasks)
+      setTaskData(updatedTasks)
     } catch (error) {
       console.error('Error updating tasks:', error)
     }
@@ -43,13 +43,13 @@ export default function Board() {
       try {
         const boardResponse = await GetBoardById({ id: boardId })
         const boardData = boardResponse.data
-        setTasks(boardData.tasks || [])
+        setTaskData(boardData.tasks || [])
       } catch (error) {
         console.error('Error fetching tasks:', error)
       }
     }
     fetchData()
-  }, [boardId])
+  }, [boardId, setTaskData, taskData])
 
   return (
     <main className="flex flex-1 gap-4 p-4 lg:gap-6 lg:p-6 relative">
@@ -63,17 +63,17 @@ export default function Board() {
               </div>
               <Reorder.Group
                 className="flex flex-col gap-5"
-                values={tasks.map((task) => task.ID)}
+                values={taskData.map((task) => task.ID)}
                 onReorder={(newOrder) => {
                   console.log('New order:', newOrder)
                   const newTasksOrder = newOrder.map(
-                    (taskId) => tasks.find((task) => task.ID === taskId)!,
+                    (taskId) => taskData.find((task) => task.ID === taskId)!,
                   )
                   handleDrop(newTasksOrder, status)
                 }}
                 axis="x"
               >
-                {tasks
+                {taskData
                   .filter((task) => task.status === status)
                   .map((task) => (
                     <BoardCard
@@ -83,7 +83,7 @@ export default function Board() {
                       statusOption={statusOptions}
                     />
                   ))}
-                {tasks.filter((task) => task.status === status).length ===
+                {taskData.filter((task) => task.status === status).length ===
                   0 && (
                   <p className="text-gray-400 text-sm mt-2">
                     Não há tarefas nesta categoria.

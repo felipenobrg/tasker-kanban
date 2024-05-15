@@ -83,12 +83,17 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
           formData.description,
           formData.dialogStatus,
         )
+        reset({
+          title: formData.title,
+          description: formData.description,
+          dialogStatus: formData.dialogStatus,
+        })
         setDialogOpen(false)
       } catch (error) {
         console.error('Error updating task:', error)
       }
     },
-    [id, taskId, onUpdateTask, setDialogOpen],
+    [id, taskId, onUpdateTask, setDialogOpen, reset],
   )
 
   useEffect(() => {
@@ -106,10 +111,13 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
       }
     }
     fetchSubtaskData()
-  }, [taskId, onSubmit])
-
-  console.log('TASKID', taskId)
-  console.log('SUBTASK', subtaskData)
+  }, [
+    taskId,
+    props.title,
+    props.initialDescription,
+    props.initialStatus,
+    reset,
+  ])
 
   return (
     <Dialog.Root modal open={isOpen} onOpenChange={onClose}>
@@ -162,7 +170,7 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
             onValueChange={(newValue) => {
               setValue('dialogStatus', newValue)
             }}
-            value={initialStatus}
+            defaultValue={initialStatus}
           >
             <SelectTrigger className="w-[20rem]">
               <SelectValue placeholder="Selecione um status" />

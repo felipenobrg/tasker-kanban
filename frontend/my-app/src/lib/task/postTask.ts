@@ -16,8 +16,8 @@ export default async function PostTask(props: PostTaskProps) {
       {
         board_id,
         title,
-        description,
         status,
+        description,
       },
       { withCredentials: true }
     );

@@ -92,7 +92,7 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
     const fetchSubtaskData = async () => {
       try {
         const subtaskData = await GetSubtaskById({ id: taskId })
-        setSubtaskData([subtaskData])
+        setSubtaskData(subtaskData)
       } catch (error) {
         console.error('Error fetching subtask data:', error)
       }
@@ -132,17 +132,23 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
             {...register('description')}
           />
           <p className="text-sm mt-2">Editar Checklist</p>
-          {subtaskData.length === 0 ? (
+          {subtaskData === null || subtaskData.length === 0 ? (
             <p className="text-sm mt-2 text-gray-400">
               Nenhuma Checklist disponível
             </p>
           ) : (
             <>
               {subtaskData.map((item) => (
-                <SubtaskCard name={item.name} key={item.ID} />
+                <SubtaskCard
+                  name={item.name}
+                  subtaskId={item.ID}
+                  key={item.ID}
+                  status={item.status}
+                />
               ))}
             </>
           )}
+
           <p className="text-sm mt-2">Editar o Status da Tarefa</p>
           <Select
             onValueChange={(newValue) => {

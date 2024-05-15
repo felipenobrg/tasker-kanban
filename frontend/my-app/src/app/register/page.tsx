@@ -17,8 +17,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import SigninAuth from '@/lib/auth/signin'
 import { useRouter } from 'next/navigation'
+import { UserContext } from '@/context/userContext';
+import { useContext } from 'react'
 
 export default function Register() {
+  const { setEmail } = useContext(UserContext)
+
   const schema = z.object({
     name: z
       .string()
@@ -51,7 +55,8 @@ export default function Register() {
         password: data.password,
         name: data.name,
       })
-      router.replace('/')
+      setEmail(data.email)
+      router.replace('/verifyCode')
     } catch (error) {
       console.error('Error:', error)
     }

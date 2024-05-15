@@ -21,6 +21,10 @@ import 'react-toastify/dist/ReactToastify.css'
 import LoginAuth from '@/lib/auth/login'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { AxiosError } from '@/types/axiosError'
+import PostResendCode from '@/lib/verifyCode/resendCode'
+import { useContext } from 'react'
+import { UserContext } from '@/context/userContext'
 
 export default function Login() {
   const { data: session } = useSession()
@@ -44,6 +48,8 @@ export default function Login() {
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
   })
+
+  const { setEmail } = useContext(UserContext)
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     try {
@@ -69,9 +75,22 @@ export default function Login() {
           toast.success('Login bem-sucedido!')
         }
       }
-    } catch (error) {
-      console.error('Error:', error)
-      setError('password', { message: 'Email ou senha incorretos' })
+    } catch (error: AxiosError | any) {
+      if (error.response?.data?.message === "user not verified") {
+        try {
+          await PostResendCode({
+            email: data.email,
+          })
+          setEmail(data.email)
+          router.replace('/verifyCode')
+        } catch (error) {
+          console.error('Error resending verification code:', error)
+        }
+      } else {
+        console.error('Error:', error)
+        setError('password', { message: 'Email ou senha incorretos' })
+      }
+
     }
   }
   // if (session) {

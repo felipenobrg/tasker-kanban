@@ -14,10 +14,7 @@ interface TaskContextType {
   setTaskId: Dispatch<SetStateAction<number | null>>
 }
 
-const TaskContext = createContext<TaskContextType>({
-  taskId: null,
-  setTaskId: () => {},
-})
+const TaskContext = createContext<TaskContextType>({} as TaskContextType)
 
 export const useTask = () => useContext(TaskContext)
 

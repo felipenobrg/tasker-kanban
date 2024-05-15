@@ -14,11 +14,7 @@ interface DialogContextType {
   onClose: () => void
 }
 
-const DialogContext = createContext<DialogContextType>({
-  isOpen: false,
-  onOpen: () => {},
-  onClose: () => {},
-})
+const DialogContext = createContext<DialogContextType>({} as DialogContextType)
 
 export const useDialog = () => useContext(DialogContext)
 

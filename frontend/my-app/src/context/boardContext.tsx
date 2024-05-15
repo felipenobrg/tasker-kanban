@@ -16,12 +16,7 @@ interface BoardContextType {
   setBoardName: Dispatch<SetStateAction<string | null>>
 }
 
-const BoardContext = createContext<BoardContextType>({
-  boardId: null,
-  setBoardId: () => {},
-  boardName: '',
-  setBoardName: () => {},
-})
+const BoardContext = createContext<BoardContextType>({} as BoardContextType)
 
 export const useBoard = () => useContext(BoardContext)
 

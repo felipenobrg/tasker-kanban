@@ -14,10 +14,7 @@ interface FilterContextType {
   setFilterValue: Dispatch<SetStateAction<string>>
 }
 
-const FilterContext = createContext<FilterContextType>({
-  filterValue: '',
-  setFilterValue: () => {},
-})
+const FilterContext = createContext<FilterContextType>({} as FilterContextType)
 
 export const useFilter = () => useContext(FilterContext)
 

@@ -4,6 +4,7 @@ import { BoardProvider } from '@/context/boardContext'
 import { DialogProvider } from '@/context/dialogContext'
 import { FilterProvider } from '@/context/filterContext'
 import { TaskProvider } from '@/context/taskContext'
+import { UserProvider } from '@/context/userContext'
 import { SessionProvider } from 'next-auth/react'
 import { ThemeProvider } from 'next-themes'
 import React from 'react'
@@ -19,25 +20,27 @@ export default function Providers({ children }: ProvidersProps) {
 
   return (
     <SessionProvider>
-      <BoardProvider>
-        <DialogProvider>
-          <FilterProvider>
-            <TaskProvider>
-              <QueryClientProvider client={queryClient}>
-                <ToastContainer theme="dark" />
-                <ThemeProvider
-                  attribute="class"
-                  defaultTheme="system"
-                  enableSystem
-                  disableTransitionOnChange
-                >
-                  {children}
-                </ThemeProvider>
-              </QueryClientProvider>
-            </TaskProvider>
-          </FilterProvider>
-        </DialogProvider>
-      </BoardProvider>
+      <UserProvider>
+        <BoardProvider>
+          <DialogProvider>
+            <FilterProvider>
+              <TaskProvider>
+                <QueryClientProvider client={queryClient}>
+                  <ToastContainer theme="dark" />
+                  <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                    disableTransitionOnChange
+                  >
+                    {children}
+                  </ThemeProvider>
+                </QueryClientProvider>
+              </TaskProvider>
+            </FilterProvider>
+          </DialogProvider>
+        </BoardProvider>
+      </UserProvider>
     </SessionProvider>
   )
 }

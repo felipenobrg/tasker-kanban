@@ -46,7 +46,6 @@ export default function SubtaskCard(props: SubTaskCardProps) {
         <Checkbox
           id="terms"
           checked={isChecked}
-          disabled={status === 'Disabled'}
           onCheckedChange={handleCheckboxChange}
         />
         <label

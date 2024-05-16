@@ -1,7 +1,7 @@
 import NextAuth, { NextAuthOptions, Session } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { BASE_URL } from '../../../../../apiConfig';
+import { BASE_URL } from '../../../../apiConfig';
 
 interface CustomUser {
   name?: string;

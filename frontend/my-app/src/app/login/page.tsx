@@ -96,14 +96,14 @@ export default function Login() {
   return (
     <main className="flex items-center justify-center min-h-screen">
       <div className="flex flex-col sm:flex-row">
-        <Card className="flex items-center flex-col max-w-sm bg-black border-none rounded-l w-full sm:w-[32rem]">
+        <Card className="flex items-center justify-center flex-col max-w-sm bg-black border-none rounded-l w-full">
           <CardHeader className="flex items-center justify-center">
             <Image
               src={TaskerLogo}
               alt="Logo do site Tasker"
               className="w-10 h-10 rounded"
             />
-            <CardTitle className="text-lg">Acesse o Tasker</CardTitle>
+            <CardTitle className="text-lg mb-3">Acesse o Tasker</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -157,7 +157,7 @@ export default function Login() {
             </div>
           </CardContent>
         </Card>
-        <Card className="flex flex-col justify-center bg-blue-900 w-full sm:w-[25rem] border-none rounded-r">
+        <Card className="flex flex-col justify-center bg-blue-900 w-full sm:w-[30rem] border-none rounded-r">
           <CardContent className="w-80">
             <h1 className="text-3xl text-start font-jakarta font-bold mb-2">
               Explore nossa <br /> Comunidade

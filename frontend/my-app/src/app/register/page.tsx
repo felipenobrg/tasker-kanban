@@ -65,7 +65,7 @@ export default function Register() {
   return (
     <main className="flex items-center justify-center min-h-screen">
       <div className="flex flex-col sm:flex-row">
-        <Card className="flex items-center flex-col max-w-sm bg-black border-none rounded-l w-full sm:w-[32rem]">
+        <Card className="flex items-center justify-center flex-col max-w-sm bg-black border-none rounded-l w-full">
           <CardHeader>
             <CardTitle className="text-xl font-bold">Registre-se</CardTitle>
             <CardDescription className="text-gray-50">
@@ -73,7 +73,7 @@ export default function Register() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(onSubmit)} noValidate>
               <div className="grid gap-4">
                 <div>
                   <Label htmlFor="firstName">Nome</Label>
@@ -85,7 +85,9 @@ export default function Register() {
                     required
                   />
                   {errors.name && (
-                    <span className="text-red-500">{errors.name.message}</span>
+                    <span className="text-sm text-red-500">
+                      {errors.name.message}
+                    </span>
                   )}
                 </div>
                 <div className="grid gap-2">
@@ -94,7 +96,7 @@ export default function Register() {
                     id="email"
                     type="email"
                     {...register('email')}
-                    className="w-[17rem]"
+                    className="text-sm w-[17rem]"
                     placeholder="Informe seu email"
                     required
                   />
@@ -110,7 +112,7 @@ export default function Register() {
                     {...register('password')}
                     placeholder="Informe sua senha"
                     required
-                    className="w-[17rem]"
+                    className="text-sm w-[17rem]"
                   />
                   {errors.password && (
                     <span className="text-red-500">
@@ -135,7 +137,7 @@ export default function Register() {
             </div>
           </CardContent>
         </Card>
-        <Card className="flex flex-col justify-center bg-blue-900 w-full sm:w-[25rem] border-none rounded-r">
+        <Card className="flex flex-col justify-center bg-blue-900 w-full sm:w-[30rem] border-none rounded-r">
           <CardContent className="w-80">
             <h1 className="text-3xl text-start font-jakarta font-bold mb-2">
               Entre na nossa <br /> Comunidade

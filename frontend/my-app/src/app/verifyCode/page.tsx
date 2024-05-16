@@ -40,7 +40,7 @@ const FormSchema = z.object({
     .max(4),
 })
 
-const VerifyCode = () => {
+export default function VerifyCode() {
   const { email } = useContext(UserContext)
 
   const userEmail = useMemo(() => {
@@ -124,7 +124,6 @@ const VerifyCode = () => {
                   </FormItem>
                 )}
               />
-
               <Button type="submit" className="w-full">
                 Submit
               </Button>
@@ -140,5 +139,3 @@ const VerifyCode = () => {
     </div>
   )
 }
-
-export default VerifyCode

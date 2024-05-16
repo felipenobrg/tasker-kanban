@@ -1,5 +1,6 @@
 import NextAuth, { NextAuthOptions, Session } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { NextApiRequest, NextApiResponse } from 'next';
 import { BASE_URL } from '../../../../../apiConfig';
 
 interface CustomUser {
@@ -56,7 +57,7 @@ const nextAuthOptions: NextAuthOptions = {
 
 export default NextAuth(nextAuthOptions);
 
-export const config = {
+export const nextAuthConfig = {
   api: {
     bodyParser: false,
   },

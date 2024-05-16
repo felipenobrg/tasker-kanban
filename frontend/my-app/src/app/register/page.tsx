@@ -63,77 +63,92 @@ export default function Register() {
   }
 
   return (
-    <div className="flex items-center flex-col justify-center h-screen">
-      <Card className="mx-auto max-w-md p-6 bg-black border-none">
-        <CardHeader>
-          <CardTitle className="text-xl font-bold">Registre-se</CardTitle>
-          <CardDescription className="text-gray-50">
-            Informe suas informações para criar sua conta
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="grid gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="firstName">Nome</Label>
-                <Input
-                  id="firstName"
-                  {...register('name')}
-                  className="input"
-                  placeholder="Informe seu nome"
-                  required
-                />
-                {errors.name && (
-                  <span className="text-red-500">{errors.name.message}</span>
-                )}
+    <main className="flex items-center justify-center min-h-screen">
+      <div className="flex flex-col sm:flex-row">
+        <Card className="flex items-center flex-col max-w-sm bg-black border-none rounded-l w-full sm:w-[32rem]">
+          <CardHeader>
+            <CardTitle className="text-xl font-bold">Registre-se</CardTitle>
+            <CardDescription className="text-gray-50">
+              Informe suas informações para criar sua conta
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="grid gap-4">
+                <div>
+                  <Label htmlFor="firstName">Nome</Label>
+                  <Input
+                    id="firstName"
+                    {...register('name')}
+                    className="w-[17rem]"
+                    placeholder="Informe seu nome"
+                    required
+                  />
+                  {errors.name && (
+                    <span className="text-red-500">{errors.name.message}</span>
+                  )}
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    {...register('email')}
+                    className="w-[17rem]"
+                    placeholder="Informe seu email"
+                    required
+                  />
+                  {errors.email && (
+                    <span className="text-red-500">{errors.email.message}</span>
+                  )}
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="password">Senha</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    {...register('password')}
+                    placeholder="Informe sua senha"
+                    required
+                    className="w-[17rem]"
+                  />
+                  {errors.password && (
+                    <span className="text-red-500">
+                      {errors.password.message}
+                    </span>
+                  )}
+                </div>
+                <Button
+                  type="submit"
+                  className="btn-primary"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Enviando...' : 'Criar sua conta'}
+                </Button>
               </div>
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  {...register('email')}
-                  className="input"
-                  placeholder="Informe seu email"
-                  required
-                />
-                {errors.email && (
-                  <span className="text-red-500">{errors.email.message}</span>
-                )}
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="password">Senha</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  {...register('password')}
-                  className="input"
-                  placeholder="Informe sua senha"
-                  required
-                />
-                {errors.password && (
-                  <span className="text-red-500">
-                    {errors.password.message}
-                  </span>
-                )}
-              </div>
-              <Button
-                type="submit"
-                className="btn-primary"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? 'Enviando...' : 'Criar sua conta'}
-              </Button>
+            </form>
+            <div className="mt-4 text-center text-sm">
+              Já tem uma conta?{' '}
+              <Link href="/login" className="underline">
+                Login
+              </Link>
             </div>
-          </form>
-          <div className="mt-4 text-center text-sm">
-            Já tem uma conta?{' '}
-            <Link href="/login" className="underline">
-              Login
+          </CardContent>
+        </Card>
+        <Card className="flex flex-col justify-center bg-blue-900 w-full sm:w-[25rem] border-none rounded-r">
+          <CardContent className="w-80">
+            <h1 className="text-3xl text-start font-jakarta font-bold mb-2">
+              Entre na nossa <br /> Comunidade
+            </h1>
+            <Link
+              href="https://github.com/felipenobrg/tasker"
+              className="text-sm text-gray-100"
+            >
+              Explore nosso repositório e seja parte do progresso!
             </Link>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+          </CardContent>
+        </Card>
+      </div>
+    </main>
   )
 }

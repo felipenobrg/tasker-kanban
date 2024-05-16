@@ -94,10 +94,10 @@ export default function Login() {
   // }
 
   return (
-    <main className="flex items-center justify-center">
+    <main className="flex items-center justify-center min-h-screen">
       <div className="flex flex-col sm:flex-row">
         <Card className="flex items-center flex-col max-w-sm bg-black border-none rounded-l w-full sm:w-[32rem]">
-          <CardHeader className="flex flex-col items-center justify-center mt-3">
+          <CardHeader className="flex items-center justify-center">
             <Image
               src={TaskerLogo}
               alt="Logo do site Tasker"
@@ -160,13 +160,13 @@ export default function Login() {
         <Card className="flex flex-col justify-center bg-blue-900 w-full sm:w-[25rem] border-none rounded-r">
           <CardContent className="w-80">
             <h1 className="text-3xl text-start font-jakarta font-bold mb-2">
-              Entre na nossa <br /> Comunidade
+              Explore nossa <br /> Comunidade
             </h1>
             <Link
               href="https://github.com/felipenobrg/tasker"
-              className="text-sm"
+              className="text-sm text-gray-100"
             >
-              Explore nosso repositório e seja parte do progresso!
+              Descubra mais sobre o Tasker e junte-se à nossa comunidade.
             </Link>
           </CardContent>
         </Card>

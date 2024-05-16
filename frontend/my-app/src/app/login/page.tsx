@@ -94,7 +94,7 @@ export default function Login() {
   // }
 
   return (
-    <main className="flex items-center justify-center h-screen">
+    <main className="flex items-center justify-center">
       <div className="flex flex-col sm:flex-row">
         <Card className="flex items-center flex-col max-w-sm bg-black border-none rounded-l w-full sm:w-[32rem]">
           <CardHeader className="flex flex-col items-center justify-center mt-3">

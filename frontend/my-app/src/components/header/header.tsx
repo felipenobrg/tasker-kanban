@@ -11,9 +11,9 @@ import AlertDialog from './alertDialog'
 import { useBoard } from '@/context/boardContext'
 import HeaderInput from './headerInput'
 import DropdownDeleteBoard from './dropdownDeleteBoard'
-import DialogAddNewTask from '../dialogs/dialogAddNewTask/dialogAddNewTask'
 import { statusOption } from '@/types/statusOption'
 import Profile from '../profile/profile'
+import DialogAddNewTask from '../dialogs/dialogAddNewTask/dialogAddNewTask'
 
 export default function Header() {
   const { setFilterValue } = useFilter()

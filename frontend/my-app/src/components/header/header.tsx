@@ -13,7 +13,7 @@ import HeaderInput from './headerInput'
 import DropdownDeleteBoard from './dropdownDeleteBoard'
 import { statusOption } from '@/types/statusOption'
 import Profile from '../profile/profile'
-import DialogAddNewTask from '../dialogs/dialogAddNewTask/dialogAddNewTask'
+import DialogAddNewTask from '../dialogs/dialogAddNewTask/dialogAddNewTasks'
 
 export default function Header() {
   const { setFilterValue } = useFilter()

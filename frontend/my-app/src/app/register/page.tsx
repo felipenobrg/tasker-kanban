@@ -17,7 +17,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import SigninAuth from '@/lib/auth/signin'
 import { useRouter } from 'next/navigation'
-import { UserContext } from '@/context/userContext';
+import { UserContext } from '@/context/userContext'
 import { useContext } from 'react'
 
 export default function Register() {
@@ -64,10 +64,10 @@ export default function Register() {
 
   return (
     <div className="flex items-center flex-col justify-center h-screen">
-      <Card className="mx-auto max-w-md p-6">
+      <Card className="mx-auto max-w-md p-6 bg-black border-none">
         <CardHeader>
           <CardTitle className="text-xl font-bold">Registre-se</CardTitle>
-          <CardDescription className="text-gray-600">
+          <CardDescription className="text-gray-50">
             Informe suas informações para criar sua conta
           </CardDescription>
         </CardHeader>
@@ -80,7 +80,7 @@ export default function Register() {
                   id="firstName"
                   {...register('name')}
                   className="input"
-                  placeholder="Max"
+                  placeholder="Informe seu nome"
                   required
                 />
                 {errors.name && (
@@ -94,7 +94,7 @@ export default function Register() {
                   type="email"
                   {...register('email')}
                   className="input"
-                  placeholder="m@exemplo.com"
+                  placeholder="Informe seu email"
                   required
                 />
                 {errors.email && (
@@ -108,6 +108,7 @@ export default function Register() {
                   type="password"
                   {...register('password')}
                   className="input"
+                  placeholder="Informe sua senha"
                   required
                 />
                 {errors.password && (

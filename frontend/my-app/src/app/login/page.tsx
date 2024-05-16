@@ -8,13 +8,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import 'react-toastify/dist/ReactToastify.css'
@@ -25,6 +19,8 @@ import { AxiosError } from '@/types/axiosError'
 import PostResendCode from '@/lib/verifyCode/resendCode'
 import { useContext } from 'react'
 import { UserContext } from '@/context/userContext'
+import TaskerLogo from '../../assets/taskerLogo.png'
+import Image from 'next/image'
 
 export default function Login() {
   const { data: session } = useSession()
@@ -76,7 +72,7 @@ export default function Login() {
         }
       }
     } catch (error: AxiosError | any) {
-      if (error.response?.data?.message === "user not verified") {
+      if (error.response?.data?.message === 'user not verified') {
         try {
           await PostResendCode({
             email: data.email,
@@ -90,7 +86,6 @@ export default function Login() {
         console.error('Error:', error)
         setError('password', { message: 'Email ou senha incorretos' })
       }
-
     }
   }
   // if (session) {
@@ -99,59 +94,83 @@ export default function Login() {
   // }
 
   return (
-    <div className="flex items-center flex-col justify-center h-screen">
-      <Card className="max-w-sm">
-        <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>
-            Entre com seu email abaixo para acessar sua conta
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} noValidate>
-            <div className="grid gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  {...register('email')}
-                  placeholder="m@exemplo.com"
-                  required
-                />
-                {errors.email && (
-                  <span className="text-red-500">{errors.email.message}</span>
-                )}
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Senha</Label>
+    <main className="flex items-center justify-center h-screen">
+      <div className="flex flex-col sm:flex-row">
+        <Card className="flex items-center flex-col max-w-sm bg-black border-none rounded-l w-full sm:w-[32rem]">
+          <CardHeader className="flex flex-col items-center justify-center mt-3">
+            <Image
+              src={TaskerLogo}
+              alt="Logo do site Tasker"
+              className="w-10 h-10 rounded"
+            />
+            <CardTitle className="text-lg">Acesse o Tasker</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit(onSubmit)} noValidate>
+              <div className="grid gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    {...register('email')}
+                    placeholder="Informe seu email"
+                    className="w-[17rem]"
+                    required
+                  />
+                  {errors.email && (
+                    <span className="text-red-500">{errors.email.message}</span>
+                  )}
                 </div>
-                <Input
-                  id="password"
-                  type="password"
-                  {...register('password')}
-                  required
-                />
-                {errors.password && (
-                  <span className="text-red-500">
-                    {errors.password.message}
-                  </span>
-                )}
+                <div className="grid gap-2">
+                  <div className="flex items-center">
+                    <Label htmlFor="password">Senha</Label>
+                  </div>
+                  <Input
+                    id="password"
+                    type="password"
+                    {...register('password')}
+                    placeholder="Informa sua senha"
+                    className="w-[17rem]"
+                    required
+                  />
+                  {errors.password && (
+                    <span className="text-red-500">
+                      {errors.password.message}
+                    </span>
+                  )}
+                </div>
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Entrando...' : 'Login'}
+                </Button>
               </div>
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? 'Entrando...' : 'Login'}
-              </Button>
+            </form>
+            <div className="mt-4 text-center text-sm">
+              Não tem uma conta?{' '}
+              <Link href="/register" className="underline">
+                Registre-se
+              </Link>
             </div>
-          </form>
-          <div className="mt-4 text-center text-sm">
-            Não tem uma conta?{' '}
-            <Link href="/register" className="underline">
-              Registre-se
+          </CardContent>
+        </Card>
+        <Card className="flex flex-col justify-center bg-blue-900 w-full sm:w-[25rem] border-none rounded-r">
+          <CardContent className="w-80">
+            <h1 className="text-3xl text-start font-jakarta font-bold mb-2">
+              Entre na nossa <br /> Comunidade
+            </h1>
+            <Link
+              href="https://github.com/felipenobrg/tasker"
+              className="text-sm"
+            >
+              Explore nosso repositório e seja parte do progresso!
             </Link>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+          </CardContent>
+        </Card>
+      </div>
+    </main>
   )
 }

@@ -81,31 +81,22 @@ export default function BoardCard(props: BoardCardProps) {
   return (
     <>
       <div className="flex items-center justify-center flex-row">
-        <div
-          onDragStart={(e) => handleDragStart(e, data.ID)}
-          onDragOver={handleDragOver}
-          className="flex flex-col gap-4"
-          draggable
-        >
-          {taskData
-            .filter((item) => item.status === data.status)
-            .map((item) => (
-              <Card
-                key={item.ID}
-                onClick={handleDialogOpen}
-                className="flex flex-col bg-gray-800 w-[18rem] h-28 p-3 cursor-pointer rounded"
-                draggable
-              >
-                <div className="flex flex-col items-start justify-start flex-1">
-                  <h2 className="text-gray-200 text-base font-bold">
-                    {item.title}
-                  </h2>
-                  <p className="text-gray-300 text-sm break-words mt-2 font-medium">
-                    {truncateDescription(item.description, 35)}
-                  </p>
-                </div>
-              </Card>
-            ))}
+        <div className="flex flex-col gap-4" draggable>
+          <Card
+            onClick={handleDialogOpen}
+            className="flex flex-col bg-gray-800 w-[18rem] h-28 p-3 cursor-pointer rounded"
+            draggable
+            key={data.ID}
+          >
+            <div className="flex flex-col items-start justify-start flex-1">
+              <h2 className="text-gray-200 text-base font-bold">
+                {data.title}
+              </h2>
+              <p className="text-gray-300 text-sm break-words mt-2 font-medium">
+                {truncateDescription(data.description, 35)}
+              </p>
+            </div>
+          </Card>
         </div>
       </div>
       {dialogOpen && (

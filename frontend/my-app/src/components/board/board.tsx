@@ -37,16 +37,18 @@ export default function Board() {
   }
 
   useEffect(() => {
-    const fetchBoardData = async () => {
-      try {
-        const boardResponse = await GetBoardById({ id: boardId })
-        const boardData = boardResponse.data
-        setTaskData(boardData.tasks || [])
-      } catch (error) {
-        console.error('Error fetching tasks:', error)
+    if (boardId) {
+      const fetchBoardData = async () => {
+        try {
+          const boardResponse = await GetBoardById({ id: boardId })
+          const boardData = boardResponse.data
+          setTaskData(boardData.tasks || [])
+        } catch (error) {
+          console.error('Error fetching tasks:', error)
+        }
       }
+      fetchBoardData()
     }
-    fetchBoardData()
   }, [boardId, setTaskData])
 
   const taskCounts = statusOptions.reduce(

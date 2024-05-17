@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/card'
 import Link from 'next/link'
 import { UserContext } from '@/context/userContext'
-import { useContext, useMemo } from 'react'
+import { useContext, useMemo, useState } from 'react'
 import {
   Form,
   FormControl,
@@ -30,6 +30,8 @@ import { useForm } from 'react-hook-form'
 import PostCode from '@/lib/verifyCode/veriyCode'
 import { useRouter } from 'next/navigation'
 import PostResendCode from '@/lib/verifyCode/resendCode'
+import { AxiosError } from 'axios'
+import { toast } from 'react-toastify'
 
 const FormSchema = z.object({
   pin: z
@@ -42,6 +44,7 @@ const FormSchema = z.object({
 
 export default function VerifyCode() {
   const { email } = useContext(UserContext)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const userEmail = useMemo(() => {
     return email
@@ -58,14 +61,23 @@ export default function VerifyCode() {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
+      setIsSubmitting(true)
       await PostCode({
         email: userEmail,
         code: data.pin,
       })
       router.push('/')
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error posting verification code:', error)
-      throw error
+      if ((error as AxiosError)?.response?.status === 400) {
+        toast.error(
+          'O email já foi usado. Por favor, verifique o email e tente novamente.',
+        )
+      } else {
+        toast.error('Ocorreu um erro. Por favor, tente novamente mais tarde.')
+      }
+    } finally {
+      setIsSubmitting(false)
     }
   }
 

@@ -3,10 +3,7 @@
 import * as React from 'react'
 import BoardCard from './boardCard'
 import { Circle } from 'lucide-react'
-import { Task } from '@/types/task'
-import { useState, useEffect } from 'react'
-import { Reorder } from 'framer-motion'
-import { useFilter } from '@/context/filterContext'
+import { useEffect } from 'react'
 import UpdateTask from '@/lib/task/updateTask'
 import { useBoard } from '@/context/boardContext'
 import GetBoardById from '@/lib/boards/getBoardById'
@@ -19,18 +16,19 @@ const statusOptions = [
 ]
 
 export default function Board() {
-  const { filterValue } = useFilter()
   const { boardId } = useBoard()
   const { setTaskData, taskData } = useTask()
 
-  const handleDrop = async (newTasks: Task[], newStatus: string) => {
+  const handleDrop = async (
+    e: React.DragEvent<HTMLDivElement>,
+    newStatus: string,
+  ) => {
+    e.preventDefault()
+    const taskId = e.dataTransfer.getData('taskId')
+    const updatedTasks = taskData.map((task) =>
+      task.ID.toString() === taskId ? { ...task, status: newStatus } : task,
+    )
     try {
-      const updatedTasks = newTasks.map((task, index) => ({
-        ...task,
-        status: newStatus,
-        id: task.ID,
-        order: index,
-      }))
       await Promise.all(updatedTasks.map((task) => UpdateTask(task)))
       setTaskData(updatedTasks)
     } catch (error) {
@@ -39,7 +37,7 @@ export default function Board() {
   }
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchBoardData = async () => {
       try {
         const boardResponse = await GetBoardById({ id: boardId })
         const boardData = boardResponse.data
@@ -48,31 +46,39 @@ export default function Board() {
         console.error('Error fetching tasks:', error)
       }
     }
-    fetchData()
-  }, [boardId, setTaskData, taskData])
+    fetchBoardData()
+  }, [boardId, setTaskData])
+
+  const taskCounts = statusOptions.reduce(
+    (acc, option) => {
+      acc[option.status] = taskData.filter(
+        (task) => task.status === option.status,
+      ).length
+      return acc
+    },
+    {} as { [key: string]: number },
+  )
+
+  console.log('taskData', taskData)
 
   return (
     <main className="flex flex-1 gap-4 p-4 lg:gap-6 lg:p-6 relative">
       <div className="flex flex-col items-center gap-4">
         <div className="flex">
           {statusOptions.map(({ status, circleColor }) => (
-            <div key={status} className="flex flex-col ml-20 items-center">
+            <div
+              key={status}
+              className="flex flex-col ml-20 items-center bg-muted/40 p-8 rounded w-[20rem]"
+              onDrop={(e) => handleDrop(e, status)}
+              onDragOver={(e) => e.preventDefault()}
+            >
               <div className="flex items-center justify-center gap-2">
                 <Circle size={18} color={circleColor} fill={circleColor} />
-                <p className="mb-2 mt-2 text-sm text-gray-400 ">{status}</p>
+                <p className="mb-2 mt-2 ml-2 text-sm text-gray-400">
+                  {status} ({taskCounts[status]})
+                </p>
               </div>
-              <Reorder.Group
-                className="flex flex-col gap-5"
-                values={taskData.map((task) => task.ID)}
-                onReorder={(newOrder) => {
-                  console.log('New order:', newOrder)
-                  const newTasksOrder = newOrder.map(
-                    (taskId) => taskData.find((task) => task.ID === taskId)!,
-                  )
-                  handleDrop(newTasksOrder, status)
-                }}
-                axis="x"
-              >
+              <div className="flex items-center flex-col gap-5 mt-3">
                 {taskData
                   .filter((task) => task.status === status)
                   .map((task) => (
@@ -83,13 +89,7 @@ export default function Board() {
                       statusOption={statusOptions}
                     />
                   ))}
-                {taskData.filter((task) => task.status === status).length ===
-                  0 && (
-                  <p className="text-gray-400 text-sm mt-2">
-                    Não há tarefas nesta categoria.
-                  </p>
-                )}
-              </Reorder.Group>
+              </div>
             </div>
           ))}
         </div>

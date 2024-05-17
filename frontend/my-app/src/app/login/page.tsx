@@ -59,9 +59,8 @@ export default function Login() {
           email: data.email,
           password: data.password,
           callbackUrl: '/',
-          redirect: false,
+          redirect: true,
         })
-
         if (result?.error) {
           setError('email', { message: 'Email ou senha incorretos' })
           setError('password', { message: 'Email ou senha incorretos' })
@@ -88,10 +87,6 @@ export default function Login() {
       }
     }
   }
-  // if (session) {
-  //   router.replace('/')
-  //   return null
-  // }
 
   return (
     <main className="flex items-center justify-center min-h-screen">
@@ -103,7 +98,7 @@ export default function Login() {
               alt="Logo do site Tasker"
               className="w-10 h-10 rounded"
             />
-            <CardTitle className="text-lg mb-3">Acesse o Tasker</CardTitle>
+            <CardTitle className="text-lg">Acesse o Tasker</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} noValidate>

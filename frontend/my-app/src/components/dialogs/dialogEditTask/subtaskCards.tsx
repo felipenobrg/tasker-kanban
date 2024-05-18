@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react'
 import { Checkbox } from '@/components/ui/checkbox'
 import updateSubtasks from '@/lib/subtasks/updateSubtask'
-import GetSubtaskById from '@/lib/subtasks/getSubtaskById'
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
+import UpdateSubtasks from '@/lib/subtasks/updateSubtask'
 
 interface SubTaskCardProps {
   name: string
@@ -12,12 +13,16 @@ interface SubTaskCardProps {
 }
 
 export default function SubtaskCard(props: SubTaskCardProps) {
+  const queryClient = useQueryClient()
   const { name, subtaskId, status } = props
   const [isChecked, setIsChecked] = useState(status === 'Enabled')
 
-  useEffect(() => {
-    setIsChecked(status === 'Enabled')
-  }, [status])
+  const { mutate: mutateSubtask } = useMutation({
+    mutationFn: UpdateSubtasks,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['subtasks'] })
+    },
+  })
 
   const handleCheckboxChange = (newCheckedState: boolean) => {
     setIsChecked(newCheckedState)
@@ -25,13 +30,13 @@ export default function SubtaskCard(props: SubTaskCardProps) {
     handleUpdateSubstaskStatus(subtaskId, newStatus)
   }
 
-  const handleUpdateSubstaskStatus = async (
+  const handleUpdateSubstaskStatus = (
     id: number | undefined,
     newStatus: string,
   ) => {
     if (id !== undefined) {
       try {
-        await updateSubtasks({ name, id, status: newStatus })
+        mutateSubtask({ name, id, status: newStatus })
       } catch (error) {
         console.error('Error updating subtask:', error)
       }
@@ -39,6 +44,10 @@ export default function SubtaskCard(props: SubTaskCardProps) {
       console.error('Subtask ID is undefined')
     }
   }
+
+  useEffect(() => {
+    setIsChecked(status === 'Enabled')
+  }, [status])
 
   return (
     <div className="bg-gray-800 w-[20rem] p-2 rounded-lg">

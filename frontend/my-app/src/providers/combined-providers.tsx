@@ -9,14 +9,21 @@ import { SessionProvider } from 'next-auth/react'
 import { ThemeProvider } from 'next-themes'
 import React from 'react'
 import { ToastContainer } from 'react-toastify'
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 interface ProvidersProps {
   children: React.ReactNode
 }
 
 export default function Providers({ children }: ProvidersProps) {
-  const queryClient = new QueryClient()
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+        staleTime: 1000 * 60 * 30,
+      },
+    },
+  })
 
   return (
     <SessionProvider>

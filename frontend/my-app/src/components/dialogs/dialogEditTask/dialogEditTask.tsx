@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Button } from '../../ui/button'
 import { Input } from '../../ui/input'
@@ -19,6 +19,8 @@ import SubtaskCard from './subtaskCards'
 import GetSubtaskById from '@/lib/subtasks/getSubtaskById'
 import { Subtasks } from '@/types/subtasks'
 import { useForm } from 'react-hook-form'
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
+import Spinner from '@/assets/spinner'
 
 interface FormDataProps {
   title: string
@@ -36,16 +38,12 @@ interface DialogEditTaskProps {
   title: string
   onClose: () => void
   setDialogOpen: (isOpen: boolean) => void
-  onUpdateTask: (
-    title: string,
-    id: number,
-    description: string,
-    status: string,
-  ) => void
   handleDeleteTask?: (id: number) => void
 }
 
 export default function DialogEditTask(props: DialogEditTaskProps) {
+  const queryClient = useQueryClient()
+
   const {
     statusOption,
     id,
@@ -54,7 +52,6 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
     initialStatus,
     onClose,
     setDialogOpen,
-    onUpdateTask,
     handleDeleteTask,
   } = props
 
@@ -68,56 +65,45 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
 
   const [subtaskData, setSubtaskData] = useState<Subtasks[]>([])
 
-  const onSubmit = useCallback(
-    async (formData: FormDataProps) => {
-      try {
-        await UpdateTask({
-          title: formData.title,
-          description: formData.description,
-          status: formData.dialogStatus,
-          id,
-        })
-        onUpdateTask(
-          formData.title,
-          taskId,
-          formData.description,
-          formData.dialogStatus,
-        )
-        reset({
-          title: formData.title,
-          description: formData.description,
-          dialogStatus: formData.dialogStatus,
-        })
-        setDialogOpen(false)
-      } catch (error) {
-        console.error('Error updating task:', error)
-      }
+  const { data: subtasks, isLoading } = useQuery({
+    queryKey: ['subtasks', taskId],
+    queryFn: () => GetSubtaskById({ id: taskId }),
+    retry: false,
+  })
+
+  const { mutate: mutateTasks } = useMutation({
+    mutationFn: UpdateTask,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['board'] })
     },
-    [id, taskId, onUpdateTask, setDialogOpen, reset],
-  )
+  })
 
   useEffect(() => {
-    const fetchSubtaskData = async () => {
-      try {
-        const subtaskData = await GetSubtaskById({ id: taskId })
-        setSubtaskData(subtaskData)
-        reset({
-          title: props.title,
-          description: props.initialDescription,
-          dialogStatus: props.initialStatus,
-        })
-      } catch (error) {
-        console.error('Error fetching subtask data:', error)
-      }
+    if (!isLoading && subtasks) {
+      setSubtaskData(subtasks)
     }
-    fetchSubtaskData()
-  }, [
-    taskId,
-    props.title,
-    props.initialDescription,
-    props.initialStatus,
-    reset,
-  ])
+  }, [subtasks, isLoading])
+
+  const onSubmit = (formData: FormDataProps) => {
+    try {
+      mutateTasks({
+        title: formData.title,
+        description: formData.description,
+        status: formData.dialogStatus,
+        id,
+      })
+      reset({
+        title: formData.title,
+        description: formData.description,
+        dialogStatus: formData.dialogStatus,
+      })
+      setDialogOpen(false)
+    } catch (error) {
+      console.error('Error updating task:', error)
+    }
+  }
+
+  if (isLoading || !subtaskData) return <Spinner />
 
   return (
     <Dialog.Root modal open={isOpen} onOpenChange={onClose}>

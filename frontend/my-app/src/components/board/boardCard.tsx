@@ -1,5 +1,6 @@
 'use client'
 
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Task } from '@/types/task'
 import { Card } from '../ui/card'
 import { useState, useEffect } from 'react'
@@ -30,6 +31,7 @@ export default function BoardCard(props: BoardCardProps) {
   const { data, statusOption, taskId } = props
   const [dialogOpen, setDialogOpen] = useState(false)
   const { setTaskId, taskData, setTaskData } = useTask()
+  const queryClient = useQueryClient()
 
   const handleDialogOpen = () => {
     setDialogOpen(true)
@@ -43,32 +45,39 @@ export default function BoardCard(props: BoardCardProps) {
     setDialogOpen(false)
   }
 
-  const handleUpdateTask = async (
+  const { mutate, isSuccess } = useMutation({
+    mutationFn: UpdateTask,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['board'] })
+    },
+  })
+
+  const handleUpdateTask = (
     title: string,
     id: number,
     description: string,
     status: string,
   ) => {
-    try {
-      await UpdateTask({ id, title, description, status })
-      const updatedTask = {
-        ...taskData.find((item) => item.ID === id),
-        title,
-        description,
-        status,
-      }
-      const updatedTasks = taskData.map((item) =>
-        item.ID === id ? updatedTask : item,
-      )
-      setTaskData(updatedTasks as Task[])
-    } catch (error) {
-      console.error('Error updating task:', error)
+    mutate({ id, title, description, status })
+    const updatedTask = {
+      ...taskData.find((item) => item.ID === id),
+      title,
+      description,
+      status,
     }
+    const updatedTasks = taskData.map((item) =>
+      item.ID === id ? updatedTask : item,
+    )
+    setTaskData(updatedTasks as Task[])
   }
 
   useEffect(() => {
     setTaskId(taskId)
   }, [taskId, setTaskId])
+
+  useEffect(() => {
+    setDialogOpen(false)
+  }, [isSuccess])
 
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>, id: number) => {
     e.dataTransfer.setData('taskId', id.toString())
@@ -81,7 +90,7 @@ export default function BoardCard(props: BoardCardProps) {
   return (
     <>
       <div className="flex items-center justify-center flex-row">
-        <div className="flex flex-col gap-4" draggable>
+        <div className="flex flex-col gap-4">
           <Card
             onClick={handleDialogOpen}
             className="flex flex-col bg-gray-800 w-[18rem] h-28 p-3 cursor-pointer rounded"
@@ -108,7 +117,6 @@ export default function BoardCard(props: BoardCardProps) {
           id={data.ID}
           taskId={taskId}
           setDialogOpen={setDialogOpen}
-          onUpdateTask={handleUpdateTask}
           isOpen={dialogOpen}
           onClose={() => setDialogOpen(false)}
           handleDeleteTask={() => handleDeleteTask(data.ID)}

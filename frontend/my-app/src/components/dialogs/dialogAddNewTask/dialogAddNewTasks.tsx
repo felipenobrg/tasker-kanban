@@ -18,6 +18,7 @@ import { Plus, X } from 'lucide-react'
 import { FieldValues, useForm } from 'react-hook-form'
 import { useTask } from '@/context/taskContext'
 import PostSubtask from '@/lib/subtasks/postSubtasks'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 interface DialogAddNewTaskProps {
   statusOption: string[]
@@ -31,8 +32,23 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
   const { boardId } = useBoard()
   const { taskId } = useTask()
   const [subTasks, setSubTasks] = useState([{ name: '' }])
+  const queryClient = useQueryClient()
 
-  const onSubmit = async (data: FieldValues) => {
+  const { mutate: mutateTask } = useMutation({
+    mutationFn: PostTask,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['board'] })
+    },
+  })
+
+  const { mutate: mutateSubtask } = useMutation({
+    mutationFn: PostSubtask,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['subtask'] })
+    },
+  })
+
+  const onSubmit = (data: FieldValues) => {
     try {
       const taskData = {
         title: data.title,
@@ -40,10 +56,9 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
         status: data.status,
         board_id: boardId,
       }
-      const mainTaskResponse = await PostTask(taskData)
-      if (!mainTaskResponse) {
-        return
-      }
+
+      mutateTask(taskData)
+
       for (const subTask of subTasks) {
         if (subTask.name.trim() !== '') {
           const subTaskData = {
@@ -51,9 +66,10 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
             name: subTask.name,
             status: 'Disabled',
           }
-          await PostSubtask(subTaskData)
+          mutateSubtask(subTaskData)
         }
       }
+
       reset()
       onClose()
       setSubTasks([])
@@ -61,6 +77,7 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
       console.error('Error posting task:', error)
     }
   }
+
   const handleAddSubTask = () => {
     setSubTasks([...subTasks, { name: '' }])
   }

@@ -6,6 +6,8 @@ import Header from '@/components/header/header'
 import Board from '@/components/board/board'
 import { useSession } from 'next-auth/react'
 
+export const dynamic = 'force-dynamic'
+
 export default function Home() {
   const router = useRouter()
   const { data: session } = useSession()

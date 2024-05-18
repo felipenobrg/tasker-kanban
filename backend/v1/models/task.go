@@ -19,6 +19,7 @@ type Task struct {
 	Title       string    `json:"title" gorm:"not null"`
 	Description string    `json:"description" gorm:"not null"`
 	Status      string    `json:"status" gorm:"default:'Pendente'"`
+	Priority    string    `json:"priority" gorm:"default:'Baixa'"`
 	SubTasks    []SubTask `json:"subtasks" gorm:"-"`
 }
 
@@ -28,15 +29,43 @@ func (t *Task) BeforeDelete(tx *gorm.DB) error {
 }
 
 func (b *Task) Validate() error {
+	err := checkStatus(b.Status)
+	if err != nil {
+		return err
+	}
+
+	err = checkPriority(b.Priority)
+	if err != nil {
+		return err
+	}
+	return err
+}
+
+func checkStatus(taskStatus string) error {
 	statusAccepted := []string{"Pendente", "Em andamento", "Feito", ""}
 
 	for _, status := range statusAccepted {
-		if status == b.Status {
+		if status == taskStatus {
 			return nil
 		}
 	}
 
-	errormsg := "invalid status. Accepted values are: Backlog, Em andamento or Feito"
+	errormsg := "invalid status. Accepted values are: Pendente, Em andamento or Feito"
+	err := errors.New(errormsg)
+
+	return err
+}
+
+func checkPriority(taskPriority string) error {
+	priorityAccepted := []string{"Baixa", "Média", "Alta", ""}
+
+	for _, priority := range priorityAccepted {
+		if priority == taskPriority {
+			return nil
+		}
+	}
+
+	errormsg := "invalid priority. Accepted values are: Baixa, Média or Alta"
 	err := errors.New(errormsg)
 
 	return err

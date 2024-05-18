@@ -10,7 +10,6 @@ import (
 
 	"tasker/models"
 	"tasker/util"
-
 )
 
 type TaskPayload struct {
@@ -18,6 +17,7 @@ type TaskPayload struct {
 	Title       string           `json:"title"`
 	Description string           `json:"description"`
 	Status      string           `json:"status"`
+	Priority    string           `json:"priority"`
 	SubTasks    []models.SubTask `json:"subtasks"`
 }
 
@@ -116,6 +116,7 @@ func (app *Handlers) CreateTask(w http.ResponseWriter, r *http.Request) {
 		Title:       payload.Title,
 		Description: payload.Description,
 		Status:      payload.Status,
+		Priority:    payload.Priority,
 	}
 
 	err = newTask.Validate()
@@ -203,6 +204,7 @@ func (app *Handlers) UpdateTask(w http.ResponseWriter, r *http.Request) {
 	task.Title = taskPayload.Title
 	task.Description = taskPayload.Description
 	task.Status = taskPayload.Status
+	task.Priority = taskPayload.Priority
 
 	err = task.Validate()
 	if err != nil {

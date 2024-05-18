@@ -90,8 +90,8 @@ export default function Login() {
 
   return (
     <main className="flex items-center justify-center min-h-screen">
-      <div className="flex flex-col sm:flex-row">
-        <Card className="flex items-center justify-center flex-col max-w-sm bg-black border-none rounded-l w-full">
+      <div className="flex flex-col-reverse sm:flex-row">
+        <Card className="flex items-center justify-center flex-col max-w-sm bg-black border-none w-full rounded-r-none rounded-l-xl">
           <CardHeader className="flex items-center justify-center">
             <Image
               src={TaskerLogo}
@@ -152,7 +152,8 @@ export default function Login() {
             </div>
           </CardContent>
         </Card>
-        <Card className="flex flex-col justify-center bg-blue-900 w-full sm:w-[30rem] border-none rounded-r">
+        <Card className="flex flex-col justify-center bg-blue-900 w-full h-52 sm:w-[40rem] sm:h-[35rem] border-none rounded-xl sm:rounded-l-none sm:rounded-r-xl">
+          {' '}
           <CardContent className="w-80">
             <h1 className="text-3xl text-start font-jakarta font-bold mb-2">
               Explore nossa <br /> Comunidade

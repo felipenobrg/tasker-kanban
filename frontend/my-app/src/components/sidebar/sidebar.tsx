@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { LayoutPanelLeft, Plus, SquareCheckBig } from 'lucide-react'
+import { HomeIcon, LayoutPanelLeft, Plus } from 'lucide-react'
 import Link from 'next/link'
 import DialogNewBoard from '../dialogs/dialogNewBoard/dialogNewBoard'
 import { useCallback, useEffect, useState } from 'react'
@@ -9,15 +9,27 @@ import getBoard from '@/lib/boards/getBoard'
 import { useBoard } from '@/context/boardContext'
 import GetBoardById from '@/lib/boards/getBoardById'
 import ChangeThemeButton from '../header/changeThemeButton'
-import TaskerLogo from '../../assets/taskerBoardLogo.png'
-import Image from 'next/image'
+import { useQuery } from '@tanstack/react-query'
 
 export default function Sidebar() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [boardSize, setBoardSize] = useState<number[]>([])
   const [activeLink, setActiveLink] = useState<string>('')
-  const [shouldFetchBoard, setShouldFetchBoard] = useState(true)
   const { setBoardId, setBoardName, setBoardData, boardData } = useBoard()
+
+  const { data: board, isLoading } = useQuery({
+    queryKey: ['board'],
+    queryFn: getBoard,
+    retry: false,
+  })
+
+  useEffect(() => {
+    if (board && board.data && board.data.boards) {
+      setBoardData(board.data.boards)
+    } else {
+      setBoardData([])
+    }
+  }, [board, setBoardData])
 
   const openDialog = () => {
     setIsDialogOpen(true)
@@ -54,31 +66,18 @@ export default function Sidebar() {
   )
 
   useEffect(() => {
-    if (shouldFetchBoard) {
-      const fetchBoard = async () => {
-        try {
-          const boardDataResponse = await getBoard()
-          const newBoardData = boardDataResponse.data.boards
-          if (newBoardData.length > 0) {
-            handleLinkClick(newBoardData[0].ID)
-          }
-          setBoardData(newBoardData)
-          setBoardSize(newBoardData.length)
-        } catch (error) {
-          console.error('Error fetching board:', error)
-        }
-      }
-      fetchBoard()
-      setShouldFetchBoard(false)
+    if (!isLoading && boardData) {
+      setBoardSize([boardData.length])
     }
-  }, [handleLinkClick, setBoardData, shouldFetchBoard])
+  }, [boardData, isLoading])
 
   return (
     <div className="hidden border-r bg-muted/40 md:block">
       <div className="flex h-full max-h-screen flex-col gap-2">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <Link href="/" className="flex items-center gap-2 font-semibold">
-            <Image src={TaskerLogo} alt="Logo do Tasker" className="w-32 h-9" />
+            <HomeIcon className="h-5 w-5" />
+            Tasker Board
           </Link>
         </div>
         <div className="flex-1">

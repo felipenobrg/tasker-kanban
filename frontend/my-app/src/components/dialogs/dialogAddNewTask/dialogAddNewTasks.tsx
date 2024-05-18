@@ -27,12 +27,12 @@ interface DialogAddNewTaskProps {
 }
 
 export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
+  const queryClient = useQueryClient()
   const { statusOption, isOpen, onClose } = props
   const { register, handleSubmit, reset, setValue } = useForm()
   const { boardId } = useBoard()
   const { taskId } = useTask()
   const [subTasks, setSubTasks] = useState([{ name: '' }])
-  const queryClient = useQueryClient()
 
   const { mutate: mutateTask } = useMutation({
     mutationFn: PostTask,

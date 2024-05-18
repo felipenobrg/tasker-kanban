@@ -32,7 +32,12 @@ export default function Board() {
     }
   }, [boardData, setTaskData])
 
-  if (isLoading || !boardData) return <Spinner />
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spinner size="xl" />
+      </div>
+    )
 
   const taskCounts = statusOptions.reduce(
     (acc, option) => {

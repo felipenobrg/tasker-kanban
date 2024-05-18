@@ -1,4 +1,5 @@
 import { useBoard } from '@/context/boardContext'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import DeleteBoard from '@/lib/boards/deleteBoard'
 import {
   AlertDialog as Alert,
@@ -29,12 +30,17 @@ export default function AlertDialog(props: AlertDialogProps) {
     setIsAlertOpen,
     setBoardName,
   } = props
-
+  const queryClient = useQueryClient()
   const { boardId } = useBoard()
-
-  const handleDeleteBoard = async () => {
+  const { mutate: mutateBoard } = useMutation({
+    mutationFn: DeleteBoard,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['board'] })
+    },
+  })
+  const handleDeleteBoard = () => {
     if (boardId !== null) {
-      await DeleteBoard({ id: boardId })
+      mutateBoard({ id: boardId })
       setIsDialogOpen(false)
       setIsAlertOpen(false)
       setBoardName('')

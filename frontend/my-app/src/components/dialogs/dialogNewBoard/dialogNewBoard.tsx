@@ -3,11 +3,10 @@ import * as Dialog from '@radix-ui/react-dialog'
 import { Button } from '../../ui/button'
 import { Input } from '../../ui/input'
 import PostBoard from '@/lib/boards/postBoard'
-import { FormEvent, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { useBoard } from '@/context/boardContext'
 import { Plus } from 'lucide-react'
-import { useQueryClient } from 'react-query'
-
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 interface DialogNewBoardProps {
   isOpen: boolean
   onClose: () => void
@@ -21,15 +20,21 @@ export default function DialogNewBoard({
   const { setBoardId, setBoardName: setContextBoardName } = useBoard()
   const queryClient = useQueryClient()
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    try {
-      const response = await PostBoard({ boardName })
-      const newBoardId = response.data.ID
+  const { mutate: mutateBoard, isSuccess } = useMutation({
+    mutationFn: PostBoard,
+    onSuccess: (data) => {
+      const newBoardId = data.ID
       setBoardId(newBoardId)
       setContextBoardName(boardName)
       onClose()
-      queryClient.invalidateQueries('boardData')
+      queryClient.invalidateQueries({ queryKey: ['board'] })
+    },
+  })
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    try {
+      mutateBoard({ boardName })
     } catch (error) {
       console.error('Error updating task:', error)
     }

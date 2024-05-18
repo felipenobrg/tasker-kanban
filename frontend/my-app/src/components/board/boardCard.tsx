@@ -15,10 +15,7 @@ interface BoardCardProps {
   statusOption: { status: string; circleColor: string }[]
 }
 
-const truncateDescription = (
-  description: string,
-  maxLength: number,
-): string => {
+const truncateText = (description: string, maxLength: number): string => {
   if (description.length <= maxLength) {
     return description
   } else {
@@ -28,10 +25,10 @@ const truncateDescription = (
 }
 
 export default function BoardCard(props: BoardCardProps) {
+  const queryClient = useQueryClient()
   const { data, statusOption, taskId } = props
   const [dialogOpen, setDialogOpen] = useState(false)
   const { setTaskId, taskData, setTaskData } = useTask()
-  const queryClient = useQueryClient()
 
   const handleDialogOpen = () => {
     setDialogOpen(true)
@@ -93,21 +90,22 @@ export default function BoardCard(props: BoardCardProps) {
         <div className="flex flex-col gap-4">
           <Card
             onClick={handleDialogOpen}
-            className="flex flex-col bg-gray-800 w-[18rem] h-28 p-3 cursor-pointer rounded"
+            className="flex flex-col bg-gray-800 w-[18rem] h-28 p-3 cursor-pointer rounded group"
             draggable
             key={data.ID}
           >
             <div className="flex flex-col items-start justify-start flex-1">
-              <h2 className="text-gray-200 text-base font-bold">
-                {data.title}
+              <h2 className="text-gray-200 text-base font-bold group-hover:text-indigo-500">
+                {truncateText(data.title, 30)}
               </h2>
               <p className="text-gray-300 text-sm break-words mt-2 font-medium">
-                {truncateDescription(data.description, 35)}
+                {truncateText(data.description, 35)}
               </p>
             </div>
           </Card>
         </div>
       </div>
+
       {dialogOpen && (
         <DialogEditTask
           statusOption={statusOption}

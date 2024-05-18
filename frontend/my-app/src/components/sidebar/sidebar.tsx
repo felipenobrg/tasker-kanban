@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { HomeIcon, LayoutPanelLeft, Plus } from 'lucide-react'
+import { ClipboardCheck, HomeIcon, LayoutPanelLeft, Plus } from 'lucide-react'
 import Link from 'next/link'
 import DialogNewBoard from '../dialogs/dialogNewBoard/dialogNewBoard'
 import { useCallback, useEffect, useState } from 'react'
@@ -66,17 +66,21 @@ export default function Sidebar() {
   )
 
   useEffect(() => {
-    if (!isLoading && boardData) {
+    if (!isLoading && boardData.length > 0) {
       setBoardSize([boardData.length])
+      if (!activeLink) {
+        setActiveLink(boardData[0].ID.toString())
+        handleLinkClick(boardData[0].ID)
+      }
     }
-  }, [boardData, isLoading])
+  }, [boardData, isLoading, activeLink, handleLinkClick])
 
   return (
     <div className="hidden border-r bg-muted/40 md:block">
       <div className="flex h-full max-h-screen flex-col gap-2">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <Link href="/" className="flex items-center gap-2 font-semibold">
-            <HomeIcon className="h-5 w-5" />
+            <ClipboardCheck className="h-5 w-5" />
             Tasker Board
           </Link>
         </div>

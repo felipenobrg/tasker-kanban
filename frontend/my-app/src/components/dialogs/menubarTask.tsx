@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { EllipsisVertical } from 'lucide-react'
+import { Trash2 } from 'lucide-react'
 import {
   DropdownMenuItem,
   DropdownMenu,
@@ -46,7 +46,7 @@ export default function MenubarTask(props: MenubarTaskProps) {
     <DropdownMenu>
       <DropdownMenuTrigger className="justify-end outline-none">
         <div className="justify-end">
-          <EllipsisVertical size={20} className="cursor-pointer" />
+          <Trash2 size={20} className="cursor-pointer hover:text-red-500" />
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent>

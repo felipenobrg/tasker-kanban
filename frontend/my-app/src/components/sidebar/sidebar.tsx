@@ -10,12 +10,14 @@ import { useBoard } from '@/context/boardContext'
 import GetBoardById from '@/lib/boards/getBoardById'
 import ChangeThemeButton from '../header/changeThemeButton'
 import { useQuery } from '@tanstack/react-query'
+import { useTheme } from 'next-themes'
 
 export default function Sidebar() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [boardSize, setBoardSize] = useState<number[]>([])
   const [activeLink, setActiveLink] = useState<string>('')
   const { setBoardId, setBoardName, setBoardData, boardData } = useBoard()
+  const { theme } = useTheme()
 
   const { data: board, isLoading } = useQuery({
     queryKey: ['board'],
@@ -81,27 +83,38 @@ export default function Sidebar() {
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <Link href="/" className="flex items-center gap-2 font-semibold">
             <ClipboardCheck className="h-5 w-5" />
-            Tasker Board
+            Tasker
           </Link>
         </div>
         <div className="flex-1">
           <div className="mt-3 mb-3 ml-5">
-            <p className="text-sm text-gray-400">
+            <p
+              className="text-smclassName={`${
+                    theme === 'dark' ? 'text-gray-300 ' : 'text-gray-300'
+                  } hover:text-primary`}"
+            >
               Todos os boards ({boardSize.length === 0 ? '0' : boardSize})
             </p>
           </div>
           {boardData.map((item) => (
             <nav
               key={item.ID}
-              className={`grid items-start px-2 gap-3 text-sm font-medium lg:px-4 relative mt-2 mb-2 rounded-l-lg rounded-r-full w-11/12 hover:bg-gray-400 text-indigo-500 ${
+              className={`grid items-start px-2 gap-3 text-sm font-medium lg:px-4 relative mt-2 mb-2 rounded-l-lg rounded-r-full w-11/12 hover:bg-gray-400 text-indigo-500  ${
                 activeLink === item.ID.toString() ? 'bg-indigo-500' : ''
               }`}
             >
               <button
                 onClick={() => handleLinkClick(item.ID)}
-                className="flex text-white items-center gap-2 rounded-lg px-3 py-2 w-11/12 text-muted-foreground transition-all bg-none cursor-pointer border-nonehover:text-primary"
+                className={`flex items-center gap-2 rounded-lg px-3 py-2 w-11/12 transition-all cursor-pointer border-none ${
+                  theme === 'dark' ? 'text-white' : 'text-gray-800'
+                } hover:text-primary`}
               >
-                <LayoutPanelLeft size={20} className="text-white" />
+                <LayoutPanelLeft
+                  size={20}
+                  className={`${
+                    theme === 'dark' ? 'text-white' : 'text-gray-800'
+                  } hover:text-primary`}
+                />
                 {item.name}
               </button>
             </nav>

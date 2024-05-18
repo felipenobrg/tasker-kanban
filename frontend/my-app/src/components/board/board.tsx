@@ -9,6 +9,7 @@ import GetBoardById from '@/lib/boards/getBoardById'
 import { useTask } from '@/context/taskContext'
 import { useQuery } from '@tanstack/react-query'
 import Spinner from '@/assets/spinner'
+import { useTheme } from 'next-themes'
 
 const statusOptions = [
   { status: 'Pendente', circleColor: 'gray' },
@@ -19,6 +20,7 @@ const statusOptions = [
 export default function Board() {
   const { boardId } = useBoard()
   const { setTaskData, taskData } = useTask()
+  const { theme } = useTheme()
 
   const { data: boardData, isLoading } = useQuery({
     queryKey: ['board', boardId],
@@ -56,7 +58,7 @@ export default function Board() {
           {statusOptions.map(({ status, circleColor }) => (
             <div
               key={status}
-              className="flex flex-col ml-20 items-center bg-muted/40 p-8 rounded w-[20rem]"
+              className={`flex flex-col ml-20 items-center ${theme === 'dark' ? 'bg-muted/40' : 'bg-gray-200'} rounded w-[20rem]`}
               onDragOver={(e) => e.preventDefault()}
             >
               <div className="flex items-center justify-center gap-2">

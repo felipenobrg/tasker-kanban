@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Menu, Link, HomeIcon } from 'lucide-react'
+import { Menu, Link, HomeIcon, ClipboardCheck } from 'lucide-react'
 import { Button } from '../ui/button'
 import { SheetTrigger, SheetContent, Sheet } from '../ui/sheet'
 import { useFilter } from '@/context/filterContext'
@@ -62,8 +62,8 @@ export default function Header() {
               href="#"
               className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
             >
-              <HomeIcon className="h-5 w-5" />
-              Tasker Board
+              <ClipboardCheck className="h-5 w-5" />
+              Tasker
             </Link>
           </nav>
         </SheetContent>
@@ -72,7 +72,7 @@ export default function Header() {
         <h1 className="text-lg font-bold">{boardName}</h1>
       </div>
       <HeaderInput handleInputChange={handleInputChange} />
-      <div className="flex items-center ml-5">
+      <div className="flex items-center  ml-5 sm:w-fit w-full">
         <div>
           <Button
             className="w-48 p-3 bg-indigo-500 text-white hover:bg-indigo600 flex gap-2 items-center"

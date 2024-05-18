@@ -8,6 +8,7 @@ import DeleteTask from '@/lib/task/deleteTask'
 import UpdateTask from '@/lib/task/updateTask'
 import DialogEditTask from '../dialogs/dialogEditTask/dialogEditTask'
 import { useTask } from '@/context/taskContext'
+import { useTheme } from 'next-themes'
 
 interface BoardCardProps {
   data: Task
@@ -29,6 +30,7 @@ export default function BoardCard(props: BoardCardProps) {
   const { data, statusOption, taskId } = props
   const [dialogOpen, setDialogOpen] = useState(false)
   const { setTaskId, taskData, setTaskData } = useTask()
+  const { theme } = useTheme()
 
   const handleDialogOpen = () => {
     setDialogOpen(true)
@@ -90,12 +92,16 @@ export default function BoardCard(props: BoardCardProps) {
         <div className="flex flex-col gap-4">
           <Card
             onClick={handleDialogOpen}
-            className="flex flex-col bg-gray-800 w-[18rem] h-28 p-3 cursor-pointer rounded group"
+            className={`flex flex-col w-[18rem] h-28 p-3 cursor-pointer rounded group ${
+              theme === 'dark' ? 'bg-gray-800' : 'bg-gray-400'
+            }`}
             draggable
             key={data.ID}
           >
             <div className="flex flex-col items-start justify-start flex-1">
-              <h2 className="text-gray-200 text-base font-bold group-hover:text-indigo-500">
+              <h2
+                className={` text-base font-bold group-hover:text-indigo-500 ${theme === 'dark' ? 'text-gray-200' : 'text-gray-400'}`}
+              >
                 {truncateText(data.title, 30)}
               </h2>
               <p className="text-gray-300 text-sm break-words mt-2 font-medium">

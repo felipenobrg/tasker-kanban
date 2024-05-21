@@ -1,17 +1,19 @@
 import axios from 'axios'
-import { BASE_URL } from '../../../apiConfig'
+import { BASE_URL } from '../../../../apiConfig'
 
-interface PostResendCode {
+interface PostCode {
   email: string
+  code: string
 }
 
-export default async function PostResendCode(props: PostResendCode) {
-  const { email } = props
+export default async function PostCode(props: PostCode) {
+  const { email, code } = props
   try {
     const response = await axios.post(
-      `${BASE_URL}/resendcode`,
+      `${BASE_URL}/auth/verifycode`,
       {
         email,
+        code,
       },
       { withCredentials: true },
     )

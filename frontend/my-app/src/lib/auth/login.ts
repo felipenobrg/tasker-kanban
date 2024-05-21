@@ -9,7 +9,7 @@ interface LoginAuthProps {
 export default async function LoginAuth(props: LoginAuthProps) {
     const { email, password } = props;
     try {
-        const response = await axios.post(`${BASE_URL}/login`, { email, password },
+        const response = await axios.post(`${BASE_URL}/auth/login`, { email, password },
         { withCredentials: true });
         return response.data;
     } catch(error) {

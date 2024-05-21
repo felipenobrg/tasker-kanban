@@ -7,6 +7,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
+
 )
 
 type User struct {
@@ -31,6 +32,14 @@ func (user *User) ValidaUser() error {
 	host := user.Email[i+1:]
 
 	_, err = net.LookupMX(host)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (user *User) ValidaPassword() error {
+	err := validate.Var(user.Password, "min=6")
 	if err != nil {
 		return err
 	}

@@ -27,9 +27,9 @@ import {
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import PostCode from '@/lib/verifyCode/veriyCode'
+import PostCode from '@/lib/auth/verifyCode/veriyCode'
 import { useRouter } from 'next/navigation'
-import PostResendCode from '@/lib/verifyCode/resendCode'
+import PostResendCode from '@/lib/auth/verifyCode/resendCode'
 import { AxiosError } from 'axios'
 import { toast } from 'react-toastify'
 

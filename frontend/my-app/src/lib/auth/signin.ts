@@ -10,7 +10,7 @@ interface SigninProps {
 export default async function SigninAuth(props: SigninProps) {
     const { email, password, name } = props;
     try {
-        const response = await axios.post(`${BASE_URL}/signin`, { email, password, name }, { withCredentials: true });
+        const response = await axios.post(`${BASE_URL}/auth/signin`, { email, password, name }, { withCredentials: true });
         return response.data;
     } catch(error) {
         console.error('Error signing in:', error);

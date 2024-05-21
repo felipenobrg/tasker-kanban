@@ -51,3 +51,40 @@ func (app *Config) AuthenticatedOnly(next http.Handler) http.Handler {
 		}
 	})
 }
+
+func (app *Config) ResetPassWord(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		tokenString := r.URL.Query().Get("token")
+		if tokenString == "" {
+			http.Error(w, http.StatusText(statusUnauthorized), statusUnauthorized)
+			return
+		}
+
+		token, err := util.ParseToken(tokenString, "reset_password")
+		if err != nil {
+			http.Error(w, http.StatusText(statusUnauthorized), statusUnauthorized)
+			return
+		}
+
+		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+			if float64(time.Now().Unix()) > claims["exp"].(float64) {
+				http.Error(w, http.StatusText(statusUnauthorized), statusUnauthorized)
+				return
+			}
+
+			var user models.User
+			app.Handlers.DB.First(&user, claims["sub"])
+			if user.ID == 0 {
+				http.Error(w, http.StatusText(statusUnauthorized), statusUnauthorized)
+				return
+			}
+
+			ctx := context.WithValue(r.Context(), "user", user)
+
+			next.ServeHTTP(w, r.WithContext(ctx))
+
+		} else {
+			http.Error(w, http.StatusText(statusUnauthorized), statusUnauthorized)
+		}
+	})
+}

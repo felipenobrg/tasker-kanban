@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"time"
 
 	"tasker/models"
 	"tasker/util"
@@ -57,16 +56,7 @@ func (app *Handlers) VerifyCode(w http.ResponseWriter, r *http.Request) {
 		Data:    map[string]any{"session_token": token},
 	}
 
-	cookie := http.Cookie{
-		Name:     "session_token",
-		Value:    token,
-		Path:     "/",
-		Domain:   "",
-		Expires:  time.Now().Add(60 * time.Minute),
-		HttpOnly: true,
-		Secure:   false,
-	}
-
+	cookie := CreateCookie(token, 60)
 	http.SetCookie(w, &cookie)
 	util.WriteJSON(w, http.StatusOK, responsePayload)
 }
@@ -113,7 +103,7 @@ func (app *Handlers) ResendCode(w http.ResponseWriter, r *http.Request) {
 		Subject: "Tasker - Verify your email",
 		Data:    verifyCode.Code,
 	}
-	go msg.SendGomail()
+	go msg.SendGomail("verification_code")
 
 	responsePayload := jsonResponse{
 		Error:   false,

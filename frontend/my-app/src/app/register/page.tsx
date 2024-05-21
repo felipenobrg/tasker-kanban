@@ -19,9 +19,11 @@ import SigninAuth from '@/lib/auth/signin'
 import { useRouter } from 'next/navigation'
 import { UserContext } from '@/context/userContext'
 import { useContext } from 'react'
+import { useTheme } from 'next-themes'
 
 export default function Register() {
   const { setEmail } = useContext(UserContext)
+  const { theme } = useTheme()
 
   const schema = z.object({
     name: z
@@ -67,8 +69,14 @@ export default function Register() {
       <div className="flex flex-col sm:flex-row">
         <Card className="flex items-center justify-center flex-col max-w-sm bg-black border-none  rounded-r-none rounded-l-xl w-full">
           <CardHeader>
-            <CardTitle className="text-xl font-bold">Registre-se</CardTitle>
-            <CardDescription className="text-gray-50">
+            <CardTitle
+              className={`text-lg font-bold ${theme === 'dark' ? 'text-base' : 'text-white'}`}
+            >
+              Registre-se
+            </CardTitle>
+            <CardDescription
+              className={`text-gray-50 ${theme === 'dark' ? 'text-base' : 'text-white'}`}
+            >
               Informe suas informações para criar sua conta
             </CardDescription>
           </CardHeader>
@@ -129,7 +137,9 @@ export default function Register() {
                 </Button>
               </div>
             </form>
-            <div className="mt-4 text-center text-sm">
+            <div
+              className={` mt-4 text-center text-sm hover:text-gray-200 ${theme === 'dark' ? 'text-bae' : 'text-gray-50'}`}
+            >
               Já tem uma conta?{' '}
               <Link href="/login" className="underline">
                 Login
@@ -137,15 +147,17 @@ export default function Register() {
             </div>
           </CardContent>
         </Card>
-        <Card className="flex flex-col justify-center bg-blue-900 w-full h-52 sm:w-[40rem] sm:h-[35rem] border-none rounded-xl sm:rounded-l-none sm:rounded-r-xl">
+        <Card className="flex flex-col justify-center bg-blue-900 w-full h-52 sm:w-[25rem] sm:h-[35rem] border-none rounded-xl sm:rounded-l-none sm:rounded-r-xl">
           {' '}
           <CardContent className="w-80">
-            <h1 className="text-3xl text-start font-jakarta font-bold mb-2">
+            <h1
+              className={`text-3xl text-start font-jakarta font-bold mb-2 ${theme === 'dark' ? 'text-base' : 'text-white'}`}
+            >
               Entre na nossa <br /> Comunidade
             </h1>
             <Link
               href="https://github.com/felipenobrg/tasker"
-              className="text-sm text-gray-100"
+              className={`text-sm text-gray-100 hover:text-gray-200text-3xl text-start font-jakarta font-bold mb-2 ${theme === 'dark' ? 'text-base' : 'text-white'}`}
             >
               Explore nosso repositório e seja parte do progresso!
             </Link>

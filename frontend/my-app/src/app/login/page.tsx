@@ -21,10 +21,11 @@ import { useContext } from 'react'
 import { UserContext } from '@/context/userContext'
 import TaskerLogo from '../../assets/taskerLogo.png'
 import Image from 'next/image'
+import { useTheme } from 'next-themes'
 
 export default function Login() {
-  const { data: session } = useSession()
   const router = useRouter()
+  const { theme } = useTheme()
 
   const schema = z.object({
     email: z
@@ -59,7 +60,7 @@ export default function Login() {
           email: data.email,
           password: data.password,
           callbackUrl: '/',
-          redirect: true,
+          redirect: false,
         })
         if (result?.error) {
           setError('email', { message: 'Email ou senha incorretos' })
@@ -98,13 +99,22 @@ export default function Login() {
               alt="Logo do site Tasker"
               className="w-10 h-10 rounded"
             />
-            <CardTitle className="text-lg">Acesse o Tasker</CardTitle>
+            <CardTitle
+              className={`text-lg ${theme === 'dark' ? 'text-base' : 'text-white'}`}
+            >
+              Acesse o Tasker
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)} noValidate>
               <div className="grid gap-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label
+                    htmlFor="email"
+                    className={`${theme === 'dark' ? 'text-base' : 'text-white'}`}
+                  >
+                    Email
+                  </Label>
                   <Input
                     id="email"
                     type="email"
@@ -119,7 +129,12 @@ export default function Login() {
                 </div>
                 <div className="grid gap-2">
                   <div className="flex items-center">
-                    <Label htmlFor="password">Senha</Label>
+                    <Label
+                      htmlFor="password"
+                      className={`${theme === 'dark' ? 'text-base' : 'text-white'}`}
+                    >
+                      Senha
+                    </Label>
                   </div>
                   <Input
                     id="password"
@@ -144,7 +159,9 @@ export default function Login() {
                 </Button>
               </div>
             </form>
-            <div className="mt-4 text-center text-sm">
+            <div
+              className={` mt-4 text-center text-sm hover:text-gray-200 ${theme === 'dark' ? 'text-bae' : 'text-gray-50'}`}
+            >
               Não tem uma conta?{' '}
               <Link href="/register" className="underline">
                 Registre-se
@@ -152,15 +169,17 @@ export default function Login() {
             </div>
           </CardContent>
         </Card>
-        <Card className="flex flex-col justify-center bg-blue-900 w-full h-52 sm:w-[40rem] sm:h-[35rem] border-none rounded-xl sm:rounded-l-none sm:rounded-r-xl">
+        <Card className="flex flex-col justify-center bg-blue-900 w-full h-52 sm:w-[25rem] sm:h-[35rem] border-none rounded-xl sm:rounded-l-none sm:rounded-r-xl">
           {' '}
           <CardContent className="w-80">
-            <h1 className="text-3xl text-start font-jakarta font-bold mb-2">
+            <h1
+              className={`text-3xl text-start font-jakarta font-bold mb-2 ${theme === 'dark' ? 'text-base' : 'text-white'}`}
+            >
               Explore nossa <br /> Comunidade
             </h1>
             <Link
               href="https://github.com/felipenobrg/tasker"
-              className="text-sm text-gray-100"
+              className={`text-sm text-gray-100 hover:text-gray-200text-3xl text-start font-jakarta font-bold mb-2 ${theme === 'dark' ? 'text-base' : 'text-white'}`}
             >
               Descubra mais sobre o Tasker e junte-se à nossa comunidade.
             </Link>

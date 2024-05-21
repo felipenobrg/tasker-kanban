@@ -111,7 +111,6 @@ export default function BoardCard(props: BoardCardProps) {
           </Card>
         </div>
       </div>
-
       {dialogOpen && (
         <DialogEditTask
           statusOption={statusOption}

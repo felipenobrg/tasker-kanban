@@ -38,10 +38,14 @@ func (app *Config) Routes() http.Handler {
 	// Routes
 	r.Route("/api/v1", func(r chi.Router) {
 
-		r.Post("/signin", hand.Signin)
-		r.Post("/login", hand.Login)
-		r.Post("/verifycode", hand.VerifyCode)
-		r.Post("/resendcode", hand.ResendCode)
+		r.Route("/auth", func(r chi.Router) {
+			r.Post("/signin", hand.Signin)
+			r.Post("/login", hand.Login)
+			r.Post("/verifycode", hand.VerifyCode)
+			r.Post("/resendcode", hand.ResendCode)
+			r.Post("/checkemail", hand.CheckEmail)
+			r.With(app.ResetPassWord).Put("/resetpassword/", hand.ResetPassWord)
+		})
 
 		r.Route("/boards", func(r chi.Router) {
 			r.Use(app.AuthenticatedOnly)

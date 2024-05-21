@@ -61,10 +61,10 @@ export default function Board() {
               className={`flex flex-col ml-20 items-center ${theme === 'dark' ? 'bg-muted/40' : 'bg-gray-200'} rounded w-[20rem]`}
               onDragOver={(e) => e.preventDefault()}
             >
-              <div className="flex items-center justify-center gap-2">
+              <div className="flex items-center justify-center gap-2 mt-4">
                 <Circle size={18} color={circleColor} fill={circleColor} />
-                <p className="mb-2 mt-2 ml-2 text-sm text-gray-400">
-                  {status} ({taskCounts[status]})
+                <p className="mb-2 text-md text-gray-400">
+                  {status} ( {taskCounts[status]} )
                 </p>
               </div>
               <div className="flex items-center flex-col gap-5 mt-3">

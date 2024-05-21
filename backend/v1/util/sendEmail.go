@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"html/template"
+	"log"
 	"os"
 
 	"gopkg.in/gomail.v2"
@@ -25,17 +26,20 @@ var (
 	password = os.Getenv("MAIL_PASSWORD")
 )
 
-func (msg *Message) SendGomail() error {
+func (msg *Message) SendGomail(about string) error {
 	msg.From = user
 	msg.DataMap = map[string]any{
 		"message": msg.Data,
 	}
 
 	var body bytes.Buffer
-	tpl, err := template.New("verification_code").ParseFiles("./templates/mail.html.gohtml")
+	
+	tpl, err := selectTemplate(about)
 	if err != nil {
+		log.Println(err)
 		return err
 	}
+
 	tpl.ExecuteTemplate(&body, "body", msg.DataMap)
 
 	m := gomail.NewMessage()
@@ -48,8 +52,27 @@ func (msg *Message) SendGomail() error {
 
 	// Send the email to Bob, Cora and Dan.
 	if err := d.DialAndSend(m); err != nil {
+		log.Println(err)
 		return err
 	}
 
 	return nil
+}
+
+func selectTemplate(about string) (*template.Template, error) {
+	var tpl *template.Template
+	var err error
+	switch about {
+	case "verification_code":
+		tpl, err = template.New("verification_code").ParseFiles("./templates/verifyMail.html.gohtml")
+
+	case "reset_password":
+		tpl, err = template.New("reset_password").ParseFiles("./templates/resetPasswordMail.html.gohtml")
+
+	default:
+		var errMsg = "invalid about"
+		err = fmt.Errorf(errMsg)
+	}
+
+	return tpl, err
 }

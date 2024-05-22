@@ -1,16 +1,16 @@
 import Sidebar from '@/components/sidebar/sidebar'
 import Header from '@/components/header/header'
 import Board from '@/components/board/board'
+import { redirect } from 'next/navigation'
+import { getServerSession } from 'next-auth'
 
 export const dynamic = 'force-dynamic'
 
 export default function Home() {
-  // const { data: session } = useSession()
-  // const router = useRouter()
+  // const session = await getServerSession()
 
   // if (!session) {
-  //   router.push('/login')
-  //   return null
+  //   redirect('/login')
   // }
 
   return (

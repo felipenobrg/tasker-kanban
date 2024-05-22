@@ -59,7 +59,7 @@ export default function Login() {
           email: data.email,
           password: data.password,
           callbackUrl: '/',
-          redirect: false,
+          redirect: true,
         })
         if (result?.error) {
           setError('email', { message: 'Email ou senha incorretos' })

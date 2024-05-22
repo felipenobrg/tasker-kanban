@@ -17,7 +17,7 @@ const handler = NextAuth({
       },
       async authorize(credentials) {
         try {
-          const response = await fetch(`${BASE_URL}/login`, {
+          const response = await fetch(`${BASE_URL}/auth/login`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

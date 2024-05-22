@@ -19,6 +19,7 @@ import { FieldValues, useForm } from 'react-hook-form'
 import { useTask } from '@/context/taskContext'
 import PostSubtask from '@/lib/subtasks/postSubtasks'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTheme } from 'next-themes'
 
 interface DialogAddNewTaskProps {
   statusOption: string[]
@@ -33,6 +34,7 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
   const { boardId } = useBoard()
   const { taskId } = useTask()
   const [subTasks, setSubTasks] = useState([{ name: '' }])
+  const { theme } = useTheme()
 
   const { mutate: mutateTask } = useMutation({
     mutationFn: PostTask,
@@ -105,10 +107,12 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
       defaultOpen={isOpen}
       modal
     >
-      <Dialog.Overlay className="fixed inset-0">
-        <div className="absolute inset-0 bg-black opacity-70"></div>
-      </Dialog.Overlay>{' '}
-      <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded shadow-md bg-gray-900 p-5 w-[30rem] flex flex-col gap-2 justify-center items-center z-50 overflow-auto">
+      <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-90 z-50" />
+      <Dialog.Content
+        className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded shadow-md p-5 w-[30rem] flex flex-col gap-2 justify-center items-center z-50 overflow-auto ${
+          theme === 'dark' ? 'bg-gray-900' : 'bg-gray-200'
+        }`}
+      >
         <form className="flex flex-col gap-3 overflow-auto">
           <div className="flex justify-start">
             <h1 className="text-lg font-bold">Adicionar uma nova tarefa</h1>

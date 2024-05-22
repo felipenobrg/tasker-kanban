@@ -21,6 +21,7 @@ import { Subtasks } from '@/types/subtasks'
 import { useForm } from 'react-hook-form'
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
 import Spinner from '@/assets/spinner'
+import { useTheme } from 'next-themes'
 
 interface FormDataProps {
   title: string
@@ -43,6 +44,7 @@ interface DialogEditTaskProps {
 
 export default function DialogEditTask(props: DialogEditTaskProps) {
   const queryClient = useQueryClient()
+  const { theme } = useTheme()
 
   const {
     statusOption,
@@ -107,10 +109,12 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
 
   return (
     <Dialog.Root modal open={isOpen} onOpenChange={onClose}>
-      <Dialog.Overlay className="fixed inset-0 backdrop-blur-sm">
-        <div className="absolute inset-0 bg-black opacity-90"></div>
-      </Dialog.Overlay>
-      <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded shadow-md bg-gray-900 p-6 w-[30rem] flex flex-col gap-2 justify-center items-center z-50 overflow-y-auto">
+      <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-90 z-50" />
+      <Dialog.Content
+        className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded shadow-md p-6 w-[30rem] flex flex-col gap-2 justify-center items-center z-50 overflow-y-auto ${
+          theme === 'dark' ? 'bg-gray-900' : 'bg-gray-200'
+        }`}
+      >
         <form className="flex flex-col gap-3" onSubmit={handleSubmit(onSubmit)}>
           <div className="flex justify-between">
             <h1 className="text-lg font-bold">Edição da Tarefa</h1>

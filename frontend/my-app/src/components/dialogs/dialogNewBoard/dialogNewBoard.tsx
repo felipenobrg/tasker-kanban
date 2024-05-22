@@ -7,6 +7,7 @@ import { FormEvent, useEffect, useState } from 'react'
 import { useBoard } from '@/context/boardContext'
 import { Plus } from 'lucide-react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useTheme } from 'next-themes'
 interface DialogNewBoardProps {
   isOpen: boolean
   onClose: () => void
@@ -19,6 +20,7 @@ export default function DialogNewBoard({
   const [boardName, setBoardName] = useState('')
   const { setBoardId, setBoardName: setContextBoardName } = useBoard()
   const queryClient = useQueryClient()
+  const { theme } = useTheme()
 
   const { mutate: mutateBoard, isSuccess } = useMutation({
     mutationFn: PostBoard,
@@ -42,10 +44,12 @@ export default function DialogNewBoard({
 
   return (
     <Dialog.Root modal open={isOpen} onOpenChange={onClose}>
-      <Dialog.Overlay className="fixed inset-0 backdrop-blur-sm">
-        <div className="absolute inset-0 bg-black opacity-90"></div>
-      </Dialog.Overlay>
-      <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 rounded-lg shadow-md bg-gray-900 p-5 w-[25rem] h-80 flex flex-col gap-2 justify-center">
+      <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-90 z-50" />
+      <Dialog.Content
+        className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 rounded-lg shadow-md  p-5 w-[25rem] h-80 flex flex-col gap-2 justify-center ${
+          theme === 'dark' ? 'bg-gray-900' : 'bg-gray-200'
+        }`}
+      >
         <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
           <div className="flex justify-start items-center">
             <h1 className="flex items-center text-lg font-bold gap-2">

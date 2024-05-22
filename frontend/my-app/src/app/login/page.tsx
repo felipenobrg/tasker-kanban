@@ -16,15 +16,17 @@ import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { AxiosError } from '@/types/axiosError'
 import PostResendCode from '@/lib/auth/verifyCode/resendCode'
-import { useContext } from 'react'
+import { useCallback, useContext, useState } from 'react'
 import { UserContext } from '@/context/userContext'
 import TaskerLogo from '../../assets/taskerLogo.png'
 import Image from 'next/image'
 import { useTheme } from 'next-themes'
+import DialogCheckEmail from '@/components/dialogs/dialogCheckEmail'
 
 export default function Login() {
   const router = useRouter()
   const { theme } = useTheme()
+  const [isOpen, setIsOpen] = useState(false)
 
   const schema = z.object({
     email: z
@@ -88,6 +90,10 @@ export default function Login() {
     }
   }
 
+  const onClose = useCallback(() => {
+    setIsOpen(false)
+  }, [isOpen])
+
   return (
     <main className="flex items-center justify-center min-h-screen">
       <div className="flex flex-col-reverse sm:flex-row">
@@ -148,6 +154,13 @@ export default function Login() {
                       {errors.password.message}
                     </span>
                   )}
+                  <div
+                    className={`text-end text-sm hover:text-gray-200 ${theme === 'dark' ? 'text-bae' : 'text-gray-50'}`}
+                  >
+                    <span className="underline cursor-pointer" onClick={() => setIsOpen(true)}>
+                      Esqueci minha senha
+                    </span>
+                  </div>
                 </div>
                 <Button
                   type="submit"
@@ -184,6 +197,7 @@ export default function Login() {
             </Link>
           </CardContent>
         </Card>
+        {isOpen && <DialogCheckEmail isOpen={isOpen} onClose={onClose} />}
       </div>
     </main>
   )

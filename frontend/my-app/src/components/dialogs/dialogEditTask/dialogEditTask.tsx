@@ -22,11 +22,13 @@ import { useForm } from 'react-hook-form'
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
 import Spinner from '@/assets/spinner'
 import { useTheme } from 'next-themes'
+import { Flag } from 'lucide-react'
 
 interface FormDataProps {
   title: string
   description: string
   dialogStatus: string
+  priority: string
 }
 
 interface DialogEditTaskProps {
@@ -37,6 +39,8 @@ interface DialogEditTaskProps {
   taskId: number
   isOpen: boolean
   title: string
+  priority: string
+  priorityOptions: { name: string; color: string }[]
   onClose: () => void
   setDialogOpen: (isOpen: boolean) => void
   handleDeleteTask?: (id: number) => void
@@ -52,6 +56,8 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
     isOpen,
     taskId,
     initialStatus,
+    priority,
+    priorityOptions,
     onClose,
     setDialogOpen,
     handleDeleteTask,
@@ -62,6 +68,7 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
       title: props.title,
       description: props.initialDescription,
       dialogStatus: props.initialStatus,
+      priority: props.priority,
     },
   })
 
@@ -81,7 +88,7 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
   })
 
   useEffect(() => {
-    if (!isLoading && subtasks) {
+    if (subtasks) {
       setSubtaskData(subtasks)
     }
   }, [subtasks, isLoading])
@@ -92,17 +99,31 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
         title: formData.title,
         description: formData.description,
         status: formData.dialogStatus,
+        priority: formData.priority,
         id,
       })
       reset({
         title: formData.title,
         description: formData.description,
+        priority: formData.priority,
         dialogStatus: formData.dialogStatus,
       })
       setDialogOpen(false)
     } catch (error) {
       console.error('Error updating task:', error)
     }
+  }
+
+  const getPriorityColor = (priority: string) => {
+    let color
+    if (priority === 'Baixa') {
+      color = 'green'
+    } else if (priority === 'Média') {
+      color = 'orange'
+    } else if (priority === 'Alta') {
+      color = 'red'
+    }
+    return color
   }
 
   if (isLoading || !subtaskData) return <Spinner />
@@ -137,6 +158,37 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
             placeholder="Informe..."
             {...register('description')}
           />
+          <p className="text-sm mt-2">Editar prioridade da Tarefa</p>
+
+          <Select
+            onValueChange={(newValue) => {
+              setValue('priority', newValue)
+            }}
+            defaultValue={priority}
+          >
+            <SelectTrigger className="w-[20rem]">
+              <SelectValue placeholder="Selecione uma prioridade" />
+            </SelectTrigger>
+            <SelectContent>
+              {priorityOptions.map((item, index) => (
+                <SelectGroup key={index}>
+                  <SelectItem
+                    value={item.name}
+                    className="flex items-center gap-3"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Flag
+                        size={18}
+                        fill={getPriorityColor(item.name)}
+                        color={getPriorityColor(item.name)}
+                      />
+                      {item.name}{' '}
+                    </div>
+                  </SelectItem>
+                </SelectGroup>
+              ))}
+            </SelectContent>
+          </Select>
           <p className="text-sm mt-2">Editar Checklist</p>
           {subtaskData === null || subtaskData.length === 0 ? (
             <p className="text-sm mt-2 text-gray-400">

@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from 'react'
 import { Checkbox } from '@/components/ui/checkbox'
-import updateSubtasks from '@/lib/subtasks/updateSubtask'
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
 import UpdateSubtasks from '@/lib/subtasks/updateSubtask'
+import { useTheme } from 'next-themes'
 
 interface SubTaskCardProps {
   name: string
@@ -16,6 +16,7 @@ export default function SubtaskCard(props: SubTaskCardProps) {
   const queryClient = useQueryClient()
   const { name, subtaskId, status } = props
   const [isChecked, setIsChecked] = useState(status === 'Enabled')
+  const { theme } = useTheme()
 
   const { mutate: mutateSubtask } = useMutation({
     mutationFn: UpdateSubtasks,
@@ -50,7 +51,9 @@ export default function SubtaskCard(props: SubTaskCardProps) {
   }, [status])
 
   return (
-    <div className="bg-gray-800 w-[20rem] p-2 rounded-lg">
+    <div
+      className={`w-[20rem] p-2 rounded-lg ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-300'}`}
+    >
       <div className="flex items-center">
         <Checkbox
           id="terms"

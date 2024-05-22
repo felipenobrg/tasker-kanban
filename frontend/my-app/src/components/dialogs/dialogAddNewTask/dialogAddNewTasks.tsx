@@ -46,7 +46,7 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
   const { mutate: mutateSubtask } = useMutation({
     mutationFn: PostSubtask,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['subtask'] })
+      queryClient.invalidateQueries({ queryKey: ['subtasks'] })
     },
   })
 
@@ -56,11 +56,10 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
         title: data.title,
         description: data.description,
         status: data.status,
+        priority: data.priority,
         board_id: boardId,
       }
-
       mutateTask(taskData)
-
       for (const subTask of subTasks) {
         if (subTask.name.trim() !== '') {
           const subTaskData = {
@@ -71,7 +70,6 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
           mutateSubtask(subTaskData)
         }
       }
-
       reset()
       onClose()
       setSubTasks([])
@@ -130,6 +128,13 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
             className="w-[20rem] mb-2"
             placeholder="e.g Discutir os objetivos e metas da semana com a equipe."
             {...register('description')}
+          />
+          <p className="text-sm mt-2">Prioridade da Tarefa</p>
+          <Input
+            type="text"
+            className="w-[20rem] mb-2"
+            placeholder="e.g Baixa."
+            {...register('priority')}
           />
           <p className="text-sm mt-2">Checklist</p>
           {subTasks.map((subTask, index) => (

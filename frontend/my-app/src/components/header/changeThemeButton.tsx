@@ -13,7 +13,7 @@ export default function ChangeThemeButton() {
   return (
     <div
       className={`flex justify-center items-center p-3 rounded-md w-10/12 ${
-        theme === 'dark' ? 'bg-gray-800' : 'bg-gray-500'
+        theme === 'dark' ? 'bg-gray-800' : 'bg-gray-400'
       }`}
     >
       <SunIcon

@@ -8,7 +8,6 @@ import { useBoard } from '@/context/boardContext'
 import GetBoardById from '@/lib/boards/getBoardById'
 import { useTask } from '@/context/taskContext'
 import { useQuery } from '@tanstack/react-query'
-import Spinner from '@/assets/spinner'
 import { useTheme } from 'next-themes'
 
 const statusOptions = [
@@ -17,12 +16,18 @@ const statusOptions = [
   { status: 'Feito', circleColor: 'green' },
 ]
 
+const priorityOptions = [
+  { name: 'Alta', color: 'red' },
+  { name: 'Média', color: 'yellow' },
+  { name: 'Baixa', color: 'green' },
+]
+
 export default function Board() {
   const { boardId } = useBoard()
   const { setTaskData, taskData } = useTask()
   const { theme } = useTheme()
 
-  const { data: boardData, isLoading } = useQuery({
+  const { data: boardData } = useQuery({
     queryKey: ['board', boardId],
     queryFn: () => GetBoardById({ id: boardId }),
     retry: false,
@@ -33,13 +38,6 @@ export default function Board() {
       setTaskData(boardData.data.tasks || [])
     }
   }, [boardData, setTaskData])
-
-  if (isLoading)
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <Spinner size="xl" />
-      </div>
-    )
 
   const taskCounts = statusOptions.reduce(
     (acc, option) => {
@@ -61,9 +59,11 @@ export default function Board() {
               className={`flex flex-col ml-20 pb-5 items-center ${theme === 'dark' ? 'bg-muted/40' : 'bg-gray-200'} rounded w-[20rem]`}
               onDragOver={(e) => e.preventDefault()}
             >
-              <div className="flex items-center justify-center gap-2 mt-4">
+              <div className="flex items-center justify-center gap-2 mt-4 mb-2">
                 <Circle size={18} color={circleColor} fill={circleColor} />
-                <p className="mb-2 text-md text-gray-400">
+                <p
+                  className={`text-md font-semibold ${theme === 'dark' ? 'text-gray-400' : 'text-gray-800'}`}
+                >
                   {status} ( {taskCounts[status]} )
                 </p>
               </div>
@@ -75,7 +75,9 @@ export default function Board() {
                       key={task.ID}
                       taskId={task.ID}
                       data={task}
+                      priority={task.priority}
                       statusOption={statusOptions}
+                      priorityOptions={priorityOptions}
                     />
                   ))}
               </div>

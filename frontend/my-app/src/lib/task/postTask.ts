@@ -6,16 +6,18 @@ interface PostTaskProps {
   description: string;
   status: string;
   board_id: number | null;
+  priority: string
 }
 
 export default async function PostTask(props: PostTaskProps) {
-  const { title, description, status, board_id } = props;
+  const { title, description, priority, status, board_id } = props;
   try {
     const response = await axios.post(
       `${BASE_URL}/tasks`,
       {
         board_id,
         title,
+        priority,
         status,
         description,
       },

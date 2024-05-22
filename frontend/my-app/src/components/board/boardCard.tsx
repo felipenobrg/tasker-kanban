@@ -9,11 +9,14 @@ import UpdateTask from '@/lib/task/updateTask'
 import DialogEditTask from '../dialogs/dialogEditTask/dialogEditTask'
 import { useTask } from '@/context/taskContext'
 import { useTheme } from 'next-themes'
+import { Flag } from 'lucide-react'
 
 interface BoardCardProps {
   data: Task
   taskId: number
   statusOption: { status: string; circleColor: string }[]
+  priorityOptions: { name: string; color: string }[]
+  priority: string
 }
 
 const truncateText = (description: string, maxLength: number): string => {
@@ -27,10 +30,11 @@ const truncateText = (description: string, maxLength: number): string => {
 
 export default function BoardCard(props: BoardCardProps) {
   const queryClient = useQueryClient()
-  const { data, statusOption, taskId } = props
+  const { data, statusOption, taskId, priority, priorityOptions } = props
   const [dialogOpen, setDialogOpen] = useState(false)
   const { setTaskId, taskData, setTaskData } = useTask()
   const { theme } = useTheme()
+  console.log('PRIORITYOP', priorityOptions)
 
   const handleDialogOpen = () => {
     setDialogOpen(true)
@@ -72,7 +76,7 @@ export default function BoardCard(props: BoardCardProps) {
 
   useEffect(() => {
     setTaskId(taskId)
-  }, [taskId, setTaskId])
+  }, [taskId, setTaskId, dialogOpen])
 
   useEffect(() => {
     setDialogOpen(false)
@@ -86,6 +90,18 @@ export default function BoardCard(props: BoardCardProps) {
     e.preventDefault()
   }
 
+  const getPriorityColor = () => {
+    let color
+    if (priority === 'Baixa') {
+      color = 'green'
+    } else if (priority === 'Média') {
+      color = 'orange'
+    } else if (priority === 'Alta') {
+      color = 'red'
+    }
+    return color
+  }
+
   return (
     <>
       <div className="flex items-center justify-center flex-row">
@@ -93,19 +109,28 @@ export default function BoardCard(props: BoardCardProps) {
           <Card
             onClick={handleDialogOpen}
             className={`flex flex-col w-[18rem] h-28 p-3 cursor-pointer rounded group ${
-              theme === 'dark' ? 'bg-gray-800' : 'bg-gray-400'
+              theme === 'dark' ? 'bg-gray-800' : 'bg-gray-300'
             }`}
             draggable
             key={data.ID}
           >
             <div className="flex flex-col items-start justify-start flex-1">
               <h2
-                className={` text-base font-bold group-hover:text-indigo-500 ${theme === 'dark' ? 'text-gray-200' : 'text-gray-400'}`}
+                className={` text-base font-bold group-hover:text-indigo-500 ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}
               >
                 {truncateText(data.title, 30)}
               </h2>
-              <p className="text-gray-300 text-sm break-words mt-2 font-medium">
+              <p
+                className={`text-gray-300 text-sm break-words mt-2 font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}
+              >
                 {truncateText(data.description, 35)}
+              </p>
+              <p className="ml-auto mt-auto">
+                <Flag
+                  size={18}
+                  color={getPriorityColor()}
+                  fill={getPriorityColor()}
+                />
               </p>
             </div>
           </Card>
@@ -123,6 +148,8 @@ export default function BoardCard(props: BoardCardProps) {
           isOpen={dialogOpen}
           onClose={() => setDialogOpen(false)}
           handleDeleteTask={() => handleDeleteTask(data.ID)}
+          priority={priority}
+          priorityOptions={priorityOptions}
         />
       )}
     </>

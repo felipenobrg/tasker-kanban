@@ -151,7 +151,7 @@ export default function Register() {
           {' '}
           <CardContent className="w-80">
             <h1
-              className={`text-3xl text-start font-jakarta font-bold mb-2 ${theme === 'dark' ? 'text-base' : 'text-white'}`}
+              className={`text-3xl text-start font-jakarta font-normal mb-2 ${theme === 'dark' ? 'text-base' : 'text-white'}`}
             >
               Entre na nossa <br /> Comunidade
             </h1>

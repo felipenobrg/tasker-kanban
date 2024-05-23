@@ -42,6 +42,7 @@ export default function Login() {
     register,
     handleSubmit,
     setError,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<FormFields>({
     resolver: zodResolver(schema),
@@ -61,15 +62,16 @@ export default function Login() {
           email: data.email,
           password: data.password,
           callbackUrl: '/',
-          redirect: true,
+          redirect: false,
         })
         if (result?.error) {
           setError('email', { message: 'Email ou senha incorretos' })
           setError('password', { message: 'Email ou senha incorretos' })
           console.error('Authentication Error:', result.error)
         } else {
-          router.replace('/')
+          router.push('/')
           toast.success('Login bem-sucedido!')
+          reset()
         }
       }
     } catch (error: AxiosError | any) {
@@ -92,7 +94,7 @@ export default function Login() {
 
   const onClose = useCallback(() => {
     setIsOpen(false)
-  }, [isOpen])
+  }, [])
 
   return (
     <main className="flex items-center justify-center min-h-screen">
@@ -157,7 +159,10 @@ export default function Login() {
                   <div
                     className={`text-end text-sm hover:text-gray-200 ${theme === 'dark' ? 'text-bae' : 'text-gray-50'}`}
                   >
-                    <span className="underline cursor-pointer" onClick={() => setIsOpen(true)}>
+                    <span
+                      className="underline cursor-pointer"
+                      onClick={() => setIsOpen(true)}
+                    >
                       Esqueci minha senha
                     </span>
                   </div>
@@ -191,7 +196,7 @@ export default function Login() {
             </h1>
             <Link
               href="https://github.com/felipenobrg/tasker"
-              className={`text-sm text-gray-100 hover:text-gray-200text-3xl text-start font-jakarta font-bold mb-2 ${theme === 'dark' ? 'text-base' : 'text-white'}`}
+              className={`text-sm text-gray-100 hover:text-gray-200text-3xl text-start font-jakarta font-normal mb-2 ${theme === 'dark' ? 'text-base' : 'text-white'}`}
             >
               Descubra mais sobre o Tasker e junte-se à nossa comunidade.
             </Link>

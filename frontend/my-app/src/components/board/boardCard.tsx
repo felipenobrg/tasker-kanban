@@ -114,7 +114,12 @@ export default function BoardCard(props: BoardCardProps) {
     setDragOver(false)
   }
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>, status: string) => {
+  const handleColumnDrop = (
+    e: React.DragEvent<HTMLDivElement>,
+    status: string,
+  ) => {
+    e.preventDefault()
+    console.log('Dropped in column with status:', status)
     const id = parseInt(e.dataTransfer.getData('taskId'), 10)
     const description = e.dataTransfer.getData('description')
     const title = e.dataTransfer.getData('title')
@@ -138,7 +143,7 @@ export default function BoardCard(props: BoardCardProps) {
         className="flex items-center justify-center flex-row"
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
-        onDrop={(e) => handleDrop(e, data.status)}
+        onDrop={(e) => handleColumnDrop(e, data.status)}
       >
         <div className="flex flex-col gap-4">
           {(data.title.toLowerCase().includes(filterValue.toLowerCase()) ||

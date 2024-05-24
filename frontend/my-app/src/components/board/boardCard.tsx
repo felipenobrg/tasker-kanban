@@ -11,6 +11,7 @@ import { useTheme } from 'next-themes'
 import { Flag } from 'lucide-react'
 import getPriorityColor from '@/helpers/getPriorityColors'
 import UpdateTask from '@/lib/task/updateTask'
+import { useFilter } from '@/context/filterContext'
 
 interface BoardCardProps {
   data: Task
@@ -37,7 +38,7 @@ export default function BoardCard(props: BoardCardProps) {
   const { theme } = useTheme()
   const [isDragging, setIsDragging] = useState(false)
   const [dragOver, setDragOver] = useState(false)
-
+  const { filterValue } = useFilter()
   const handleDialogOpen = () => {
     setDialogOpen(true)
   }
@@ -140,48 +141,53 @@ export default function BoardCard(props: BoardCardProps) {
         onDrop={(e) => handleDrop(e, data.status)}
       >
         <div className="flex flex-col gap-4">
-          <Card
-            onClick={handleDialogOpen}
-            className={`flex flex-col w-[18rem] h-28 p-3 cursor-pointer rounded group transition-transform transform hover:scale-105 ${
-              theme === 'dark' ? 'bg-gray-800' : 'bg-gray-300'
-            } ${isDragging ? 'opacity-50 shadow-lg' : ''}  ${dragOver ? 'border-2 border-indigo-500 transition-colors duration-300' : ''}`}
-            draggable
-            onDragStart={(e) =>
-              handleDragStart(
-                e,
-                data.ID,
-                data.description,
-                data.title,
-                priority,
-              )
-            }
-            onDragEnd={handleDragEnd}
-            key={data.ID}
-          >
-            <div className="flex flex-col items-start justify-start flex-1">
-              <h2
-                className={`text-base font-bold group-hover:text-indigo-500 ${
-                  theme === 'dark' ? 'text-gray-200' : 'text-gray-700'
-                }`}
-              >
-                {truncateText(data.title, 20)}
-              </h2>
-              <p
-                className={`text-sm break-words mt-2 font-medium ${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
-                }`}
-              >
-                {truncateText(data.description, 20)}
-              </p>
-              <p className="ml-auto mt-auto">
-                <Flag
-                  size={18}
-                  color={getPriorityColor(priority)}
-                  fill={getPriorityColor(priority)}
-                />
-              </p>
-            </div>
-          </Card>
+          {(data.title.toLowerCase().includes(filterValue.toLowerCase()) ||
+            data.description
+              .toLowerCase()
+              .includes(filterValue.toLowerCase())) && (
+            <Card
+              onClick={handleDialogOpen}
+              className={`flex flex-col w-[18rem] h-28 p-3 cursor-pointer rounded group transition-transform transform hover:scale-105 ${
+                theme === 'dark' ? 'bg-gray-800' : 'bg-gray-300'
+              } ${isDragging ? 'opacity-50 shadow-lg' : ''}  ${dragOver ? 'border-2 border-indigo-500 transition-colors duration-300' : ''}`}
+              draggable
+              onDragStart={(e) =>
+                handleDragStart(
+                  e,
+                  data.ID,
+                  data.description,
+                  data.title,
+                  priority,
+                )
+              }
+              onDragEnd={handleDragEnd}
+              key={data.ID}
+            >
+              <div className="flex flex-col items-start justify-start flex-1">
+                <h2
+                  className={`text-base font-bold group-hover:text-indigo-500 ${
+                    theme === 'dark' ? 'text-gray-200' : 'text-gray-700'
+                  }`}
+                >
+                  {truncateText(data.title, 20)}
+                </h2>
+                <p
+                  className={`text-sm break-words mt-2 font-medium ${
+                    theme === 'dark' ? 'text-gray-300' : 'text-gray-600'
+                  }`}
+                >
+                  {truncateText(data.description, 20)}
+                </p>
+                <p className="ml-auto mt-auto">
+                  <Flag
+                    size={18}
+                    color={getPriorityColor(priority)}
+                    fill={getPriorityColor(priority)}
+                  />
+                </p>
+              </div>
+            </Card>
+          )}
         </div>
       </div>
       {dialogOpen && (

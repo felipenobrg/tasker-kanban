@@ -1,28 +1,16 @@
 package models
 
-import (
-	"errors"
-
-	"gorm.io/gorm"
-)
+import "gorm.io/gorm"
 
 type Board struct {
-	gorm.Model
-	Description string `json:"description"`
-	Status      string `json:"status" gorm:"default:'Backlog'"`
+	Model
+	UserID uint   `json:"-" gorm:"foreignKey:user_id;not null"`
+	User   string `json:"user" gorm:"not null"`
+	Name   string `json:"name" gorm:"not null"`
+	Tasks  []Task `json:"tasks" gorm:"-"`
 }
 
-func (b *Board) Validate() error {
-	statusAccepted := []string{"Backlog", "Em andamento", "Feito", ""}
-
-	for _, status := range statusAccepted {
-		if status == b.Status {
-			return nil
-		}
-	}
-
-	errormsg := "invalid status. Accepted values are: Backlog, Em andamento or Feito"
-	err := errors.New(errormsg)
-
-	return err
+func (b *Board) BeforeDelete(tx *gorm.DB) error {
+	tx.Where("board_id = ?", b.ID).Delete(&Task{})
+	return nil
 }

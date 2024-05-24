@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  tasker-api:
+    image: perazzojoao/tasker-api:1.0.0
+    deploy:
+      mode: replicated
+      replicas: 3

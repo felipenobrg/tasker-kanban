@@ -5,7 +5,9 @@ services:
     container_name: tasker-api
     env_file:
       - .env
-    environment:
-      - NEON_DB=${NEON_DB}
+    restart: always
+    deploy:
+      mode: replicated
+      replicas: 1
     ports:
       - "8080:8080"

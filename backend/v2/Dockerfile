@@ -11,4 +11,5 @@ RUN go build -o main .
 FROM alpine:latest AS production
 WORKDIR /app
 COPY --from=builder /app/main .
+COPY templates /app/templates
 CMD [ "/app/main" ]

@@ -16,7 +16,7 @@ const statusOptions = [
   { status: 'Feito', circleColor: 'green' },
 ]
 
-const priorityOptions = [
+export const priorityOptions = [
   { name: 'Alta', color: 'red' },
   { name: 'Média', color: 'yellow' },
   { name: 'Baixa', color: 'green' },
@@ -56,7 +56,7 @@ export default function Board() {
           {statusOptions.map(({ status, circleColor }) => (
             <div
               key={status}
-              className={`flex flex-col ml-20 pb-5 items-center ${theme === 'dark' ? 'bg-muted/40' : 'bg-gray-200'} rounded w-[20rem]`}
+              className={`flex flex-col ml-20 pb-5 items-center bg-muted/40  ${theme === 'dark' ? 'bg-muted/40' : 'bg-gray-200'} rounded w-[20rem]`}
               onDragOver={(e) => e.preventDefault()}
             >
               <div className="flex items-center justify-center gap-2 mt-4 mb-2">

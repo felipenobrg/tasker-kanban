@@ -2,9 +2,9 @@ import axios from 'axios'
 import { BASE_URL } from '../../../apiConfig'
 
 export interface UpdateTaskProps {
-  description?: string
-  title?: string
-  priority?: string
+  description: string
+  title: string
+  priority: string
   status: string
   id: number
 }

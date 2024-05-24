@@ -23,6 +23,7 @@ import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query'
 import Spinner from '@/assets/spinner'
 import { useTheme } from 'next-themes'
 import { Flag } from 'lucide-react'
+import getPriorityColor from '@/helpers/getPriorityColors'
 
 interface FormDataProps {
   title: string
@@ -114,18 +115,6 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
     }
   }
 
-  const getPriorityColor = (priority: string) => {
-    let color
-    if (priority === 'Baixa') {
-      color = 'green'
-    } else if (priority === 'Média') {
-      color = 'orange'
-    } else if (priority === 'Alta') {
-      color = 'red'
-    }
-    return color
-  }
-
   if (isLoading || !subtaskData) return <Spinner />
 
   return (
@@ -159,7 +148,6 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
             {...register('description')}
           />
           <p className="text-sm mt-2">Editar prioridade da Tarefa</p>
-
           <Select
             onValueChange={(newValue) => {
               setValue('priority', newValue)
@@ -182,7 +170,7 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
                         fill={getPriorityColor(item.name)}
                         color={getPriorityColor(item.name)}
                       />
-                      {item.name}{' '}
+                      {item.name}
                     </div>
                   </SelectItem>
                 </SelectGroup>

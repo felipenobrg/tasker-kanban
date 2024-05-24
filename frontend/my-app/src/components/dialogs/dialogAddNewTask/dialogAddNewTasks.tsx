@@ -14,12 +14,14 @@ import * as Dialog from '@radix-ui/react-dialog'
 import { useState } from 'react'
 import { useBoard } from '@/context/boardContext'
 import PostTask from '@/lib/task/postTask'
-import { Plus, X } from 'lucide-react'
+import { Flag, Plus, X } from 'lucide-react'
 import { FieldValues, useForm } from 'react-hook-form'
 import { useTask } from '@/context/taskContext'
 import PostSubtask from '@/lib/subtasks/postSubtasks'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTheme } from 'next-themes'
+import { priorityOptions } from '@/components/board/board'
+import getPriorityColor from '@/helpers/getPriorityColors'
 
 interface DialogAddNewTaskProps {
   statusOption: string[]
@@ -130,12 +132,34 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
             {...register('description')}
           />
           <p className="text-sm mt-2">Prioridade da Tarefa</p>
-          <Input
-            type="text"
-            className="w-[20rem] mb-2"
-            placeholder="e.g Baixa."
-            {...register('priority')}
-          />
+          <Select
+            onValueChange={(newValue) => {
+              setValue('priority', newValue)
+            }}
+          >
+            <SelectTrigger className="w-[20rem]">
+              <SelectValue placeholder="e.g Baixa." />
+            </SelectTrigger>
+            <SelectContent>
+              {priorityOptions.map((item, index) => (
+                <SelectGroup key={index}>
+                  <SelectItem
+                    value={item.name}
+                    className="flex items-center gap-3"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Flag
+                        size={18}
+                        fill={getPriorityColor(item.name)}
+                        color={getPriorityColor(item.name)}
+                      />
+                      {item.name}{' '}
+                    </div>
+                  </SelectItem>
+                </SelectGroup>
+              ))}
+            </SelectContent>
+          </Select>
           <p className="text-sm mt-2">Checklist</p>
           {subTasks.map((subTask, index) => (
             <div key={index} className="flex items-center">

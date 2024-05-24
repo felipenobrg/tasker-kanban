@@ -30,7 +30,8 @@ func Connect() (*gorm.DB, error) {
 			log.Panic(err.Error())
 		}
 	}
-	dns := os.Getenv("NEON_DB")
+
+	dns := os.Getenv("DB_DNS")
 
 	for {
 		DB, err = gorm.Open(postgres.Open(dns))
@@ -38,7 +39,7 @@ func Connect() (*gorm.DB, error) {
 			counts++
 		} else {
 			log.Println("Conectado com postgres")
-			DB.AutoMigrate(&models.Board{})
+			DB.AutoMigrate(&models.User{}, &models.VerifyCode{}, &models.Board{}, &models.Task{}, &models.SubTask{})
 			connection = DB
 			break
 		}

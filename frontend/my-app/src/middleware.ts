@@ -1,24 +1,23 @@
-import { getSession } from 'next-auth/react';
+import { getToken } from 'next-auth/jwt';
 import { NextResponse } from 'next/server';
-import { NextApiRequest } from 'next';
+import type { NextRequest } from 'next/server';
 
 const protectedRoutes = ['/'];
 
-export default async function AuthMiddleware(req: NextApiRequest): Promise<NextResponse> {
-  if (!protectedRoutes.some((path) => req.url === path)) {
-    return NextResponse.next();
-  } else {
-    const session = await getSession({ req });
-    if (!session) {
-      const loginUrl = new URL('/login', `http://${req.headers.host}`);
-      return NextResponse.redirect(loginUrl.href);
+export default async function middleware(req: NextRequest) {
+  const url = req.nextUrl.clone();
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+
+  if (protectedRoutes.some((path) => url.pathname === path)) {
+    if (!token) {
+      url.pathname = '/login';
+      return NextResponse.redirect(url);
     }
   }
+
   return NextResponse.next();
 }
 
 export const config = {
-  api: {
-    bodyParser: false,
-  },
+  matcher: ['/'], 
 };

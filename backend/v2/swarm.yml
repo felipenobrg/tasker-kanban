@@ -3,6 +3,13 @@ version: '3'
 services:
   tasker-api:
     image: perazzojoao/tasker-api:1.0.0
+    configs:
+      - source: env
+        target: /app/.env
     deploy:
       mode: replicated
       replicas: 3
+
+configs:
+  env:
+    external: true

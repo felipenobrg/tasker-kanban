@@ -18,7 +18,7 @@ export default function DropdownFilter() {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger asChild className="hidden md:flex">
         <Button variant="outline">
           <ListFilter />
         </Button>

@@ -1,5 +1,6 @@
 'use client'
 
+import { Suspense, useMemo } from 'react'
 import { Button } from '@/components/ui/button'
 import { AxiosError } from '@/types/axiosError'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
@@ -11,8 +12,8 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import resetPassword from '@/lib/auth/forgotPassword/resetPassword'
-import { useMemo } from 'react'
 import Link from 'next/link'
+import Spinner from '@/assets/spinner'
 
 const ResetPassword = () => {
   const { theme } = useTheme()
@@ -151,4 +152,16 @@ const ResetPassword = () => {
   )
 }
 
-export default ResetPassword
+const ResetPasswordPage = () => (
+  <Suspense
+    fallback={
+      <div>
+        <Spinner />
+      </div>
+    }
+  >
+    <ResetPassword />
+  </Suspense>
+)
+
+export default ResetPasswordPage

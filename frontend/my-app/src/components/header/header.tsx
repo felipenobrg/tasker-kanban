@@ -1,9 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Menu, Link, ClipboardCheck } from 'lucide-react'
 import { Button } from '../ui/button'
-import { SheetTrigger, SheetContent, Sheet } from '../ui/sheet'
 import { useFilter } from '@/context/filterContext'
 import { ChangeEvent, useState } from 'react'
 import { Plus } from 'lucide-react'
@@ -15,6 +13,7 @@ import { statusOption } from '@/types/statusOption'
 import Profile from '../profile/profile'
 import DialogAddNewTask from '../dialogs/dialogAddNewTask/dialogAddNewTasks'
 import DropdownFilter from './dropdownFIlter'
+import HamburguerMenu from './hamburguerMenu'
 
 export default function Header() {
   const { setFilterValue } = useFilter()
@@ -50,25 +49,7 @@ export default function Header() {
 
   return (
     <header className="flex justify-start h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button variant="outline" size="icon" className="shrink-0 md:hidden">
-            <Menu className="h-5 w-5" />
-            <span className="sr-only">Mudar menu de navegação</span>
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="left" className="flex flex-col">
-          <nav className="grid gap-2 text-lg font-medium">
-            <Link
-              href="/"
-              className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-            >
-              <ClipboardCheck className="h-5 w-5" />
-              Tasker
-            </Link>
-          </nav>
-        </SheetContent>
-      </Sheet>
+      <HamburguerMenu />
       <div className="mr-8">
         <h1 className="text-lg font-bold">{boardName}</h1>
       </div>

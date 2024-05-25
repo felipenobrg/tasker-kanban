@@ -6,7 +6,7 @@ interface InputProps {
   handleInputChange: (event: ChangeEvent<HTMLInputElement>) => void
 }
 
-export default function HeaderInput(props: InputProps) {
+export default function BoardInput(props: InputProps) {
   const { handleInputChange } = props
   return (
     <div className="hidden w-full items-center sm:flex">

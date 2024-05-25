@@ -7,24 +7,18 @@ import { ChangeEvent, useState } from 'react'
 import { Plus } from 'lucide-react'
 import AlertDialog from './alertDialog'
 import { useBoard } from '@/context/boardContext'
-import HeaderInput from './headerInput'
+import HeaderInput from '../board/boardInput'
 import DropdownDeleteBoard from './dropdownDeleteBoard'
 import { statusOption } from '@/types/statusOption'
 import Profile from '../profile/profile'
 import DialogAddNewTask from '../dialogs/dialogAddNewTask/dialogAddNewTasks'
-import DropdownFilter from './dropdownFIlter'
 import HamburguerMenu from './hamburguerMenu'
 
 export default function Header() {
-  const { setFilterValue } = useFilter()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [isAlertOpen, setIsAlertOpen] = useState(false)
   const { boardName, setBoardName } = useBoard()
-
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFilterValue(e.target.value)
-  }
 
   const handleDialogOpen = () => {
     setIsDialogOpen(true)
@@ -50,13 +44,6 @@ export default function Header() {
   return (
     <header className="flex justify-start h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
       <HamburguerMenu />
-      <div className="mr-8">
-        <h1 className="text-lg font-bold">{boardName}</h1>
-      </div>
-      <div className="flex justify-between">
-        <HeaderInput handleInputChange={handleInputChange} />
-        <DropdownFilter />
-      </div>
       <div className="flex items-center ml-5 sm:w-fit w-full">
         <div>
           <Button

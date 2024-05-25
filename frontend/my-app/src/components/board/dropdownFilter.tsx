@@ -5,7 +5,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
 } from '../ui/dropdown-menu'
-import { priorityOptions } from '../board/board'
+import { priorityOptions } from './board'
 import getPriorityColor from '@/helpers/getPriorityColors'
 import { useFilter } from '@/context/filterContext'
 

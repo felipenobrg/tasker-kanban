@@ -8,11 +8,13 @@ import DeleteTask from '@/lib/task/deleteTask'
 import DialogEditTask from '../dialogs/dialogEditTask/dialogEditTask'
 import { useTask } from '@/context/taskContext'
 import { useTheme } from 'next-themes'
-import { Flag } from 'lucide-react'
+import { Calendar, Flag } from 'lucide-react'
 import getPriorityColor from '@/helpers/getPriorityColors'
 import UpdateTask from '@/lib/task/updateTask'
 import { useFilter } from '@/context/filterContext'
 import Spinner from '@/assets/spinner'
+import { formattedDate } from '@/helpers/formattedDate'
+import { truncateText } from '@/helpers/truncateText'
 
 interface BoardCardProps {
   data: Task
@@ -20,20 +22,13 @@ interface BoardCardProps {
   statusOption: { status: string; circleColor: string }[]
   priorityOptions: { name: string; color: string }[]
   priority: string
-}
-
-const truncateText = (text: string, maxLength: number): string => {
-  if (text.length <= maxLength) {
-    return text
-  } else {
-    const truncatedText = text.substring(0, maxLength)
-    return truncatedText + '...'
-  }
+  createdAt: string
 }
 
 export default function BoardCard(props: BoardCardProps) {
   const queryClient = useQueryClient()
-  const { data, statusOption, taskId, priority, priorityOptions } = props
+  const { data, statusOption, taskId, priority, priorityOptions, createdAt } =
+    props
   const [dialogOpen, setDialogOpen] = useState(false)
   const { setTaskId, taskData, setTaskData } = useTask()
   const { theme } = useTheme()
@@ -165,8 +160,10 @@ export default function BoardCard(props: BoardCardProps) {
               .includes(filterValue.toLowerCase())) && (
             <Card
               onClick={handleDialogOpen}
-              className={`flex flex-col w-[18rem] h-28 p-3 cursor-pointer rounded group transition-transform transform hover:scale-105 ${
-                theme === 'dark' ? 'bg-gray-800' : 'bg-gray-300'
+              className={`flex flex-col w-[18rem] h-28 p-3 cursor-pointer rounded group transition-transform transform hover:scale-105 shadow-lg border ${
+                theme === 'dark'
+                  ? 'bg-gray-800 border-gray-700'
+                  : 'bg-gray-300 border-gray-400'
               } ${isDragging ? 'opacity-50 shadow-lg' : ''}  ${
                 dragOver
                   ? 'border-2 border-indigo-500 transition-colors duration-300'
@@ -200,13 +197,17 @@ export default function BoardCard(props: BoardCardProps) {
                 >
                   {truncateText(data.description, 20)}
                 </p>
-                <p className="ml-auto mt-auto">
+                <div className="flex items-start justify-between w-full mt-auto">
+                  <p className="flex items-center text-xs font-medium text-gray-500 gap-1">
+                    <Calendar size={14} />
+                    {formattedDate(createdAt)}
+                  </p>
                   <Flag
                     size={18}
                     color={getPriorityColor(priority)}
                     fill={getPriorityColor(priority)}
                   />
-                </p>
+                </div>
               </div>
             </Card>
           )}

@@ -27,7 +27,7 @@ services:
   
   tasker:
     build: .
-    container_name: tasker-api
+    container_name: tasker
     env_file:
       - .env
     environment:

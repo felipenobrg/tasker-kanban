@@ -12,7 +12,6 @@ import (
 
 	"tasker/models"
 	"tasker/util"
-
 )
 
 type UserPayload struct {
@@ -38,7 +37,7 @@ func CreateCookie(token string, duration time.Duration) http.Cookie {
 		Value:    token,
 		Path:     "/",
 		Domain:   "",
-		Expires:  time.Now().Add(duration * time.Minute),
+		Expires:  time.Now().Add(duration * time.Hour),
 		HttpOnly: true,
 		Secure:   false,
 	}
@@ -161,7 +160,7 @@ func (app *Handlers) Login(w http.ResponseWriter, r *http.Request) {
 		Data:    map[string]any{"session_token": token, "user": userPayload},
 	}
 
-	cookie := CreateCookie(token, 60)
+	cookie := CreateCookie(token, 24*30)
 	http.SetCookie(w, &cookie)
 	util.WriteJSON(w, http.StatusOK, responsePayload)
 }
@@ -248,7 +247,7 @@ func (app *Handlers) CheckEmail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	token, err := util.GenerateToken(&user, "reset_password")
-	exp := time.Now().Add(time.Minute * 5).Unix()
+	exp := time.Now().Add(time.Hour * 1).Unix()
 	if err != nil {
 		log.Println(err)
 		err = errors.New("error generating jwt token")

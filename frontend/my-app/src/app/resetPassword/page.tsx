@@ -1,24 +1,24 @@
 'use client'
 
-import { Button } from "@/components/ui/button";
+import { Suspense, useMemo } from 'react'
+import { Button } from '@/components/ui/button'
 import { AxiosError } from '@/types/axiosError'
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { Label } from '@/components/ui/label'
-import { useTheme } from "next-themes";
-import { useRouter, useSearchParams } from "next/navigation";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { z } from "zod";
-import resetPassword from "@/lib/auth/forgotPassword/resetPassword";
-import { useMemo } from "react";
-import Link from "next/link";
+import { useTheme } from 'next-themes'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { z } from 'zod'
+import resetPassword from '@/lib/auth/forgotPassword/resetPassword'
+import Link from 'next/link'
+import Spinner from '@/assets/spinner'
 
 const ResetPassword = () => {
   const { theme } = useTheme()
   const router = useRouter()
   const searchParams = useSearchParams()
-
 
   const schema = z.object({
     password: z
@@ -60,7 +60,6 @@ const ResetPassword = () => {
           type: 'manual',
           message: 'A nova senha não pode ser igual à antiga',
         })
-
       } else {
         console.error('Error:', error)
       }
@@ -70,17 +69,18 @@ const ResetPassword = () => {
   const expTime = useMemo(() => {
     const exp = searchParams.get('expires')
     if (exp) {
-      return new Date(parseInt(exp) * 1000);
+      return new Date(parseInt(exp) * 1000)
     }
     return null
-  }, [])
+  }, [searchParams])
 
-  if (!expTime || (expTime < new Date())) {
+  if (!expTime || expTime < new Date()) {
     return (
       <main className="flex items-center justify-center min-h-screen">
         <div className="flex items-center justify-center flex-col max-w-sm bg-black border-none rounded-xl w-full h-full p-6">
           <h1 className="text-lg font-bold text-white">Link expirado</h1>
-          <Link href="/login"
+          <Link
+            href="/login"
             className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
             Ir para Login
@@ -149,7 +149,19 @@ const ResetPassword = () => {
         </Card>
       </div>
     </main>
-  );
+  )
 }
 
-export default ResetPassword;
+const ResetPasswordPage = () => (
+  <Suspense
+    fallback={
+      <div>
+        <Spinner />
+      </div>
+    }
+  >
+    <ResetPassword />
+  </Suspense>
+)
+
+export default ResetPasswordPage

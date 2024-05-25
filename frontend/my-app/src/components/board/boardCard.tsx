@@ -12,6 +12,7 @@ import { Flag } from 'lucide-react'
 import getPriorityColor from '@/helpers/getPriorityColors'
 import UpdateTask from '@/lib/task/updateTask'
 import { useFilter } from '@/context/filterContext'
+import Spinner from '@/assets/spinner'
 
 interface BoardCardProps {
   data: Task
@@ -38,7 +39,8 @@ export default function BoardCard(props: BoardCardProps) {
   const { theme } = useTheme()
   const [isDragging, setIsDragging] = useState(false)
   const [dragOver, setDragOver] = useState(false)
-  const { filterValue } = useFilter()
+  const { filterValue, select } = useFilter()
+
   const handleDialogOpen = () => {
     setDialogOpen(true)
   }
@@ -51,7 +53,7 @@ export default function BoardCard(props: BoardCardProps) {
     setDialogOpen(false)
   }
 
-  const { mutate, isSuccess } = useMutation({
+  const { mutate, isSuccess, isPending } = useMutation({
     mutationFn: UpdateTask,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['board'] })
@@ -119,7 +121,6 @@ export default function BoardCard(props: BoardCardProps) {
     status: string,
   ) => {
     e.preventDefault()
-    console.log('Dropped in column with status:', status)
     const id = parseInt(e.dataTransfer.getData('taskId'), 10)
     const description = e.dataTransfer.getData('description')
     const title = e.dataTransfer.getData('title')
@@ -136,6 +137,18 @@ export default function BoardCard(props: BoardCardProps) {
   useEffect(() => {
     setDialogOpen(false)
   }, [isSuccess])
+
+  if (isPending) {
+    return (
+      <div className="h-full w-full flex items-center justify-center">
+        <Spinner />
+      </div>
+    )
+  }
+
+  if (select && select !== 'All' && select !== priority) {
+    return null
+  }
 
   return (
     <>
@@ -154,7 +167,11 @@ export default function BoardCard(props: BoardCardProps) {
               onClick={handleDialogOpen}
               className={`flex flex-col w-[18rem] h-28 p-3 cursor-pointer rounded group transition-transform transform hover:scale-105 ${
                 theme === 'dark' ? 'bg-gray-800' : 'bg-gray-300'
-              } ${isDragging ? 'opacity-50 shadow-lg' : ''}  ${dragOver ? 'border-2 border-indigo-500 transition-colors duration-300' : ''}`}
+              } ${isDragging ? 'opacity-50 shadow-lg' : ''}  ${
+                dragOver
+                  ? 'border-2 border-indigo-500 transition-colors duration-300'
+                  : ''
+              }`}
               draggable
               onDragStart={(e) =>
                 handleDragStart(

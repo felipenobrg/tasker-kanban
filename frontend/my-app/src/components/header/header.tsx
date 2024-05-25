@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Menu, Link, HomeIcon, ClipboardCheck } from 'lucide-react'
+import { Menu, Link, ClipboardCheck } from 'lucide-react'
 import { Button } from '../ui/button'
 import { SheetTrigger, SheetContent, Sheet } from '../ui/sheet'
 import { useFilter } from '@/context/filterContext'
@@ -14,6 +14,7 @@ import DropdownDeleteBoard from './dropdownDeleteBoard'
 import { statusOption } from '@/types/statusOption'
 import Profile from '../profile/profile'
 import DialogAddNewTask from '../dialogs/dialogAddNewTask/dialogAddNewTasks'
+import DropdownFilter from './dropdownFIlter'
 
 export default function Header() {
   const { setFilterValue } = useFilter()
@@ -71,8 +72,11 @@ export default function Header() {
       <div className="mr-8">
         <h1 className="text-lg font-bold">{boardName}</h1>
       </div>
-      <HeaderInput handleInputChange={handleInputChange} />
-      <div className="flex items-center  ml-5 sm:w-fit w-full">
+      <div className="flex justify-between">
+        <HeaderInput handleInputChange={handleInputChange} />
+        <DropdownFilter />
+      </div>
+      <div className="flex items-center ml-5 sm:w-fit w-full">
         <div>
           <Button
             className="w-48 p-3 bg-indigo-500 text-white hover:bg-indigo600 flex gap-2 items-center"

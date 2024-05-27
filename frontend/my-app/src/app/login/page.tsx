@@ -21,7 +21,7 @@ import TaskerLogo from '../../assets/taskerLogo.png'
 import Image from 'next/image'
 import { useTheme } from 'next-themes'
 import DialogCheckEmail from '@/components/dialogs/dialogCheckEmail'
-import GithubButton from '@/components/ui/githubButton'
+import CardAboutRepo from '@/components/cardAboutRepo/cardAboutRepo'
 
 export default function Login() {
   const router = useRouter()
@@ -99,8 +99,8 @@ export default function Login() {
 
   return (
     <main className="flex items-center justify-center min-h-screen">
-      <div className="flex flex-col-reverse sm:flex-row">
-        <Card className="flex items-center justify-center flex-col max-w-sm bg-black border-none w-full rounded-r-none rounded-l-xl">
+      <div className="flex flex-col-reverse w-screen sm:w-fit sm:flex-row">
+        <Card className="flex items-center justify-center flex-col max-w-sm bg-black border-none w-full rounded-r-none rounded-none sm:rounded-l-xl sm:w-[25rem] sm:h-[40rem]">
           <CardHeader className="flex items-center justify-center">
             <Image
               src={TaskerLogo}
@@ -132,7 +132,9 @@ export default function Login() {
                     required
                   />
                   {errors.email && (
-                    <span className="text-red-500">{errors.email.message}</span>
+                    <span className="text-red-500 text-xs">
+                      {errors.email.message}
+                    </span>
                   )}
                 </div>
                 <div className="grid gap-2">
@@ -153,7 +155,7 @@ export default function Login() {
                     required
                   />
                   {errors.password && (
-                    <span className="text-red-500">
+                    <span className="text-red-500 text-xs">
                       {errors.password.message}
                     </span>
                   )}
@@ -187,21 +189,10 @@ export default function Login() {
             </div>
           </CardContent>
         </Card>
-        <Card className="flex flex-col justify-center bg-blue-900 w-full h-52 sm:w-[25rem] sm:h-[35rem] border-none rounded-xl sm:rounded-l-none sm:rounded-r-xl">
-          <CardContent className="w-80">
-            <h1
-              className={`text-3xl text-start font-jakarta font-bold mb-2 ${theme === 'dark' ? 'text-base' : 'text-white'}`}
-            >
-              Explore nossa <br /> Comunidade
-            </h1>
-            <p
-              className={`text-sm text-gray-100 text-start font-jakarta font-normal mb-2 ${theme === 'dark' ? 'text-base' : 'text-white'}`}
-            >
-              Descubra mais sobre o Tasker e junte-se à nossa comunidade.
-            </p>
-            <GithubButton />
-          </CardContent>
-        </Card>
+        <CardAboutRepo
+          title="Explore nossa Comunidade"
+          description="Descubra mais sobre o Tasker e junte-se à nossa comunidade."
+        />
         {isOpen && <DialogCheckEmail isOpen={isOpen} onClose={onClose} />}
       </div>
     </main>

@@ -21,6 +21,7 @@ import { UserContext } from '@/context/userContext'
 import { useContext } from 'react'
 import { useTheme } from 'next-themes'
 import GithubButton from '@/components/ui/githubButton'
+import CardAboutRepo from '@/components/cardAboutRepo/cardAboutRepo'
 
 export default function Register() {
   const { setEmail } = useContext(UserContext)
@@ -67,8 +68,8 @@ export default function Register() {
 
   return (
     <main className="flex items-center justify-center min-h-screen">
-      <div className="flex flex-col sm:flex-row">
-        <Card className="flex items-center justify-center flex-col max-w-sm bg-black border-none  rounded-r-none rounded-l-xl w-full">
+      <div className="flex flex-col-reverse w-screen sm:w-fit sm:flex-row">
+        <Card className="flex items-center justify-center flex-col max-w-sm bg-black border-none w-full rounded-r-none rounded-none sm:rounded-l-xl sm:w-[25rem] sm:h-[40rem]">
           <CardHeader>
             <CardTitle
               className={`text-lg font-bold ${theme === 'dark' ? 'text-base' : 'text-white'}`}
@@ -94,7 +95,7 @@ export default function Register() {
                     required
                   />
                   {errors.name && (
-                    <span className="text-sm text-red-500">
+                    <span className="text-xs text-red-500">
                       {errors.name.message}
                     </span>
                   )}
@@ -110,7 +111,9 @@ export default function Register() {
                     required
                   />
                   {errors.email && (
-                    <span className="text-red-500">{errors.email.message}</span>
+                    <span className="text-red-500 text-xs">
+                      {errors.email.message}
+                    </span>
                   )}
                 </div>
                 <div className="grid gap-2">
@@ -124,7 +127,7 @@ export default function Register() {
                     className="text-sm w-[17rem]"
                   />
                   {errors.password && (
-                    <span className="text-red-500">
+                    <span className="text-red-500 text-xs">
                       {errors.password.message}
                     </span>
                   )}
@@ -139,7 +142,7 @@ export default function Register() {
               </div>
             </form>
             <div
-              className={` mt-4 text-center text-sm hover:text-gray-200 ${theme === 'dark' ? 'text-base' : 'text-gray-50'}`}
+              className={`mt-4 text-center text-sm hover:text-gray-200 ${theme === 'dark' ? 'text-base' : 'text-gray-50'}`}
             >
               Já tem uma conta?{' '}
               <Link href="/login" className="underline">
@@ -148,22 +151,10 @@ export default function Register() {
             </div>
           </CardContent>
         </Card>
-        <Card className="flex flex-col justify-center bg-blue-900 w-full h-52 sm:w-[25rem] sm:h-[35rem] border-none rounded-xl sm:rounded-l-none sm:rounded-r-xl">
-          {' '}
-          <CardContent className="w-80">
-            <h1
-              className={`text-3xl text-start font-jakarta font-normal mb-2 ${theme === 'dark' ? 'text-base' : 'text-white'}`}
-            >
-              Entre na nossa <br /> Comunidade
-            </h1>
-            <p
-              className={`text-sm text-gray-100 hover:text-gray-200text-3xl text-start font-jakarta font-bold mb-2 ${theme === 'dark' ? 'text-base' : 'text-white'}`}
-            >
-              Explore nosso repositório e seja parte do progresso!
-            </p>
-            <GithubButton />
-          </CardContent>
-        </Card>
+        <CardAboutRepo
+          title="Entre na nossa Comunidade"
+          description=" Explore nosso repositório e seja parte do progresso!"
+        />
       </div>
     </main>
   )

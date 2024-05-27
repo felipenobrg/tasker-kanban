@@ -15,6 +15,7 @@ import BoardInput from './boardInput'
 import DropdownFilter from './dropdownFilter'
 import { useFilter } from '@/context/filterContext'
 import DialogUpdateBoardName from '../dialogs/updateBoardName/dialogUpdateBoardName'
+import { Button } from '../ui/button'
 
 const statusOptions = [
   { status: 'Pendente', circleColor: 'gray' },
@@ -36,6 +37,7 @@ export default function Board() {
   const { boardName } = useBoard()
   const [dragOverColumn, setDragOverColumn] = useState<string | null>(null)
   const [dialogOpen, setDialogOpen] = useState<boolean>(false)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const queryClient = useQueryClient()
 
   const { data: boardData, isLoading } = useQuery({
@@ -97,8 +99,17 @@ export default function Board() {
     handleUpdateTaskStatus(id, status, { title, description, priority })
     setDragOverColumn(null)
   }
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFilterValue(e.target.value)
+  }
+
+  const handleDialogOpen = () => {
+    setIsDialogOpen(true)
+  }
+
+  const handleCloseDialogBoard = () => {
+    setIsDialogOpen(false)
   }
 
   if (isLoading) {
@@ -122,6 +133,14 @@ export default function Board() {
               >
                 <Pencil size={20} />
               </div>
+              <div>
+                <Button
+                  className="w-48 p-3 bg-indigo-500 text-white hover:bg-indigo600 flex gap-2 items-center"
+                  onClick={handleDialogOpen}
+                >
+                  <Plus size={18} /> Adicionar nova Tarefa
+                </Button>
+              </div>
             </div>
             <div className="flex items-center justify-center gap-4">
               <BoardInput handleInputChange={handleInputChange} />
@@ -132,7 +151,7 @@ export default function Board() {
             {statusOptions.map(({ status, circleColor }) => (
               <div
                 key={status}
-                className={`flex flex-col shadow-lg ml-20 pb-5 items-center ${theme === 'dark' ? ' bg-muted/40 ' : 'bg-gray-100'} rounded-lg w-[20rem] ${dragOverColumn === status ? 'border-2 border-indigo-500' : ''} transition-shadow duration-300 ease-in-out hover:shadow-xl`}
+                className={`flex flex-col shadow-lg ${theme === 'dark' && 'shadow-black'} ml-20 pb-5 items-center ${theme === 'dark' ? ' bg-muted/40 ' : 'bg-gray-100'} rounded-lg w-[20rem] ${dragOverColumn === status ? 'border-2 border-indigo-500' : ''} transition-shadow duration-300 ease-in-out`}
                 onDragOver={(e) => e.preventDefault()}
                 onDragEnter={() => setDragOverColumn(status)}
                 onDragLeave={() => setDragOverColumn(null)}

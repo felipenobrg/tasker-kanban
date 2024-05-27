@@ -3,7 +3,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Task } from '@/types/task'
 import { Card } from '../ui/card'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import DeleteTask from '@/lib/task/deleteTask'
 import DialogEditTask from '../dialogs/dialogEditTask/dialogEditTask'
 import { useTask } from '@/context/taskContext'
@@ -35,6 +35,7 @@ export default function BoardCard(props: BoardCardProps) {
   const [isDragging, setIsDragging] = useState(false)
   const [dragOver, setDragOver] = useState(false)
   const { filterValue, select } = useFilter()
+  const cardRef = useRef<HTMLDivElement>(null)
 
   const handleDialogOpen = () => {
     setDialogOpen(true)
@@ -95,6 +96,9 @@ export default function BoardCard(props: BoardCardProps) {
     e.dataTransfer.setData('description', description)
     e.dataTransfer.setData('title', title)
     e.dataTransfer.setData('priority', priority)
+    if (cardRef.current) {
+      e.dataTransfer.setDragImage(cardRef.current, 0, 0)
+    }
     setIsDragging(true)
   }
 
@@ -159,12 +163,13 @@ export default function BoardCard(props: BoardCardProps) {
               .toLowerCase()
               .includes(filterValue.toLowerCase())) && (
             <Card
+              ref={cardRef}
               onClick={handleDialogOpen}
               className={`flex flex-col w-[18rem] h-28 p-3 cursor-pointer rounded group transition-transform transform hover:scale-105 shadow-lg border ${
                 theme === 'dark'
                   ? 'bg-gray-800 border-gray-700'
                   : 'bg-gray-300 border-gray-400'
-              } ${isDragging ? 'opacity-50 shadow-lg' : ''}  ${
+              } ${isDragging ? 'opacity-75' : ''}  ${
                 dragOver
                   ? 'border-2 border-indigo-500 transition-colors duration-300'
                   : ''

@@ -93,7 +93,7 @@ export default function Sidebar() {
                     theme === 'dark' ? 'text-gray-300 ' : 'text-gray-300'
                   } hover:text-primary`}"
             >
-              Todos os boards ({boardSize.length === 0 ? '0' : boardSize})
+              Todos os quadros ( {boardSize.length === 0 ? '0' : boardSize} )
             </p>
           </div>
           {boardData.map((item) => (

@@ -54,10 +54,10 @@ export default function DialogNewBoard({
           <div className="flex justify-start items-center">
             <h1 className="flex items-center text-lg font-bold gap-2">
               <Plus />
-              Adicionar novo Board
+              Adicionar novo Quadro
             </h1>
           </div>
-          <p className="text-sm mt-2">Nome do Board</p>
+          <p className="text-sm mt-2">Nome do Quadro</p>
           <Input
             type="text"
             className="w-full"
@@ -66,7 +66,7 @@ export default function DialogNewBoard({
             onChange={(e) => setBoardName(e.target.value)}
           />
           <Button type="submit" className="mt-5">
-            Criar novo Board
+            Criar novo Quadro
           </Button>
         </form>
       </Dialog.Content>

@@ -8,7 +8,6 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 
 	"tasker/models"
-
 )
 
 func GenerateToken(user *models.User, tokenType ...string) (string, error) {
@@ -19,7 +18,7 @@ func GenerateToken(user *models.User, tokenType ...string) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"sub": user.ID,
-		"exp": time.Now().Add(time.Minute * duration).Unix(),
+		"exp": time.Now().Add(time.Hour * duration).Unix(),
 	})
 	return token.SignedString([]byte(os.Getenv(key)))
 }
@@ -44,13 +43,13 @@ func selectClaims(tokenType ...string) (string, time.Duration, error) {
 
 	if len(tokenType) == 0 {
 		key = "SECRET_KEY"
-		duration = 60
+		duration = 24 * 30
 		return key, duration, nil
 	}
 
 	if tokenType[0] == "reset_password" {
 		key = "RESET_PASSWORD_KEY"
-		duration = 5
+		duration = 1
 		return key, duration, nil
 	}
 

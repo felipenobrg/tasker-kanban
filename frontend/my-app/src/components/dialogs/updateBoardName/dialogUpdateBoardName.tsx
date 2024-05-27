@@ -2,36 +2,30 @@ import * as React from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Button } from '../../ui/button'
 import { Input } from '../../ui/input'
-import PostBoard from '@/lib/boards/postBoard'
-import { FormEvent, useState } from 'react'
-import { useBoard } from '@/context/boardContext'
-import { Plus } from 'lucide-react'
+import { FormEvent, useState, useEffect } from 'react'
+import { Edit } from 'lucide-react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useTheme } from 'next-themes'
+import UpdateBoard from '@/lib/boards/updateBoard'
+import { useBoard } from '@/context/boardContext'
+
 interface DialogNewBoardProps {
   isOpen: boolean
   onClose: () => void
 }
 
-export default function DialogNewBoard({
+export default function DialogUpdateBoardName({
   isOpen,
   onClose,
 }: DialogNewBoardProps) {
-  const [boardName, setBoardName] = useState('')
-  const { setBoardId, setBoardName: setContextBoardName } = useBoard()
   const queryClient = useQueryClient()
   const { theme } = useTheme()
+  const { boardName: BoardNameContext } = useBoard()
+  const [boardName, setBoardName] = useState(BoardNameContext ?? '')
 
-  const { mutate: mutateBoard } = useMutation({
-    mutationFn: PostBoard,
-    onSuccess: (data) => {
-      const newBoardId = data.ID
-      setBoardId(newBoardId)
-      setContextBoardName(boardName)
-      onClose()
-      queryClient.invalidateQueries({ queryKey: ['board'] })
-    },
-  })
+  useEffect(() => {
+    setBoardName(BoardNameContext ?? '')
+  }, [BoardNameContext])
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -41,6 +35,14 @@ export default function DialogNewBoard({
       console.error('Error updating task:', error)
     }
   }
+
+  const { mutate: mutateBoard } = useMutation({
+    mutationFn: UpdateBoard,
+    onSuccess: (data) => {
+      onClose()
+      queryClient.invalidateQueries({ queryKey: ['board'] })
+    },
+  })
 
   return (
     <Dialog.Root modal open={isOpen} onOpenChange={onClose}>
@@ -53,17 +55,16 @@ export default function DialogNewBoard({
         <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
           <div className="flex justify-start items-center">
             <h1 className="flex items-center text-lg font-bold gap-2">
-              <Plus />
-              Adicionar novo Board
+              <Edit />
+              Editar nome do Board
             </h1>
           </div>
           <p className="text-sm mt-2">Nome do Board</p>
           <Input
             type="text"
             className="w-full"
-            placeholder="e.g Web Design"
-            value={boardName}
             onChange={(e) => setBoardName(e.target.value)}
+            value={boardName}
           />
           <Button type="submit" className="mt-5">
             Criar novo Board

@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import BoardCard from './boardCard'
-import { Circle, Pencil } from 'lucide-react'
+import { Circle, Pencil, Plus } from 'lucide-react'
 import { ChangeEvent, useEffect, useState } from 'react'
 import { useBoard } from '@/context/boardContext'
 import GetBoardById from '@/lib/boards/getBoardById'
@@ -12,8 +12,9 @@ import { useTheme } from 'next-themes'
 import UpdateTask from '@/lib/task/updateTask'
 import Spinner from '@/assets/spinner'
 import BoardInput from './boardInput'
-import DropdownFilter from './dropdownFIlter'
+import DropdownFilter from './dropdownFilter'
 import { useFilter } from '@/context/filterContext'
+import DialogUpdateBoardName from '../dialogs/updateBoardName/dialogUpdateBoardName'
 
 const statusOptions = [
   { status: 'Pendente', circleColor: 'gray' },
@@ -31,10 +32,11 @@ export default function Board() {
   const { boardId } = useBoard()
   const { setTaskData, taskData } = useTask()
   const { theme } = useTheme()
-  const queryClient = useQueryClient()
-  const [dragOverColumn, setDragOverColumn] = useState<string | null>(null)
   const { setFilterValue } = useFilter()
   const { boardName } = useBoard()
+  const [dragOverColumn, setDragOverColumn] = useState<string | null>(null)
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false)
+  const queryClient = useQueryClient()
 
   const { data: boardData, isLoading } = useQuery({
     queryKey: ['board', boardId],
@@ -106,58 +108,75 @@ export default function Board() {
       </div>
     )
   }
+
   return (
-    <main className="flex flex-1 p-4 lg:gap-6 lg:p-6 relative">
-      <div className="flex flex-col items-start">
-        <div className="flex flex-col ml-20">
-          <div className="flex items-center mb-4 gap-4 ">
-            <h1 className="text-2xl font-bold">{boardName}</h1>
-            <div className="flex items-center bg-indigo-500 p-2 rounded-lg cursor-pointer h-7 w-7">
-              <Pencil size={18} />
-            </div>
-          </div>
-          <div className="flex items-center justify-center gap-4">
-            <BoardInput handleInputChange={handleInputChange} />
-            <DropdownFilter />
-          </div>
-        </div>
-        <div className="flex mt-8">
-          {statusOptions.map(({ status, circleColor }) => (
-            <div
-              key={status}
-              className={`flex flex-col ml-20 pb-5 items-center bg-muted/40 ${theme === 'dark' ? 'bg-muted/40' : 'bg-gray-300'} rounded w-[20rem] ${dragOverColumn === status ? 'border-2 border-indigo-500' : ''}`}
-              onDragOver={(e) => e.preventDefault()}
-              onDragEnter={() => setDragOverColumn(status)}
-              onDragLeave={() => setDragOverColumn(null)}
-              onDrop={(e) => handleColumnDrop(e, status)}
-            >
-              <div className="flex items-center justify-center gap-2 mt-4 mb-2">
-                <Circle size={18} color={circleColor} fill={circleColor} />
-                <p
-                  className={`text-md font-semibold ${theme === 'dark' ? 'text-gray-400' : 'text-gray-800'}`}
-                >
-                  {status} ( {taskCounts[status]} )
-                </p>
-              </div>
-              <div className="flex items-center flex-col gap-5 mt-3">
-                {taskData
-                  .filter((task) => task.status === status)
-                  .map((task) => (
-                    <BoardCard
-                      key={task.ID}
-                      taskId={task.ID}
-                      data={task}
-                      priority={task.priority}
-                      createdAt={task.CreatedAt}
-                      statusOption={statusOptions}
-                      priorityOptions={priorityOptions}
-                    />
-                  ))}
+    <>
+      <main className="flex flex-1 p-4 lg:gap-6 lg:p-6 relative">
+        <div className="flex flex-col items-start">
+          <div className="flex flex-col ml-20">
+            <div className="flex items-center mb-4 gap-4">
+              <h1 className="text-2xl font-bold">{boardName}</h1>
+              <div
+                className="flex items-center bg-indigo-500 p-2 rounded-lg cursor-pointer h-8 w-8 shadow-md hover:shadow-lg transition-shadow"
+                onClick={() => setDialogOpen(true)}
+              >
+                <Pencil size={20} />
               </div>
             </div>
-          ))}
+            <div className="flex items-center justify-center gap-4">
+              <BoardInput handleInputChange={handleInputChange} />
+              <DropdownFilter />
+            </div>
+          </div>
+          <div className="flex mt-8">
+            {statusOptions.map(({ status, circleColor }) => (
+              <div
+                key={status}
+                className={`flex flex-col shadow-lg ml-20 pb-5 items-center ${theme === 'dark' ? ' bg-muted/40 ' : 'bg-gray-100'} rounded-lg w-[20rem] ${dragOverColumn === status ? 'border-2 border-indigo-500' : ''} transition-shadow duration-300 ease-in-out hover:shadow-xl`}
+                onDragOver={(e) => e.preventDefault()}
+                onDragEnter={() => setDragOverColumn(status)}
+                onDragLeave={() => setDragOverColumn(null)}
+                onDrop={(e) => handleColumnDrop(e, status)}
+              >
+                <div className="flex items-center justify-between w-full px-4 mt-4 mb-2">
+                  <div className="flex items-center justify-center gap-2">
+                    <Circle size={18} color={circleColor} fill={circleColor} />
+                    <p
+                      className={`text-md font-semibold ${theme === 'dark' ? 'text-gray-300' : 'text-gray-800'}`}
+                    >
+                      {status} ( {taskCounts[status]} )
+                    </p>
+                  </div>
+                  <div className="bg-indigo-500 rounded p-1 cursor-pointer hover:bg-indigo-600 transition-colors">
+                    <Plus size={20} color="white" />
+                  </div>
+                </div>
+                <div className="flex items-center flex-col gap-5 mt-3 w-full px-2">
+                  {taskData
+                    .filter((task) => task.status === status)
+                    .map((task) => (
+                      <BoardCard
+                        key={task.ID}
+                        taskId={task.ID}
+                        data={task}
+                        priority={task.priority}
+                        createdAt={task.CreatedAt}
+                        statusOption={statusOptions}
+                        priorityOptions={priorityOptions}
+                      />
+                    ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+      {dialogOpen && (
+        <DialogUpdateBoardName
+          isOpen={dialogOpen}
+          onClose={() => setDialogOpen(false)}
+        />
+      )}
+    </>
   )
 }

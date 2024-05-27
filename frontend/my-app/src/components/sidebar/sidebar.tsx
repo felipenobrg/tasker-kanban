@@ -121,7 +121,7 @@ export default function Sidebar() {
           ))}
           <Link
             href="/"
-            className="mt-3 flex items-center  flex-row gap-1 text-indigo-500 ml-7 hover:rounded-l-lg rounded-r-full"
+            className="mt-3 flex items-center  flex-row gap-1 text-indigo-500 ml-7 hover:rounded-l-lg rounded-r-full hover:text-indigo-600"
             onClick={openDialog}
           >
             <LayoutPanelLeft size={20} /> <Plus size={15} /> Criar Novo Board

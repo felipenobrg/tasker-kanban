@@ -20,6 +20,7 @@ import { useRouter } from 'next/navigation'
 import { UserContext } from '@/context/userContext'
 import { useContext } from 'react'
 import { useTheme } from 'next-themes'
+import GithubButton from '@/components/ui/githubButton'
 
 export default function Register() {
   const { setEmail } = useContext(UserContext)
@@ -72,7 +73,7 @@ export default function Register() {
             <CardTitle
               className={`text-lg font-bold ${theme === 'dark' ? 'text-base' : 'text-white'}`}
             >
-              Registre-se
+              Cadastre-se
             </CardTitle>
             <CardDescription
               className={`text-gray-50 ${theme === 'dark' ? 'text-base' : 'text-white'}`}
@@ -138,7 +139,7 @@ export default function Register() {
               </div>
             </form>
             <div
-              className={` mt-4 text-center text-sm hover:text-gray-200 ${theme === 'dark' ? 'text-bae' : 'text-gray-50'}`}
+              className={` mt-4 text-center text-sm hover:text-gray-200 ${theme === 'dark' ? 'text-base' : 'text-gray-50'}`}
             >
               Já tem uma conta?{' '}
               <Link href="/login" className="underline">
@@ -155,12 +156,12 @@ export default function Register() {
             >
               Entre na nossa <br /> Comunidade
             </h1>
-            <Link
-              href="https://github.com/felipenobrg/tasker"
+            <p
               className={`text-sm text-gray-100 hover:text-gray-200text-3xl text-start font-jakarta font-bold mb-2 ${theme === 'dark' ? 'text-base' : 'text-white'}`}
             >
               Explore nosso repositório e seja parte do progresso!
-            </Link>
+            </p>
+            <GithubButton />
           </CardContent>
         </Card>
       </div>

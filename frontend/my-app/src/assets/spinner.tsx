@@ -1,3 +1,5 @@
+import React from 'react'
+
 export interface LoadingProps {
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 }
@@ -11,21 +13,56 @@ const Spinner = (props: LoadingProps) => {
     lg: 'w-9 h-9',
     xl: 'w-12 h-12',
   }
+
   return (
     <svg
-      className={`animate-spin text-primary-500 ${sizeClasses[size]}`}
+      className={`animate-spin ${sizeClasses[size]}`}
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 256 256"
+      viewBox="0 0 50 50"
+      style={{
+        animation: 'spin 1s linear infinite',
+      }}
     >
-      <rect width="256" height="256" fill="none" />
-      <path
-        d="M168,40a97,97,0,0,1,56,88,96,96,0,0,1-192,0A97,97,0,0,1,88,40"
+      <style jsx>{`
+        @keyframes spin {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+      `}</style>
+      <circle
+        cx="25"
+        cy="25"
+        r="20"
         fill="none"
         stroke="currentColor"
+        strokeWidth="5"
         strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="16"
-      />
+        strokeDasharray="100, 200"
+        strokeDashoffset="0"
+        style={{
+          animation: 'dash 1.5s ease-in-out infinite',
+        }}
+      ></circle>
+      <style jsx>{`
+        @keyframes dash {
+          0% {
+            stroke-dasharray: 1, 150;
+            stroke-dashoffset: 0;
+          }
+          50% {
+            stroke-dasharray: 90, 150;
+            stroke-dashoffset: -35;
+          }
+          100% {
+            stroke-dasharray: 90, 150;
+            stroke-dashoffset: -124;
+          }
+        }
+      `}</style>
     </svg>
   )
 }

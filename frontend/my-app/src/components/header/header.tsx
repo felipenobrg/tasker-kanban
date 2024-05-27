@@ -42,7 +42,7 @@ export default function Header() {
   }
 
   return (
-    <header className="flex justify-start h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+    <header className="flex justify-end h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
       <HamburguerMenu />
       <div className="flex items-center ml-5 sm:w-fit w-full">
         <div>
@@ -53,11 +53,11 @@ export default function Header() {
             <Plus size={18} /> Adicionar nova Tarefa
           </Button>
         </div>
-        <DialogAddNewTask
+        {/* <DialogAddNewTask
           onClose={handleCloseDialogBoard}
           isOpen={isDialogOpen}
           statusOption={statusOption}
-        />
+        /> */}
         <DropdownDeleteBoard
           handleEllipsisClick={handleEllipsisClick}
           handleDeleteConfirmation={handleDeleteConfirmation}

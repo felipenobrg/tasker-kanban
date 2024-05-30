@@ -1,4 +1,3 @@
-import Sidebar from '../sidebar/sidebar'
 import { Button } from '../ui/button'
 import { Sheet, SheetTrigger, SheetContent } from '../ui/sheet'
 import { Menu } from 'lucide-react'
@@ -12,9 +11,7 @@ export default function HamburguerMenu() {
           <span className="sr-only">Mudar menu de navegação</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="flex flex-col">
-        <Sidebar />
-      </SheetContent>
+      <SheetContent side="left" className="flex flex-col"></SheetContent>
     </Sheet>
   )
 }

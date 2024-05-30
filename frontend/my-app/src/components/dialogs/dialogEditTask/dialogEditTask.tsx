@@ -63,7 +63,6 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
     setDialogOpen,
     handleDeleteTask,
   } = props
-
   const { register, handleSubmit, setValue, reset } = useForm({
     defaultValues: {
       title: props.title,
@@ -74,7 +73,6 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
   })
 
   const [subtaskData, setSubtaskData] = useState<Subtasks[]>([])
-
   const { data: subtasks, isLoading } = useQuery({
     queryKey: ['subtasks', taskId],
     queryFn: () => GetSubtaskById({ id: taskId }),

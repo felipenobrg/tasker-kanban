@@ -7,7 +7,6 @@ interface DeleteBoardProps {
 
 export default async function DeleteBoard(props: DeleteBoardProps) {
     const { id } = props
-    console.log('ID', id)
     try {
         const response = await axios.delete(`${BASE_URL}/boards/${id}`, {
             withCredentials: true

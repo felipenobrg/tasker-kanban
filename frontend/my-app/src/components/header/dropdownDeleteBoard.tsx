@@ -23,7 +23,7 @@ export default function DropdownDeleteBoard(props: DropdownDeleteBoardProps) {
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem onClick={handleDeleteConfirmation}>
-          <p className="text-red-400">Deletar board</p>
+          <p className="text-red-400">Deletar quadro</p>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

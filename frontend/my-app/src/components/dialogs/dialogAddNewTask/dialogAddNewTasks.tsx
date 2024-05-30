@@ -24,7 +24,7 @@ import { priorityOptions } from '@/components/board/board'
 import getPriorityColor from '@/helpers/getPriorityColors'
 
 interface DialogAddNewTaskProps {
-  statusOption: string[]
+  statusOption: { status: string; circleColor: string }[]
   isOpen: boolean
   onClose: () => void
 }
@@ -34,13 +34,15 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
   const { statusOption, isOpen, onClose } = props
   const { register, handleSubmit, reset, setValue } = useForm()
   const { boardId } = useBoard()
-  const { taskId } = useTask()
   const [subTasks, setSubTasks] = useState([{ name: '' }])
   const { theme } = useTheme()
+  const [taskId, setTaskId] = useState<number | null>(null)
 
   const { mutate: mutateTask } = useMutation({
     mutationFn: PostTask,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      setTaskId(data.data.ID)
+      console.log('DATA', data.data.ID)
       queryClient.invalidateQueries({ queryKey: ['board'] })
     },
   })
@@ -61,20 +63,25 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
         priority: data.priority,
         board_id: boardId,
       }
-      mutateTask(taskData)
-      for (const subTask of subTasks) {
-        if (subTask.name.trim() !== '') {
-          const subTaskData = {
-            task_id: taskId,
-            name: subTask.name,
-            status: 'Disabled',
+      mutateTask(taskData, {
+        onSuccess: (task) => {
+          if (task.id) {
+            for (const subTask of subTasks) {
+              if (subTask.name.trim() !== '') {
+                const subTaskData = {
+                  task_id: taskId,
+                  name: subTask.name,
+                  status: 'Disabled',
+                }
+                mutateSubtask(subTaskData)
+              }
+            }
           }
-          mutateSubtask(subTaskData)
-        }
-      }
-      reset()
-      onClose()
-      setSubTasks([])
+          reset()
+          onClose()
+          setSubTasks([{ name: '' }])
+        },
+      })
     } catch (error) {
       console.error('Error posting task:', error)
     }
@@ -153,7 +160,7 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
                         fill={getPriorityColor(item.name)}
                         color={getPriorityColor(item.name)}
                       />
-                      {item.name}{' '}
+                      {item.name}
                     </div>
                   </SelectItem>
                 </SelectGroup>
@@ -171,14 +178,14 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
                 onChange={(e) => handleSubTaskChange(index, e.target.value)}
               />
               <X
-                className="w-[3rem]"
+                className="w-[3rem] cursor-pointer"
                 onClick={() => handleRemoveSubTask(index)}
               />
             </div>
           ))}
           <Button
             onClick={handleAddSubTask}
-            className="flex flex-row items-center bg-indigo-500 hover:bg-indigo-600  text-white w-[20rem]"
+            className="flex flex-row items-center bg-indigo-500 hover:bg-indigo-600 text-white w-[20rem]"
             type="button"
           >
             <Plus color="white" size={18} /> Adicionar Checklist
@@ -194,15 +201,14 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                {statusOption.map((status, index) => (
-                  <SelectItem key={index} value={status}>
-                    {status}
+                {statusOption.map((item, index) => (
+                  <SelectItem key={index} value={item.status}>
+                    {item.status}
                   </SelectItem>
                 ))}
               </SelectGroup>
             </SelectContent>
           </Select>
-
           <Button
             onClick={handleSubmitButtonClick}
             className="mt-6 w-[20rem]"

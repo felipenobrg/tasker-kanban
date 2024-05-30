@@ -31,19 +31,21 @@ export default function Header() {
     <header className="flex justify-end h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
       <HamburguerMenu />
       <div className="flex items-center ml-5 sm:w-fit w-full">
+        <Profile />
         <DropdownDeleteBoard
           handleEllipsisClick={handleEllipsisClick}
           handleDeleteConfirmation={handleDeleteConfirmation}
         />
-        <AlertDialog
-          boardName={boardName}
-          isDialogOpen={isAlertOpen}
-          setIsDialogOpen={setIsDialogOpen}
-          handleCancelDelete={handleCloseDialog}
-          setIsAlertOpen={setIsAlertOpen}
-          setBoardName={setBoardName}
-        />
-        <Profile />
+        {isAlertOpen && (
+          <AlertDialog
+            boardName={boardName}
+            isDialogOpen={isAlertOpen}
+            setIsDialogOpen={setIsDialogOpen}
+            handleCancelDelete={handleCloseDialog}
+            setIsAlertOpen={setIsAlertOpen}
+            setBoardName={setBoardName}
+          />
+        )}
       </div>
     </header>
   )

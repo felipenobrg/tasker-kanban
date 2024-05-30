@@ -16,6 +16,7 @@ import DropdownFilter from './dropdownFilter'
 import { useFilter } from '@/context/filterContext'
 import DialogUpdateBoardName from '../dialogs/updateBoardName/dialogUpdateBoardName'
 import { Button } from '../ui/button'
+import DialogAddNewTask from '../dialogs/dialogAddNewTask/dialogAddNewTasks'
 
 const statusOptions = [
   { status: 'Pendente', circleColor: 'gray' },
@@ -36,8 +37,9 @@ export default function Board() {
   const { setFilterValue } = useFilter()
   const { boardName } = useBoard()
   const [dragOverColumn, setDragOverColumn] = useState<string | null>(null)
-  const [dialogOpen, setDialogOpen] = useState<boolean>(false)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isUpdateBoardDialogOpen, setIsUpdateBoardDialogOpen] =
+    useState<boolean>(false)
+  const [isAddTaskDialogOpen, setIsAddTaskDialogOpen] = useState(false)
   const queryClient = useQueryClient()
 
   const { data: boardData, isLoading } = useQuery({
@@ -104,14 +106,6 @@ export default function Board() {
     setFilterValue(e.target.value)
   }
 
-  const handleDialogOpen = () => {
-    setIsDialogOpen(true)
-  }
-
-  const handleCloseDialogBoard = () => {
-    setIsDialogOpen(false)
-  }
-
   if (isLoading) {
     return (
       <div className="h-full w-full flex items-center justify-center">
@@ -128,15 +122,15 @@ export default function Board() {
             <div className="flex items-center mb-4 gap-4">
               <h1 className="text-2xl font-bold">{boardName}</h1>
               <div
-                className="flex items-center bg-indigo-500 p-2 rounded-lg cursor-pointer h-8 w-8 shadow-md hover:shadow-lg transition-shadow"
-                onClick={() => setDialogOpen(true)}
+                className="flex items-center justify-center bg-indigo-500 p-1 rounded-lg cursor-pointer h-10 w-10 shadow-md hover:shadow-lg transition-shadow"
+                onClick={() => setIsUpdateBoardDialogOpen(true)}
               >
                 <Pencil size={20} />
               </div>
-              <div>
+              <div className="flex items-end justify-end">
                 <Button
                   className="w-48 p-3 bg-indigo-500 text-white hover:bg-indigo600 flex gap-2 items-center"
-                  onClick={handleDialogOpen}
+                  onClick={() => setIsAddTaskDialogOpen(true)}
                 >
                   <Plus size={18} /> Adicionar nova Tarefa
                 </Button>
@@ -151,7 +145,7 @@ export default function Board() {
             {statusOptions.map(({ status, circleColor }) => (
               <div
                 key={status}
-                className={`flex flex-col shadow-lg ${theme === 'dark' && 'shadow-black'} ml-20 pb-5 items-center ${theme === 'dark' ? ' bg-muted/40 ' : 'bg-gray-100'} rounded-lg w-[20rem] ${dragOverColumn === status ? 'border-2 border-indigo-500' : ''} transition-shadow duration-300 ease-in-out`}
+                className={`flex flex-col shadow-lg ${theme === 'dark' && 'shadow-black'} ml-5 sm:ml-20 pb-5 items-center ${theme === 'dark' ? ' bg-muted/40 ' : 'bg-gray-100'} rounded-lg w-[20rem] ${dragOverColumn === status ? 'border-2 border-indigo-500' : ''} transition-shadow duration-300 ease-in-out`}
                 onDragOver={(e) => e.preventDefault()}
                 onDragEnter={() => setDragOverColumn(status)}
                 onDragLeave={() => setDragOverColumn(null)}
@@ -165,9 +159,6 @@ export default function Board() {
                     >
                       {status} ( {taskCounts[status]} )
                     </p>
-                  </div>
-                  <div className="bg-indigo-500 rounded p-1 cursor-pointer hover:bg-indigo-600 transition-colors">
-                    <Plus size={20} color="white" />
                   </div>
                 </div>
                 <div className="flex items-center flex-col gap-5 mt-3 w-full px-2">
@@ -190,10 +181,17 @@ export default function Board() {
           </div>
         </div>
       </main>
-      {dialogOpen && (
+      {isUpdateBoardDialogOpen && (
         <DialogUpdateBoardName
-          isOpen={dialogOpen}
-          onClose={() => setDialogOpen(false)}
+          isOpen={isUpdateBoardDialogOpen}
+          onClose={() => setIsUpdateBoardDialogOpen(false)}
+        />
+      )}
+      {isAddTaskDialogOpen && (
+        <DialogAddNewTask
+          statusOption={statusOptions}
+          isOpen={isAddTaskDialogOpen}
+          onClose={() => setIsAddTaskDialogOpen(false)}
         />
       )}
     </>

@@ -131,7 +131,7 @@ export default function BoardCard(props: BoardCardProps) {
 
   useEffect(() => {
     setTaskId(taskId)
-  }, [taskId, setTaskId, dialogOpen])
+  }, [taskId, dialogOpen, setTaskId])
 
   useEffect(() => {
     setDialogOpen(false)

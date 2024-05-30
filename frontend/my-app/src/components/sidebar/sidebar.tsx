@@ -78,7 +78,7 @@ export default function Sidebar() {
   }, [boardData, isLoading, activeLink, handleLinkClick])
 
   return (
-    <div className="border-r bg-muted/40 md:block">
+    <div className="hidden border-r bg-muted/40 md:block">
       <div className="flex h-full max-h-screen flex-col gap-2">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <Link href="/" className="flex items-center gap-2 font-bold text-xl">
@@ -124,7 +124,7 @@ export default function Sidebar() {
             className="mt-3 flex items-center  flex-row gap-1 text-indigo-500 ml-7 hover:rounded-l-lg rounded-r-full hover:text-indigo-600"
             onClick={openDialog}
           >
-            <LayoutPanelLeft size={20} /> <Plus size={15} /> Criar Novo Board
+            <LayoutPanelLeft size={20} /> <Plus size={15} /> Criar Novo Quadro
           </Link>
           <div className="mt-10 ml-5 gap-2">
             <ChangeThemeButton />

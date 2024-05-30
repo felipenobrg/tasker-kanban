@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import Providers from '@/providers/combined-providers'
-import { ReactNode } from 'react'
+import { ReactNode, Suspense } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,10 +17,10 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="description" />
+        <meta name="description" content="Gerenciador de Tarefas" />
       </head>
       <body className={inter.className}>
         <Providers>

@@ -19,6 +19,7 @@ export default async function PostSubtask(props: PostSubtasksProps) {
       },
       { withCredentials: true }
     );
+    console.log("SUBTASKDATA", response.data)
     return response.data;
   } catch (error) {
     console.error('Error posting task:', error);

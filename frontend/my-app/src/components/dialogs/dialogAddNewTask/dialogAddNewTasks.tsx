@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import * as Dialog from '@radix-ui/react-dialog'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useBoard } from '@/context/boardContext'
 import PostTask from '@/lib/task/postTask'
 import { Flag, Plus, X } from 'lucide-react'
@@ -42,7 +42,6 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
     mutationFn: PostTask,
     onSuccess: (data) => {
       setTaskId(data.data.ID)
-      console.log('DATA', data.data.ID)
       queryClient.invalidateQueries({ queryKey: ['board'] })
     },
   })
@@ -54,37 +53,31 @@ export default function DialogAddNewTask(props: DialogAddNewTaskProps) {
     },
   })
 
-  const onSubmit = (data: FieldValues) => {
-    try {
-      const taskData = {
-        title: data.title,
-        description: data.description,
-        status: data.status,
-        priority: data.priority,
-        board_id: boardId,
-      }
-      mutateTask(taskData, {
-        onSuccess: (task) => {
-          if (task.id) {
-            for (const subTask of subTasks) {
-              if (subTask.name.trim() !== '') {
-                const subTaskData = {
-                  task_id: taskId,
-                  name: subTask.name,
-                  status: 'Disabled',
-                }
-                mutateSubtask(subTaskData)
-              }
-            }
-          }
-          reset()
-          onClose()
-          setSubTasks([{ name: '' }])
-        },
+  useEffect(() => {
+    if (taskId) {
+      subTasks.forEach((subTask) => {
+        const subTaskData = {
+          task_id: taskId,
+          name: subTask.name,
+          status: 'Disabled',
+        }
+        mutateSubtask(subTaskData)
       })
-    } catch (error) {
-      console.error('Error posting task:', error)
+      reset()
+      onClose()
+      setSubTasks([{ name: '' }])
     }
+  }, [taskId, subTasks, mutateSubtask, reset, onClose])
+
+  const onSubmit = (data: FieldValues) => {
+    const taskData = {
+      title: data.title,
+      description: data.description,
+      status: data.status,
+      priority: data.priority,
+      board_id: boardId!,
+    }
+    mutateTask(taskData)
   }
 
   const handleAddSubTask = () => {

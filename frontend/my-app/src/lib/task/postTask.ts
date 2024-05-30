@@ -23,7 +23,6 @@ export default async function PostTask(props: PostTaskProps) {
       },
       { withCredentials: true }
     );
-    console.log("response", response.data);
     return response.data;
   } catch (error) {
     console.error('Error posting task:', error);

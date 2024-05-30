@@ -151,7 +151,7 @@ export default function Board() {
                 onDragLeave={() => setDragOverColumn(null)}
                 onDrop={(e) => handleColumnDrop(e, status)}
               >
-                <div className="flex items-center justify-between w-full px-4 mt-4 mb-2">
+                <div className="flex items-center justify-center w-full px-4 mt-4 mb-2">
                   <div className="flex items-center justify-center gap-2">
                     <Circle size={18} color={circleColor} fill={circleColor} />
                     <p

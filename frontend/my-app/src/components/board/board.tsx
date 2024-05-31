@@ -118,7 +118,7 @@ export default function Board() {
     <>
       <main className="flex flex-1 p-4 lg:gap-6 lg:p-6 relative">
         <div className="flex flex-col items-start">
-          <div className="flex flex-col ml-20">
+          <div className="flex flex-col md:ml-20 ml-5">
             <div className="flex items-center mb-4 gap-4">
               <h1 className="text-2xl font-bold">{boardName}</h1>
               <div

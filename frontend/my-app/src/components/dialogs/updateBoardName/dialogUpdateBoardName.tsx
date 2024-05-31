@@ -38,7 +38,7 @@ export default function DialogUpdateBoardName({
 
   const { mutate: mutateBoard } = useMutation({
     mutationFn: UpdateBoard,
-    onSuccess: (data) => {
+    onSuccess: () => {
       onClose()
       queryClient.invalidateQueries({ queryKey: ['board'] })
     },
@@ -56,10 +56,10 @@ export default function DialogUpdateBoardName({
           <div className="flex justify-start items-center">
             <h1 className="flex items-center text-lg font-bold gap-2">
               <Edit />
-              Editar nome do Board
+              Editar nome do Quadro
             </h1>
           </div>
-          <p className="text-sm mt-2">Nome do Board</p>
+          <p className="text-sm mt-2">Nome do Quadro</p>
           <Input
             type="text"
             className="w-full"
@@ -67,7 +67,7 @@ export default function DialogUpdateBoardName({
             value={boardName}
           />
           <Button type="submit" className="mt-5">
-            Criar novo Board
+            Editar
           </Button>
         </form>
       </Dialog.Content>

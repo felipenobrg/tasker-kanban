@@ -11,6 +11,7 @@ import GetBoardById from '@/lib/boards/getBoardById'
 import ChangeThemeButton from '../header/changeThemeButton'
 import { useQuery } from '@tanstack/react-query'
 import { useTheme } from 'next-themes'
+import { Button } from '../ui/button'
 
 export default function Sidebar() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -119,13 +120,13 @@ export default function Sidebar() {
               </button>
             </nav>
           ))}
-          <Link
-            href="/"
+          <Button
             className="mt-3 flex items-center  flex-row gap-1 text-indigo-500 ml-7 hover:rounded-l-lg rounded-r-full hover:text-indigo-600"
             onClick={openDialog}
+            variant="ghost"
           >
             <LayoutPanelLeft size={20} /> <Plus size={15} /> Criar Novo Quadro
-          </Link>
+          </Button>
           <div className="mt-10 ml-5 gap-2">
             <ChangeThemeButton />
           </div>

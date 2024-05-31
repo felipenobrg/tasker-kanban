@@ -79,8 +79,6 @@ export default function DialogEditTask(props: DialogEditTaskProps) {
     retry: false,
   })
 
-  console.log('TASKID', taskId)
-
   const { mutate: mutateTasks } = useMutation({
     mutationFn: UpdateTask,
     onSuccess: () => {

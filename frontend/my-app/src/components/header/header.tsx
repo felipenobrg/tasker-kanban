@@ -30,7 +30,7 @@ export default function Header() {
   return (
     <header className="flex justify-end h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
       <HamburguerMenu />
-      <div className="flex items-center ml-5 sm:w-fit w-full">
+      <div className="flex justify-end items-center ml-5 sm:w-fit w-full">
         <Profile />
         <DropdownDeleteBoard
           handleEllipsisClick={handleEllipsisClick}

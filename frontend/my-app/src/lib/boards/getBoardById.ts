@@ -17,3 +17,4 @@ export default async function GetBoardById(props: GetBoardById) {
         throw error; 
     }
 }
+

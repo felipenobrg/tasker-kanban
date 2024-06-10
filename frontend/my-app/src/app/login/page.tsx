@@ -10,7 +10,6 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import 'react-toastify/dist/ReactToastify.css'
 import LoginAuth from '@/lib/auth/login'
 import { toast } from 'react-toastify'
 import { AxiosError } from '@/types/axiosError'
@@ -22,6 +21,7 @@ import Image from 'next/image'
 import { useTheme } from 'next-themes'
 import DialogCheckEmail from '@/components/dialogs/dialogCheckEmail'
 import CardAboutRepo from '@/components/cardAboutRepo/cardAboutRepo'
+import 'react-toastify/dist/ReactToastify.css'
 
 export default function Login() {
   const router = useRouter()
@@ -63,7 +63,7 @@ export default function Login() {
           email: data.email,
           password: data.password,
           callbackUrl: '/',
-          redirect: false,
+          redirect: true,
         })
         if (result?.error) {
           setError('email', { message: 'Email ou senha incorretos' })

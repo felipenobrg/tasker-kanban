@@ -68,7 +68,7 @@ export default function VerifyCode() {
       })
       router.push('/')
     } catch (error: any) {
-      console.error('Error posting verification code:', error)
+      console.error('Error posting verification code :', error)
       if ((error as AxiosError)?.response?.status === 400) {
         toast.error(
           'O email já foi usado. Por favor, verifique o email e tente novamente.',

@@ -18,27 +18,27 @@ Nenhum.
 
 ```json
 {
-	"error": false,
-	"message": "boards fetched successfully",
-	"data": [
-		{
-			"ID": 2,
-			"CreatedAt": "2024-04-30T23:17:17.842608Z",
-			"UpdatedAt": "2024-04-30T23:17:17.842608Z",
-			"DeletedAt": null,
-			"name": "Board Exemplo",
-			"tasks": [
-				{
-					"ID": 3,
-					"CreatedAt": "2024-04-30T23:18:19.957549Z",
-					"UpdatedAt": "2024-04-30T23:54:46.529809Z",
-					"board_id": 2,
-					"description": "Update test",
-					"status": "Feito"
-				}
-			]
-		}
-	]
+ "error": false,
+ "message": "boards fetched successfully",
+ "data": [
+  {
+   "ID": 2,
+   "CreatedAt": "2024-04-30T23:17:17.842608Z",
+   "UpdatedAt": "2024-04-30T23:17:17.842608Z",
+   "DeletedAt": null,
+   "name": "Board Exemplo",
+   "tasks": [
+    {
+     "ID": 3,
+     "CreatedAt": "2024-04-30T23:18:19.957549Z",
+     "UpdatedAt": "2024-04-30T23:54:46.529809Z",
+     "board_id": 2,
+     "description": "Update test",
+     "status": "Feito"
+    }
+   ]
+  }
+ ]
 }
 ```
 
@@ -54,16 +54,16 @@ Cria um quadro novo.
 
 ```json
 {
-	"error": false,
-	"message": "board created successfully",
-	"data": {
-		"ID": 3,
-		"CreatedAt": "2024-04-30T23:55:09.684258081Z",
-		"UpdatedAt": "2024-04-30T23:55:09.684258081Z",
-		"DeletedAt": null,
-		"name": "Board Exemplo",
-		"tasks": []
-	}
+ "error": false,
+ "message": "board created successfully",
+ "data": {
+  "ID": 3,
+  "CreatedAt": "2024-04-30T23:55:09.684258081Z",
+  "UpdatedAt": "2024-04-30T23:55:09.684258081Z",
+  "DeletedAt": null,
+  "name": "Board Exemplo",
+  "tasks": []
+ }
 }
 ```
 
@@ -79,16 +79,16 @@ Atualza um quadro já existente.
 
 ```json
 {
-	"error": false,
-	"message": "board created successfully",
-	"data": {
-		"ID": 3,
-		"CreatedAt": "2024-04-30T23:55:09.684258081Z",
-		"UpdatedAt": "2024-04-30T23:55:09.684258081Z",
-		"DeletedAt": null,
-		"name": "Board Exemplo alterado",
-		"tasks": []
-	}
+ "error": false,
+ "message": "board created successfully",
+ "data": {
+  "ID": 3,
+  "CreatedAt": "2024-04-30T23:55:09.684258081Z",
+  "UpdatedAt": "2024-04-30T23:55:09.684258081Z",
+  "DeletedAt": null,
+  "name": "Board Exemplo alterado",
+  "tasks": []
+ }
 }
 ```
 
@@ -104,8 +104,8 @@ Nenhum.
 
 ```json
 {
-	"error": false,
-	"message": "board deleted successfully"
+ "error": false,
+ "message": "board deleted successfully"
 }
 ```
 
@@ -121,26 +121,26 @@ Nenhum.
 
 ```json
 {
-	"error": false,
-	"message": "tasks fetched successfully",
-	"data": [
-		{
-			"ID": 1,
-			"CreatedAt": "2024-04-30T23:18:19.957549Z",
-			"UpdatedAt": "2024-04-30T23:54:46.529809Z",
-			"board_id": 2,
-			"description": "Estudar",
-			"status": "Feito"
-		},
-		{
-			"ID": 2,
-			"CreatedAt": "2024-05-01T00:32:04.044972Z",
-			"UpdatedAt": "2024-05-01T00:32:04.044972Z",
-			"board_id": 2,
-			"description": "Correr",
-			"status": "Backlog"
-		}
-	]
+ "error": false,
+ "message": "tasks fetched successfully",
+ "data": [
+  {
+   "ID": 1,
+   "CreatedAt": "2024-04-30T23:18:19.957549Z",
+   "UpdatedAt": "2024-04-30T23:54:46.529809Z",
+   "board_id": 2,
+   "description": "Estudar",
+   "status": "Feito"
+  },
+  {
+   "ID": 2,
+   "CreatedAt": "2024-05-01T00:32:04.044972Z",
+   "UpdatedAt": "2024-05-01T00:32:04.044972Z",
+   "board_id": 2,
+   "description": "Correr",
+   "status": "Backlog"
+  }
+ ]
 }
 ```
 
@@ -158,16 +158,16 @@ Cria uma nova tarefa em um quadro já existente.
 
 ```json
 {
-	"error": false,
-	"message": "task created successfully",
-	"data": {
-		"ID": 3,
-		"CreatedAt": "2024-05-01T00:32:42.000139071Z",
-		"UpdatedAt": "2024-05-01T00:32:42.000139071Z",
-		"board_id": 1,
-		"description": "Treinar",
-		"status": "Em andamento"
-	}
+ "error": false,
+ "message": "task created successfully",
+ "data": {
+  "ID": 3,
+  "CreatedAt": "2024-05-01T00:32:42.000139071Z",
+  "UpdatedAt": "2024-05-01T00:32:42.000139071Z",
+  "board_id": 1,
+  "description": "Treinar",
+  "status": "Em andamento"
+ }
 }
 ```
 
@@ -184,16 +184,16 @@ Atualiza uma tarefa existente.
 
 ```json
 {
-	"error": false,
-	"message": "task created successfully",
-	"data": {
-		"ID": 3,
-		"CreatedAt": "2024-05-01T00:32:42.000139071Z",
-		"UpdatedAt": "2024-05-01T00:32:42.000139071Z",
-		"board_id": 1,
-		"description": "Treinar Atualizado",
-		"status": "Feito"
-	}
+ "error": false,
+ "message": "task created successfully",
+ "data": {
+  "ID": 3,
+  "CreatedAt": "2024-05-01T00:32:42.000139071Z",
+  "UpdatedAt": "2024-05-01T00:32:42.000139071Z",
+  "board_id": 1,
+  "description": "Treinar Atualizado",
+  "status": "Feito"
+ }
 }
 ```
 
@@ -209,7 +209,7 @@ Nenhum.
 
 ```json
 {
-	"error": false,
-	"message": "board deleted successfully"
+ "error": false,
+ "message": "board deleted successfully"
 }
 ```

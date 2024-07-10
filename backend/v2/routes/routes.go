@@ -9,7 +9,6 @@ import (
 	"github.com/go-chi/cors"
 
 	"tasker/routes/handlers"
-
 )
 
 type Config struct {
@@ -22,7 +21,7 @@ func (app *Config) Routes() http.Handler {
 
 	// CORS
 	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins:   []string{"https://*", "http://*"},
+		AllowedOrigins:   []string{"https://tasker-seven-delta.vercel.app", "http://localhost:3000"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 		ExposedHeaders:   []string{"Link"},

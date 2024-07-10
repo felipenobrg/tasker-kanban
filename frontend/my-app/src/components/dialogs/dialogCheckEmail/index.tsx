@@ -1,23 +1,18 @@
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import CheckEmail from '@/lib/auth/forgotPassword/checkEmail';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as Dialog from '@radix-ui/react-dialog';
-import { useTheme } from 'next-themes';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { BASE_FRONT_URL } from '../../../../apiConfig';
-import { useState } from 'react';
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import CheckEmail from '@/lib/auth/forgotPassword/checkEmail'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as Dialog from '@radix-ui/react-dialog'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { BASE_FRONT_URL } from '../../../../apiConfig'
+import { useState } from 'react'
 
 interface DialogCheckEmailProps {
   isOpen: boolean
   onClose: () => void
 }
-const DialogCheckEmail = ({
-  isOpen,
-  onClose,
-}: DialogCheckEmailProps) => {
-  const { theme } = useTheme()
+const DialogCheckEmail = ({ isOpen, onClose }: DialogCheckEmailProps) => {
   const [disabled, setDisabled] = useState(false)
   const [successMsg, setSuccessMsg] = useState('')
   const [countDown, setCountDown] = useState(10)
@@ -40,7 +35,10 @@ const DialogCheckEmail = ({
 
   const onSubmit = async (data: any) => {
     try {
-      const response = await CheckEmail({ email: data.email, url: BASE_FRONT_URL + '/resetPassword' })
+      const response = await CheckEmail({
+        email: data.email,
+        url: BASE_FRONT_URL + '/resetPassword',
+      })
       if (!response) return
 
       setDisabled(true)
@@ -68,16 +66,13 @@ const DialogCheckEmail = ({
 
   return (
     <Dialog.Root modal open={isOpen} onOpenChange={onClose}>
-      <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-90 z-50" />
-      <Dialog.Content
-        className={`fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded shadow-md p-6 w-[30rem] flex flex-col gap-2 justify-center items-center z-50 overflow-y-auto ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-200'
-          }`}
-      >
+      <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-90 z-50  className={`${theme === 'dark' ? 'text-base' : 'text-white'}`}" />
+      <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded shadow-md p-6 w-[30rem] flex flex-col gap-2 justify-center items-center z-50 overflow-y-auto bg-gray-900">
         <form className="flex flex-col gap-3" onSubmit={handleSubmit(onSubmit)}>
           <div className="flex justify-between">
             <h1 className="text-lg font-bold">Email</h1>
           </div>
-          <p className='text-sm'>Verifique seu email</p>
+          <p className="text-sm">Verifique seu email</p>
           <Input
             type="email"
             className="w-[20rem]"
@@ -85,14 +80,24 @@ const DialogCheckEmail = ({
             {...register('email')}
           />
           {successMsg && <p className="text-green-500 text-sm">{successMsg}</p>}
-          {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
-          <Button type="submit" className="mt-3" disabled={(isSubmitting || disabled)}>
-            {isSubmitting ? 'Enviando...' : disabled ? `Reenviar em ${countDown}s` : 'Enviar' }
+          {errors.email && (
+            <p className="text-red-500 text-sm">{errors.email.message}</p>
+          )}
+          <Button
+            type="submit"
+            className="mt-3"
+            disabled={isSubmitting || disabled}
+          >
+            {isSubmitting
+              ? 'Enviando...'
+              : disabled
+                ? `Reenviar em ${countDown}s`
+                : 'Enviar'}
           </Button>
         </form>
       </Dialog.Content>
     </Dialog.Root>
-  );
+  )
 }
 
-export default DialogCheckEmail;
+export default DialogCheckEmail

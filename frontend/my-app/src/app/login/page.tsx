@@ -22,6 +22,7 @@ import Image from 'next/image'
 import { useTheme } from 'next-themes'
 import DialogCheckEmail from '@/components/dialogs/dialogCheckEmail'
 import CardAboutRepo from '@/components/cardAboutRepo/cardAboutRepo'
+import Spinner from '@/assets/spinner'
 
 export default function Login() {
   const router = useRouter()
@@ -172,10 +173,16 @@ export default function Login() {
                 </div>
                 <Button
                   type="submit"
-                  className="w-full"
+                  className="flex items-center justify-center w-full"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? 'Entrando...' : 'Login'}
+                  {isSubmitting ? (
+                    <div className="flex items-center justify-center gap-3">
+                      <Spinner size="sm" /> Entrando...
+                    </div>
+                  ) : (
+                    'Entrar'
+                  )}
                 </Button>
               </div>
             </form>

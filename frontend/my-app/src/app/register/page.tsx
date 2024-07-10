@@ -22,6 +22,7 @@ import { useContext } from 'react'
 import { useTheme } from 'next-themes'
 import GithubButton from '@/components/ui/githubButton'
 import CardAboutRepo from '@/components/cardAboutRepo/cardAboutRepo'
+import Spinner from '@/assets/spinner'
 
 export default function Register() {
   const { setEmail } = useContext(UserContext)
@@ -137,7 +138,13 @@ export default function Register() {
                   className="btn-primary"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? 'Enviando...' : 'Criar sua conta'}
+                  {isSubmitting ? (
+                    <div className="flex items-center justify-center gap-3">
+                      <Spinner size="sm" /> Enviando...
+                    </div>
+                  ) : (
+                    'Criar conta'
+                  )}{' '}
                 </Button>
               </div>
             </form>
